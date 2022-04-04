@@ -16,37 +16,37 @@ jumpHeight = -20
 
 
 class Alusta(pygame.sprite.Sprite):
-    def __init__(self, maze_image):
+    def __init__(self, alusta):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load(maze_image).convert_alpha()
+        self.image = pygame.image.load(alusta).convert_alpha()
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect(topleft=(0, 0))
 
 
 class Eteen(pygame.sprite.Sprite):
-    def __init__(self, maze_image):
+    def __init__(self, eteen):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load(maze_image).convert_alpha()
+        self.image = pygame.image.load(eteen).convert_alpha()
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect(topleft=(0, 0))
 
 
 class Alusta_col(pygame.sprite.Sprite):
-    def __init__(self, maze_image):
+    def __init__(self, alusta_col):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load(maze_image).convert_alpha()
+        self.image = pygame.image.load(alusta_col).convert_alpha()
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect(topleft=(0, 0))
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, player_image, x=50, y=50):
+    def __init__(self, player_image, x, y):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load(player_image).convert_alpha()
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
-        self.rect.left = 50
-        self.rect.top = 50
+        self.rect.left = x/2
+        self.rect.top = y/2
         self.down = False
         self.up = False
         self.left = False
@@ -57,19 +57,26 @@ class Player(pygame.sprite.Sprite):
         if self.up:
             self.rect.top -= speed
             if (pygame.sprite.spritecollide(alusta_col, player_group, False, collided=pygame.sprite.collide_mask)):
-                self.rect.top +=speed
+                self.rect.top += speed
         if self.down:
             self.rect.bottom += speed
             if (pygame.sprite.spritecollide(alusta_col, player_group, False, collided=pygame.sprite.collide_mask)):
-                self.rect.bottom -=speed
+                self.rect.bottom -= speed
         if self.left:
             self.rect.left -= speed
             if (pygame.sprite.spritecollide(alusta_col, player_group, False, collided=pygame.sprite.collide_mask)):
-                self.rect.left +=speed
+                self.rect.top -= 1
+                if (pygame.sprite.spritecollide(alusta_col, player_group, False, collided=pygame.sprite.collide_mask)):
+                    self.rect.left += speed
+                    self.rect.top += 1
+
         if self.right:
             self.rect.right += speed
             if (pygame.sprite.spritecollide(alusta_col, player_group, False, collided=pygame.sprite.collide_mask)):
-                self.rect.right -=speed
+                self.rect.top -= 1
+                if (pygame.sprite.spritecollide(alusta_col, player_group, False, collided=pygame.sprite.collide_mask)):
+                    self.rect.right -= speed
+                    self.rect.top += 1
 
 
 SURFACE = pygame.HWSURFACE | pygame.DOUBLEBUF
