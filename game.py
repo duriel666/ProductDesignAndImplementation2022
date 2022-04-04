@@ -57,19 +57,26 @@ class Player(pygame.sprite.Sprite):
         if self.up:
             self.rect.top -= speed
             if (pygame.sprite.spritecollide(alusta_col, player_group, False, collided=pygame.sprite.collide_mask)):
-                self.rect.top +=speed
+                self.rect.top += speed
         if self.down:
             self.rect.bottom += speed
             if (pygame.sprite.spritecollide(alusta_col, player_group, False, collided=pygame.sprite.collide_mask)):
-                self.rect.bottom -=speed
+                self.rect.bottom -= speed
         if self.left:
             self.rect.left -= speed
             if (pygame.sprite.spritecollide(alusta_col, player_group, False, collided=pygame.sprite.collide_mask)):
-                self.rect.left +=speed
+                self.rect.top -= 1
+                if (pygame.sprite.spritecollide(alusta_col, player_group, False, collided=pygame.sprite.collide_mask)):
+                    self.rect.left += speed
+                    self.rect.top += 1
+
         if self.right:
             self.rect.right += speed
             if (pygame.sprite.spritecollide(alusta_col, player_group, False, collided=pygame.sprite.collide_mask)):
-                self.rect.right -=speed
+                self.rect.top -= 1
+                if (pygame.sprite.spritecollide(alusta_col, player_group, False, collided=pygame.sprite.collide_mask)):
+                    self.rect.right -= speed
+                    self.rect.top += 1
 
 
 SURFACE = pygame.HWSURFACE | pygame.DOUBLEBUF
