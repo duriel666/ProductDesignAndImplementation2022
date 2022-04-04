@@ -16,37 +16,37 @@ jumpHeight = -20
 
 
 class Alusta(pygame.sprite.Sprite):
-    def __init__(self, maze_image):
+    def __init__(self, alusta):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load(maze_image).convert_alpha()
+        self.image = pygame.image.load(alusta).convert_alpha()
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect(topleft=(0, 0))
 
 
 class Eteen(pygame.sprite.Sprite):
-    def __init__(self, maze_image):
+    def __init__(self, eteen):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load(maze_image).convert_alpha()
+        self.image = pygame.image.load(eteen).convert_alpha()
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect(topleft=(0, 0))
 
 
 class Alusta_col(pygame.sprite.Sprite):
-    def __init__(self, maze_image):
+    def __init__(self, alusta_col):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load(maze_image).convert_alpha()
+        self.image = pygame.image.load(alusta_col).convert_alpha()
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect(topleft=(0, 0))
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, player_image, x=50, y=50):
+    def __init__(self, player_image, x, y):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load(player_image).convert_alpha()
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
-        self.rect.left = 50
-        self.rect.top = 50
+        self.rect.left = x/2
+        self.rect.top = y/2
         self.down = False
         self.up = False
         self.left = False
