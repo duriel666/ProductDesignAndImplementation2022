@@ -56,10 +56,26 @@ class Player(pygame.sprite.Sprite):
         self.acc = vec(0,acceleration)
         pressed_keys = pygame.key.get_pressed()
                 
-        if pressed_keys[K_LEFT]:
+        if pressed_keys[K_a]:
             self.acc.x = -acceleration
-        if pressed_keys[K_RIGHT]:
+            if (pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask)):
+                self.pos.y+=1
+                if(pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask)):
+                    self.pos.y-=1
+                    self.acc.x=0
+                    self.pos.x+=1
+        if pressed_keys[K_d]:
             self.acc.x = acceleration
+            if (pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask)):
+                self.pos.y+=1
+                if(pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask)):
+                    self.pos.y-=1
+                    self.acc.x=0
+                    self.pos.x-=1
+        if self.acc.y<0:
+            if (pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask)):
+                self.pos.y+=1
+                self.acc.y=0
                  
         self.acc.x += self.vel.x * friction
         self.vel += self.acc
@@ -73,7 +89,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.midbottom = self.pos
  
     def jump(self): 
-        hits=pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask)
+        #hits=pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask)
         if not self.jumping:
            self.jumping = True
            self.vel.y = -8
@@ -121,10 +137,10 @@ while True:
             pygame.quit()
             sys.exit()
         if event.type == pygame.KEYDOWN:    
-            if event.key == pygame.K_SPACE:
+            if event.key == pygame.K_w:
                 player.jump()
         if event.type == pygame.KEYUP:    
-            if event.key == pygame.K_SPACE:
+            if event.key == pygame.K_w:
                 player.cancel_jump()
 
     background = black
