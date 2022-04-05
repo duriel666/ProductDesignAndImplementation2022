@@ -94,13 +94,13 @@ class Player(pygame.sprite.Sprite):
 
 SURFACE = pygame.HWSURFACE | pygame.DOUBLEBUF
 window = pygame.display.set_mode((ww, wh), SURFACE)
-pygame.display.set_caption("Testi 01")
+pygame.display.set_caption("Drawn-testi 01")
 
 
-alusta_col = Alusta_col('level-alpha-test.png')
-alusta = Alusta('alusta.png')
-player = Player("mario.png")
-eteen = Eteen('eteen.png')
+alusta_col = Alusta_col('drawn-level-alpha-test.png')
+alusta = Alusta('drawn-alusta.png')
+player = Player('drawn-mario.png')
+eteen = Eteen('drawn-eteen.png')
 
 col_group=pygame.sprite.Group()
 col_group.add(alusta_col)
