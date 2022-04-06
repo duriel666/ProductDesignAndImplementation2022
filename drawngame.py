@@ -41,70 +41,71 @@ class Alusta_col(pygame.sprite.Sprite):
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, player_image):
-        super().__init__() 
+        super().__init__()
         self.image = pygame.image.load(player_image).convert_alpha()
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
-   
+
         self.pos = vec((500, 500))
-        self.vel = vec(0,0)
-        self.acc = vec(0,0)
+        self.vel = vec(0, 0)
+        self.acc = vec(0, 0)
         self.jumping = False
-        self.score = 0 
- 
+        self.score = 0
+
     def move(self):
-        self.acc = vec(0,acceleration)
+        self.acc = vec(0, acceleration)
         pressed_keys = pygame.key.get_pressed()
-                
+
         if pressed_keys[K_a]:
             self.acc.x = -acceleration
             if (pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask)):
-                self.pos.y+=1
+                self.pos.y -= 1
                 if(pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask)):
-                    self.pos.y-=1
-                    self.acc.x=0
-                    self.pos.x+=1
+                    self.pos.y -= 1
+                    self.acc.x = 0
+                    self.pos.x += 1
         if pressed_keys[K_d]:
             self.acc.x = acceleration
             if (pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask)):
-                self.pos.y+=1
+                self.pos.y -= 1
                 if(pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask)):
-                    self.pos.y-=1
-                    self.acc.x=0
-                    self.pos.x-=1
-        if self.acc.y<0:
+                    self.pos.y -= 1
+                    self.acc.x = 0
+                    self.pos.x -= 1
+        if self.acc.y < 0:
             if (pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask)):
-                self.pos.y+=1
-                self.acc.y=0
-                 
+                self.pos.y += 1
+                self.acc.y = 0
+
         self.acc.x += self.vel.x * friction
         self.vel += self.acc
         self.pos += self.vel + acceleration * self.acc
-         
+
         if self.pos.x > ww:
             self.pos.x = 0
         if self.pos.x < 0:
             self.pos.x = ww
-             
+
         self.rect.midbottom = self.pos
- 
-    def jump(self): 
+
+    def jump(self):
         #hits=pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask)
         if not self.jumping:
-           self.jumping = True
-           self.vel.y = -8
- 
+            self.jumping = True
+            self.vel.y = -8
+
     def cancel_jump(self):
         if self.jumping:
             if self.vel.y < -3:
                 self.vel.y = -3
- 
+
     def update(self):
-        hits=pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask)
-        if self.vel.y > 0:        
+        hits = pygame.sprite.spritecollide(
+            self, col_group, False, collided=pygame.sprite.collide_mask)
+        if self.vel.y > 0:
             if hits:
-                self.pos.y -=1
-                self.vel.y =0
+                self.pos.y -= 1
+                self.vel.y = 0
                 self.jumping = False
 
 
@@ -118,7 +119,7 @@ alusta = Alusta('drawn-alusta.png')
 player = Player('drawn-mario.png')
 eteen = Eteen('drawn-eteen.png')
 
-col_group=pygame.sprite.Group()
+col_group = pygame.sprite.Group()
 col_group.add(alusta_col)
 sprite_group = pygame.sprite.Group()
 sprite_group.add(alusta_col)
@@ -131,17 +132,20 @@ sprite_group.add(eteen)
 
 clock = pygame.time.Clock()
 
-while True:
+run=True
+
+while run:
     for event in pygame.event.get():
         if event.type == pygame.K_ESCAPE:
             pygame.quit()
-            sys.exit()
-        if event.type == pygame.KEYDOWN:    
+        if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_w:
                 player.jump()
-        if event.type == pygame.KEYUP:    
+        if event.type == pygame.KEYUP:
             if event.key == pygame.K_w:
                 player.cancel_jump()
+        if event.type == pygame.QUIT:
+            run = False
 
     background = black
     sprite_group.update()
@@ -152,3 +156,5 @@ while True:
     player.move()
     pygame.display.flip()
     clock.tick(fps)
+
+pygame.quit()
