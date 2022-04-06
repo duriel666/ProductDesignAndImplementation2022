@@ -147,11 +147,10 @@ while run:
         if event.type == pygame.QUIT:
             run = False
 
-    background = black
     sprite_group.update()
     col_group.update()
     player.update()
-    window.fill(background)
+    window.fill(black)
     sprite_group.draw(window)
     player.move()
     pygame.display.flip()

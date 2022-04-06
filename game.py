@@ -160,6 +160,7 @@ saw_group = pygame.sprite.Group()
 world = World(world_data)
 
 run = True
+
 while run:
 
     clock.tick(fps)
