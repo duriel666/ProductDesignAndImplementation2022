@@ -7,8 +7,8 @@ pygame.init()
 pygame.font.init()
 vec = pygame.math.Vector2
 
-ww = 900
-wh = 600
+ww = 1600
+wh = 900
 fps = 240
 acceleration = 0.08
 friction = -0.04
@@ -46,7 +46,7 @@ class Player(pygame.sprite.Sprite):
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
    
-        self.pos = vec((10, 360))
+        self.pos = vec((500, 500))
         self.vel = vec(0,0)
         self.acc = vec(0,0)
         self.jumping = False
@@ -113,7 +113,7 @@ window = pygame.display.set_mode((ww, wh), SURFACE)
 pygame.display.set_caption("Drawn-testi 01")
 
 
-alusta_col = Alusta_col('drawn-level-alpha-test.png')
+alusta_col = Alusta_col('drawn-level-alpha-test-2.png')
 alusta = Alusta('drawn-alusta.png')
 player = Player('drawn-mario.png')
 eteen = Eteen('drawn-eteen.png')
