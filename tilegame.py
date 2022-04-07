@@ -1,3 +1,4 @@
+from tkinter import EventType
 import pygame, sys
 from tilemap import * 
 from tilelevel import Level
@@ -8,11 +9,13 @@ screen = pygame.display.set_mode((screen_width,screen_height))
 clock = pygame.time.Clock()
 level = Level(level_map, screen)
 
-while True:
+run=True
+
+while run:
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			pygame.quit()
-			sys.exit()
+			run=False
 	
 	screen.fill('pink')
 	level.run()

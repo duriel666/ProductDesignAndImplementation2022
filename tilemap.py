@@ -1,3 +1,6 @@
+import pygame
+
+
 level_map = [
 '                            ',
 '                            ',
@@ -5,7 +8,7 @@ level_map = [
 ' XX    XXX            XX    ',
 ' XX P                       ',
 ' XXXX         XX         XX ',
-' XXXX       XX              ',
+' XXXX       XX     E        ',
 ' XX    X  XXXX    XX  XX    ',
 '       X  XXXX    XX  XXX   ',
 '    XXXX  XXXXXX  XX  XXXX  ',
