@@ -9,8 +9,8 @@ vec = pygame.math.Vector2
 
 ww = 900
 wh = 600
-fps = 240
-acceleration = 0.08
+fps = 120
+acceleration = 0.2
 friction = -0.04
 black = (0,  0,  0)
 
@@ -60,18 +60,18 @@ class Player(pygame.sprite.Sprite):
             self.acc.x = -acceleration
             if (pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask)):
                 self.pos.y -= 1
-                if(pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask)):
+                '''if(pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask)):
                     self.pos.y -= 1
                     self.acc.x = 0
-                    self.pos.x += 1
+                    self.pos.x += 1'''
         if pressed_keys[K_d]:
             self.acc.x = acceleration
             if (pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask)):
                 self.pos.y -= 1
-                if(pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask)):
+                '''if(pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask)):
                     self.pos.y -= 1
                     self.acc.x = 0
-                    self.pos.x -= 1
+                    self.pos.x -= 1'''
         if self.acc.y < 0:
             if (pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask)):
                 self.pos.y += 1
@@ -92,7 +92,7 @@ class Player(pygame.sprite.Sprite):
         #hits=pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask)
         if not self.jumping:
             self.jumping = True
-            self.vel.y = -8
+            self.vel.y = -9
 
     def cancel_jump(self):
         if self.jumping:
