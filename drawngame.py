@@ -7,8 +7,8 @@ pygame.init()
 pygame.font.init()
 vec = pygame.math.Vector2
 
-ww = 1600
-wh = 900
+ww = 900
+wh = 600
 fps = 240
 acceleration = 0.08
 friction = -0.04
@@ -59,6 +59,7 @@ class Player(pygame.sprite.Sprite):
         if pressed_keys[K_a]:
             self.acc.x = -acceleration
             if (pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask)):
+
                 self.pos.y -= 1
                 if(pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask)):
                     self.pos.y -= 1
@@ -114,7 +115,7 @@ window = pygame.display.set_mode((ww, wh), SURFACE)
 pygame.display.set_caption("Drawn-testi 01")
 
 
-alusta_col = Alusta_col('drawn-level-alpha-test-2.png')
+alusta_col = Alusta_col('drawn-level-alpha-test.png')
 alusta = Alusta('drawn-alusta.png')
 player = Player('drawn-mario.png')
 eteen = Eteen('drawn-eteen.png')
