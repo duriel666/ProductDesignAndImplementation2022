@@ -3,14 +3,14 @@ from tiletile import Tile
 from tilemap import tile_size, screen_width
 from tileplayer import *
 
+
 class Level:
-    def __init__(self,level_data,surface):
-        #the level setup
+    def __init__(self, level_data, surface):
+        # the level setup
         self.display_surface = surface
         self.levelsetup(level_data)
 
         self.worldmove = 0
-
 
     def levelsetup(self, layout):
         self.tile = pygame.sprite.Group()
@@ -21,16 +21,16 @@ class Level:
                 y = row_index * tile_size
                 if cell == 'X':
 
-                    tile = Tile((x,y),tile_size)
+                    tile = Tile((x, y), tile_size)
                     self.tile.add(tile)
                 if cell == 'P':
 
-                    player_sprite = Player((x,y))
+                    player_sprite = Player((x, y))
                     self.player.add(player_sprite)
-                
+
     def scroll_x(self):
         player = self.player.sprite
-        player_x = player.rect.centerx  
+        player_x = player.rect.centerx
         direction_x = player.direction.x
 
         if player_x < screen_width / 4 and direction_x < 0:
@@ -51,7 +51,7 @@ class Level:
         for sprite in self.tile.sprites():
             if sprite.rect.colliderect(player.rect):
                 if player.direction.x < 0:
-                   player.rect.left = sprite.rect.right
+                    player.rect.left = sprite.rect.right
                 elif player.direction.x > 0:
                     player.rect.right = sprite.rect.left
 
@@ -61,12 +61,11 @@ class Level:
         for sprite in self.tile.sprites():
             if sprite.rect.colliderect(player.rect):
                 if player.direction.y > 0:
-                   player.rect.bottom = sprite.rect.top
-                   player.direction.y = 0
+                    player.rect.bottom = sprite.rect.top
+                    player.direction.y = 0
                 elif player.direction.y < 0:
                     player.rect.top = sprite.rect.bottom
                     player.direction.y = 0
-
 
     def run(self):
         self.tile.update(self.worldmove)
@@ -76,4 +75,3 @@ class Level:
         self.x_moving_coll()
         self.y_moving_coll()
         self.player.draw(self.display_surface)
-        
