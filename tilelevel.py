@@ -5,6 +5,7 @@ from tileplayer import *
 from tileenemy import *
 
 
+
 class Level:
     def __init__(self, level_data, surface):
         # the level setup
