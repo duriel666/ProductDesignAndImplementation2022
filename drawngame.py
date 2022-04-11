@@ -52,14 +52,14 @@ class Player(pygame.sprite.Sprite):
         if pressed_keys[K_a]:
             self.acc.x = -acceleration
             if (pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask)):
-                self.pos.y += 1
+                self.vel.y -= 1
         if pressed_keys[K_d]:
             self.acc.x = acceleration
             if (pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask)):
-                self.pos.y -= 1
+                self.vel.y -= 1
         if self.acc.y < 0:
             if (pygame.sprite.spritecollide(self.overlap(), col_group, False, collided=pygame.sprite.collide_mask)) and (pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask)):
-                self.pos.y = 1
+                self.vel.y -= 1
 
         self.acc.x += self.vel.x * friction
         self.vel += self.acc
@@ -128,22 +128,22 @@ while run:
 
     speed_x = player.vel.x
     speed_y = player.vel.y
-    if player.pos.x < ww/5:
+    if player.pos.x < ww/5 and player.vel.x < 0:
         for world in world_list:
             world.scroll_x(-(speed_x))
         player.vel.x = 0
         player.pos.x -= speed_x
-    elif player.pos.x > ww-(ww/5):
+    elif player.pos.x > ww-(ww/5) and player.vel.x > 0:
         for world in world_list:
             world.scroll_x(-(speed_x))
         player.vel.x = 0
         player.pos.x -= speed_x
-    if player.pos.y < wh/5:
+    if player.pos.y < wh/5 and player.vel.y < 0:
         for world in world_list:
             world.scroll_y(-(speed_y))
         player.vel.y = 0
         player.pos.y -= speed_y
-    elif player.pos.y > wh-(wh/5):
+    elif player.pos.y > wh-(wh/5) and player.vel.y > 0:
         for world in world_list:
             world.scroll_y(-(speed_y))
         player.vel.y = 0
@@ -156,7 +156,6 @@ while run:
         player.vel.y = speed_y
     player.vel.x = speed_x
     player.vel.y = speed_y
-
 
     sprite_group.update()
     col_group.update()
