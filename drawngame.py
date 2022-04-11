@@ -11,32 +11,27 @@ ww = 900
 wh = 600
 fps = 120
 acceleration = 0.2
+gravity = 0.2
 friction = -0.04
 black = (0,  0,  0)
 
 
-class Alusta(pygame.sprite.Sprite):
-    def __init__(self, alusta):
-        pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load(alusta).convert_alpha()
+class World(pygame.sprite.Sprite):
+    def __init__(self, world_image):
+        super().__init__()
+        self.image = pygame.image.load(world_image).convert_alpha()
         self.mask = pygame.mask.from_surface(self.image)
-        self.rect = self.image.get_rect(topleft=(0, 0))
+        self.rect = self.image.get_rect()
+        self.pos = vec((0, 0))
+        self.vel = vec(0, 0)
 
+    def scroll_x(self, speed):
+        self.rect.topleft = self.pos
+        self.pos.x += speed
 
-class Eteen(pygame.sprite.Sprite):
-    def __init__(self, eteen):
-        pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load(eteen).convert_alpha()
-        self.mask = pygame.mask.from_surface(self.image)
-        self.rect = self.image.get_rect(topleft=(0, 0))
-
-
-class Alusta_col(pygame.sprite.Sprite):
-    def __init__(self, alusta_col):
-        pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load(alusta_col).convert_alpha()
-        self.mask = pygame.mask.from_surface(self.image)
-        self.rect = self.image.get_rect(topleft=(0, 0))
+    def scroll_y(self, speed):
+        self.rect.topleft = self.pos
+        self.pos.y += speed
 
 
 class Player(pygame.sprite.Sprite):
@@ -45,51 +40,36 @@ class Player(pygame.sprite.Sprite):
         self.image = pygame.image.load(player_image).convert_alpha()
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
-
-        self.pos = vec((500, 500))
+        self.pos = vec((ww/2, wh/2))
         self.vel = vec(0, 0)
         self.acc = vec(0, 0)
         self.jumping = False
         self.score = 0
 
     def move(self):
-        self.acc = vec(0, acceleration)
+        global gravity
+        self.acc = vec(0, gravity)
         pressed_keys = pygame.key.get_pressed()
 
         if pressed_keys[K_a]:
             self.acc.x = -acceleration
             if (pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask)):
-                self.pos.y -= 1
-                '''if(pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask)):
-                    self.pos.y -= 1
-                    self.acc.x = 0
-                    self.pos.x += 1'''
+                self.pos.y += 1
         if pressed_keys[K_d]:
             self.acc.x = acceleration
             if (pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask)):
                 self.pos.y -= 1
-                '''if(pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask)):
-                    self.pos.y -= 1
-                    self.acc.x = 0
-                    self.pos.x -= 1'''
         if self.acc.y < 0:
-            if (pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask)):
-                self.pos.y += 1
-                self.acc.y = 0
+            if (pygame.sprite.spritecollide(self.overlap(), col_group, False, collided=pygame.sprite.collide_mask)) and (pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask)):
+                self.pos.y = 1
 
         self.acc.x += self.vel.x * friction
         self.vel += self.acc
         self.pos += self.vel + acceleration * self.acc
 
-        if self.pos.x > ww:
-            self.pos.x = 0
-        if self.pos.x < 0:
-            self.pos.x = ww
-
         self.rect.midbottom = self.pos
 
     def jump(self):
-        #hits=pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask)
         if not self.jumping:
             self.jumping = True
             self.vel.y = -9
@@ -109,30 +89,29 @@ class Player(pygame.sprite.Sprite):
                 self.jumping = False
 
 
-SURFACE = pygame.HWSURFACE | pygame.DOUBLEBUF
-window = pygame.display.set_mode((ww, wh), SURFACE)
+window = pygame.display.set_mode((ww, wh))
 pygame.display.set_caption("Drawn-testi 01")
 
-
-alusta_col = Alusta_col('drawn-level-alpha-test.png')
-alusta = Alusta('drawn-alusta.png')
 player = Player('drawn-mario.png')
-eteen = Eteen('drawn-eteen.png')
-
-col_group = pygame.sprite.Group()
-col_group.add(alusta_col)
-sprite_group = pygame.sprite.Group()
-sprite_group.add(alusta_col)
-sprite_group.add(alusta)
-sprite_group.add(player)
 player_group = pygame.sprite.GroupSingle()
 player_group.add(player)
-sprite_group.add(eteen)
 
+collision = World('drawn-level-alpha-test.png')
+#collision = World('drawn-level-alpha-test-2.png')
+taakse = World('drawn-alusta.png')
+#taakse = World('drawn-level-alpha-test-2.png')
+eteen = World('drawn-eteen.png')
+
+col_group = pygame.sprite.Group()
+col_group.add(collision)
+sprite_group = pygame.sprite.Group()
+sprite_group.add(taakse)
+sprite_group.add(eteen)
+world_list = [eteen, taakse, collision]
 
 clock = pygame.time.Clock()
 
-run=True
+run = True
 
 while run:
     for event in pygame.event.get():
@@ -147,11 +126,42 @@ while run:
         if event.type == pygame.QUIT:
             run = False
 
+    speed_x = player.vel.x
+    speed_y = player.vel.y
+    if player.pos.x < ww/3:
+        for world in world_list:
+            world.scroll_x(-speed_x-1)
+        player.vel.x = 0
+        player.pos.x += 1
+    elif player.pos.x > ww-(ww/3):
+        for world in world_list:
+            world.scroll_x(-speed_x-1)
+        player.vel.x = 0
+        player.pos.x -= 1
+    if player.pos.y < wh/3:
+        for world in world_list:
+            world.scroll_y(-speed_y-1)
+        player.vel.y = 0
+        player.pos.y += 1
+    elif player.pos.y > wh-(wh/3):
+        for world in world_list:
+            world.scroll_y(-speed_y-1)
+        player.vel.y = 0
+        player.pos.y -= 1
+    else:
+        for world in world_list:
+            world.scroll_x(0)
+            world.scroll_y(0)
+        player.vel.x = speed_x
+        player.vel.y = speed_y
+
     sprite_group.update()
     col_group.update()
+    player_group.update()
     player.update()
     window.fill(black)
     sprite_group.draw(window)
+    player_group.draw(window)
     player.move()
     pygame.display.flip()
     clock.tick(fps)
