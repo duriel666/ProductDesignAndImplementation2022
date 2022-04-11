@@ -7,11 +7,10 @@ pygame.init()
 pygame.font.init()
 vec = pygame.math.Vector2
 
-ww = 900
-wh = 600
+ww = 1600
+wh = 900
 fps = 120
 acceleration = 0.2
-gravity = 0.2
 friction = -0.04
 black = (0,  0,  0)
 
@@ -47,8 +46,7 @@ class Player(pygame.sprite.Sprite):
         self.score = 0
 
     def move(self):
-        global gravity
-        self.acc = vec(0, gravity)
+        self.acc = vec(0, acceleration)
         pressed_keys = pygame.key.get_pressed()
 
         if pressed_keys[K_a]:
@@ -89,6 +87,7 @@ class Player(pygame.sprite.Sprite):
                 self.jumping = False
 
 
+#SURFACE = pygame.HWSURFACE | pygame.DOUBLEBUF
 window = pygame.display.set_mode((ww, wh))
 pygame.display.set_caption("Drawn-testi 01")
 
@@ -96,15 +95,16 @@ player = Player('drawn-mario.png')
 player_group = pygame.sprite.GroupSingle()
 player_group.add(player)
 
-collision = World('drawn-level-alpha-test.png')
-#collision = World('drawn-level-alpha-test-2.png')
-taakse = World('drawn-alusta.png')
-#taakse = World('drawn-level-alpha-test-2.png')
+#collision = World('drawn-level-alpha-test.png')
+collision = World('drawn-level-alpha-test-2.png')
+#taakse = World('drawn-alusta.png')
+taakse = World('drawn-level-alpha-test-2.png')
 eteen = World('drawn-eteen.png')
 
 col_group = pygame.sprite.Group()
 col_group.add(collision)
 sprite_group = pygame.sprite.Group()
+# sprite_group.add(collision)
 sprite_group.add(taakse)
 sprite_group.add(eteen)
 world_list = [eteen, taakse, collision]
@@ -128,32 +128,35 @@ while run:
 
     speed_x = player.vel.x
     speed_y = player.vel.y
-    if player.pos.x < ww/3:
+    if player.pos.x < ww/5:
         for world in world_list:
-            world.scroll_x(-speed_x-1)
+            world.scroll_x(-(speed_x))
         player.vel.x = 0
-        player.pos.x += 1
-    elif player.pos.x > ww-(ww/3):
+        player.pos.x -= speed_x
+    elif player.pos.x > ww-(ww/5):
         for world in world_list:
-            world.scroll_x(-speed_x-1)
+            world.scroll_x(-(speed_x))
         player.vel.x = 0
-        player.pos.x -= 1
-    if player.pos.y < wh/3:
+        player.pos.x -= speed_x
+    if player.pos.y < wh/5:
         for world in world_list:
-            world.scroll_y(-speed_y-1)
+            world.scroll_y(-(speed_y))
         player.vel.y = 0
-        player.pos.y += 1
-    elif player.pos.y > wh-(wh/3):
+        player.pos.y -= speed_y
+    elif player.pos.y > wh-(wh/5):
         for world in world_list:
-            world.scroll_y(-speed_y-1)
+            world.scroll_y(-(speed_y))
         player.vel.y = 0
-        player.pos.y -= 1
+        player.pos.y -= speed_y
     else:
         for world in world_list:
             world.scroll_x(0)
             world.scroll_y(0)
         player.vel.x = speed_x
         player.vel.y = speed_y
+    player.vel.x = speed_x
+    player.vel.y = speed_y
+
 
     sprite_group.update()
     col_group.update()
