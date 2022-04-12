@@ -17,9 +17,10 @@ fps = 120
 acceleration = 0.2
 friction = -0.04
 black = (0,  0,  0)
-white=(255,255,255)
+white = (255, 255, 255)
 
-my_font = pygame.font.SysFont('Comic Sans MS', 30)
+game_font = pygame.freetype.Font('HelveticaNeue Light.ttf', 30)
+
 
 class World(pygame.sprite.Sprite):
     def __init__(self, world_image):
@@ -173,10 +174,12 @@ while run:
     sprite_group.draw(window)
     player_group.draw(window)
     player.move()
-    text_surface = my_font.render('player.vel.x - '+str(player.vel.x), False, (white))
-    text_surface2 = my_font.render('player.vel.y - '+str(player.vel.y), False, (white))
-    window.blit(text_surface, (0,0))
-    window.blit(text_surface2, (0,30))
+    game_font.render_to(window, (0, 0), 'player.vel.x - ' +
+                        str(player.vel.x), (white))
+    game_font.render_to(window, (0, 30), 'player.vel.y - ' +
+                        str(player.vel.y), (white))
+    #window.blit(text_surface, (0,0))
+    #window.blit(text_surface2, (0,30))
     pygame.display.flip()
     clock.tick(fps)
 
