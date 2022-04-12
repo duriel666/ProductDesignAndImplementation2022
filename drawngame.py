@@ -11,13 +11,15 @@ vec = pygame.math.Vector2
 #wh = 846
 ww = 1600
 wh = 900
-gw = 4961 #game width
-gh = 3508
+gh = 4961  # game width
+gw = 3508
 fps = 120
 acceleration = 0.2
 friction = -0.04
 black = (0,  0,  0)
+white=(255,255,255)
 
+my_font = pygame.font.SysFont('Comic Sans MS', 30)
 
 class World(pygame.sprite.Sprite):
     def __init__(self, world_image):
@@ -40,8 +42,8 @@ class World(pygame.sprite.Sprite):
 class Player(pygame.sprite.Sprite):
     def __init__(self, player_image):
         super().__init__()
-        self.image = pygame.transform.scale2x(
-            pygame.image.load(player_image).convert_alpha())
+        #self.image = pygame.transform.scale2x(pygame.image.load(player_image).convert_alpha())
+        self.image = pygame.image.load(player_image).convert_alpha()
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
         self.pos = vec((ww/2, wh/2))
@@ -134,22 +136,22 @@ while run:
 
     speed_x = player.vel.x
     speed_y = player.vel.y
-    if player.pos.x < ww/4 and player.vel.x < 0 and collision.pos.x<0:
+    if player.pos.x < ww/4 and player.vel.x < 0 and collision.pos.x < 0:
         for world in world_list:
             world.scroll_x(-(speed_x))
         player.vel.x = 0
         player.pos.x -= speed_x
-    elif player.pos.x > ww-(ww/4) and player.vel.x > 0 and collision.pos.x>(-gh+ww):
+    elif player.pos.x > ww-(ww/4) and player.vel.x > 0 and collision.pos.x > (-gw+ww):
         for world in world_list:
             world.scroll_x(-(speed_x))
         player.vel.x = 0
         player.pos.x -= speed_x
-    if player.pos.y < wh/3 and player.vel.y < 0 and collision.pos.y<0:
+    if player.pos.y < wh/3 and player.vel.y < 0 and collision.pos.y < 0:
         for world in world_list:
             world.scroll_y(-(speed_y))
         player.vel.y = 0
         player.pos.y -= speed_y
-    elif player.pos.y > wh-(wh/3) and player.vel.y > 0 and collision.pos.y>(-gw+wh):
+    elif player.pos.y > wh-(wh/3) and player.vel.y > 0 and collision.pos.y > (-gh+wh):
         for world in world_list:
             world.scroll_y(-(speed_y))
         player.vel.y = 0
@@ -171,6 +173,10 @@ while run:
     sprite_group.draw(window)
     player_group.draw(window)
     player.move()
+    text_surface = my_font.render('player.vel.x - '+str(player.vel.x), False, (white))
+    text_surface2 = my_font.render('player.vel.y - '+str(player.vel.y), False, (white))
+    window.blit(text_surface, (0,0))
+    window.blit(text_surface2, (0,30))
     pygame.display.flip()
     clock.tick(fps)
 
