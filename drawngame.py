@@ -9,10 +9,10 @@ vec = pygame.math.Vector2
 
 #ww = 1504
 #wh = 846
-ww = 1600
-wh = 900
-gh = 4961  # game width
-gw = 3508
+ww = 1600  # window width
+wh = 900  # window height
+gw = 3508  # game width
+gh = 4961  # game height
 fps = 120
 acceleration = 0.2
 friction = -0.04
@@ -28,7 +28,7 @@ class World(pygame.sprite.Sprite):
         self.image = pygame.image.load(world_image).convert_alpha()
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
-        self.pos = vec((0, 0))
+        self.pos = vec((0, -gh+wh))
         self.vel = vec(0, 0)
 
     def scroll_x(self, speed):
@@ -47,7 +47,7 @@ class Player(pygame.sprite.Sprite):
         self.image = pygame.image.load(player_image).convert_alpha()
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
-        self.pos = vec((ww/2, wh/2))
+        self.pos = vec((ww/8, wh-wh/5))
         self.vel = vec(0, 0)
         self.acc = vec(0, 0)
         self.jumping = False
@@ -95,7 +95,6 @@ class Player(pygame.sprite.Sprite):
                 self.jumping = False
 
 
-#SURFACE = pygame.HWSURFACE | pygame.DOUBLEBUF
 window = pygame.display.set_mode((ww, wh))
 pygame.display.set_caption("Drawn-testi 01")
 
@@ -178,8 +177,6 @@ while run:
                         str(player.vel.x), (white))
     game_font.render_to(window, (0, 30), 'player.vel.y - ' +
                         str(player.vel.y), (white))
-    #window.blit(text_surface, (0,0))
-    #window.blit(text_surface2, (0,30))
     pygame.display.flip()
     clock.tick(fps)
 
