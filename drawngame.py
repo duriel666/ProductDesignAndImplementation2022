@@ -7,6 +7,8 @@ pygame.init()
 pygame.font.init()
 vec = pygame.math.Vector2
 
+#ww = 1504
+#wh = 846
 ww = 1600
 wh = 900
 fps = 120
@@ -36,7 +38,8 @@ class World(pygame.sprite.Sprite):
 class Player(pygame.sprite.Sprite):
     def __init__(self, player_image):
         super().__init__()
-        self.image = pygame.image.load(player_image).convert_alpha()
+        self.image = pygame.transform.scale2x(
+            pygame.image.load(player_image).convert_alpha())
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
         self.pos = vec((ww/2, wh/2))
@@ -70,7 +73,7 @@ class Player(pygame.sprite.Sprite):
     def jump(self):
         if not self.jumping:
             self.jumping = True
-            self.vel.y = -9
+            self.vel.y = -12
 
     def cancel_jump(self):
         if self.jumping:
@@ -115,8 +118,9 @@ run = True
 
 while run:
     for event in pygame.event.get():
-        if event.type == pygame.K_ESCAPE:
-            pygame.quit()
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                run = False
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_w:
                 player.jump()
@@ -138,12 +142,12 @@ while run:
             world.scroll_x(-(speed_x))
         player.vel.x = 0
         player.pos.x -= speed_x
-    if player.pos.y < wh/5 and player.vel.y < 0:
+    if player.pos.y < wh/3 and player.vel.y < 0:
         for world in world_list:
             world.scroll_y(-(speed_y))
         player.vel.y = 0
         player.pos.y -= speed_y
-    elif player.pos.y > wh-(wh/5) and player.vel.y > 0:
+    elif player.pos.y > wh-(wh/3) and player.vel.y > 0:
         for world in world_list:
             world.scroll_y(-(speed_y))
         player.vel.y = 0
