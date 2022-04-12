@@ -9,6 +9,8 @@ vec = pygame.math.Vector2
 
 ww = 1600
 wh = 900
+gw = 4961 #game width
+gh = 3508
 fps = 120
 acceleration = 0.2
 friction = -0.04
@@ -59,7 +61,7 @@ class Player(pygame.sprite.Sprite):
                 self.vel.y -= 1
         if self.acc.y < 0:
             if (pygame.sprite.spritecollide(self.overlap(), col_group, False, collided=pygame.sprite.collide_mask)) and (pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask)):
-                self.vel.y -= 1
+                self.vel.y -= -1
 
         self.acc.x += self.vel.x * friction
         self.vel += self.acc
@@ -128,22 +130,22 @@ while run:
 
     speed_x = player.vel.x
     speed_y = player.vel.y
-    if player.pos.x < ww/5 and player.vel.x < 0:
+    if player.pos.x < ww/4 and player.vel.x < 0 and collision.pos.x<0:
         for world in world_list:
             world.scroll_x(-(speed_x))
         player.vel.x = 0
         player.pos.x -= speed_x
-    elif player.pos.x > ww-(ww/5) and player.vel.x > 0:
+    elif player.pos.x > ww-(ww/4) and player.vel.x > 0 and collision.pos.x>(-gh+ww):
         for world in world_list:
             world.scroll_x(-(speed_x))
         player.vel.x = 0
         player.pos.x -= speed_x
-    if player.pos.y < wh/5 and player.vel.y < 0:
+    if player.pos.y < wh/3 and player.vel.y < 0 and collision.pos.y<0:
         for world in world_list:
             world.scroll_y(-(speed_y))
         player.vel.y = 0
         player.pos.y -= speed_y
-    elif player.pos.y > wh-(wh/5) and player.vel.y > 0:
+    elif player.pos.y > wh-(wh/3) and player.vel.y > 0 and collision.pos.y>(-gw+wh):
         for world in world_list:
             world.scroll_y(-(speed_y))
         player.vel.y = 0
