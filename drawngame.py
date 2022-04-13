@@ -31,10 +31,6 @@ class Point(pygame.sprite.Sprite):
         self.pos = vec(pos)
         self.vel = vec(0, 0)
 
-    '''def update(self):
-        if (pygame.sprite.spritecollide(self, player, False, collided=pygame.sprite.collide_mask)):
-            self.kill()'''
-
     def scroll_x(self, speed):
         self.rect.topleft = self.pos
         self.pos.x += speed
@@ -91,9 +87,6 @@ class Player(pygame.sprite.Sprite):
         if self.acc.y < 0:
             if (pygame.sprite.spritecollide(self.overlap(), col_group, False, collided=pygame.sprite.collide_mask)) and (pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask)):
                 self.vel.y -= -1
-    
-        '''if (pygame.sprite.spritecollide(self, point_group, False, collided=pygame.sprite.collide_mask)):
-            self.score += 1'''
 
         self.acc.x += self.vel.x * friction
         self.vel += self.acc
@@ -137,14 +130,15 @@ taakse = World('bg-lines-1.png')
 #eteen = World('drawn-eteen.png')
 eteen = World('fg-1.png')
 
-points=[]
-points.append(Point((500,500)))
-points.append(Point((800,500)))
-points.append(Point((1500,500)))
+points = []
+points.append(Point((500, 500)))
+points.append(Point((800, 500)))
+points.append(Point((1500, 500)))
 point_group = pygame.sprite.Group()
 for point in points:
     point_group.add(point)
 
+score_count = int(len(points))
 col_group = pygame.sprite.Group()
 col_group.add(collision)
 sprite_group = pygame.sprite.Group()
@@ -207,9 +201,10 @@ while run:
 
     for point in points:
         if (pygame.sprite.spritecollide(point, player_group, False, collided=pygame.sprite.collide_mask)):
-            player.score+=1
             point.kill()
+            points.remove(point)
 
+    player.score = -int(len(points))+int(score_count)
     sprite_group.update()
     col_group.update()
     player_group.update()
@@ -226,6 +221,8 @@ while run:
                         str(player.vel.y), (black))
     game_font.render_to(window, (0, 60), 'player.score - ' +
                         str(player.score), (black))
+    game_font.render_to(window, (0, 90), 'points length - ' +
+                        str(str(len(points))), (black))
     pygame.display.flip()
     clock.tick(fps)
 
