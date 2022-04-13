@@ -131,9 +131,13 @@ taakse = World('bg-lines-1.png')
 eteen = World('fg-1.png')
 
 points = []
-points.append(Point((500, 500)))
+points.append(Point((500, 450)))
 points.append(Point((800, 500)))
-points.append(Point((1500, 500)))
+points.append(Point((1500, 400)))
+points.append(Point((1920, 550)))
+points.append(Point((2500, -200)))
+
+
 point_group = pygame.sprite.Group()
 for point in points:
     point_group.add(point)
