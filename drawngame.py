@@ -11,8 +11,8 @@ vec = pygame.math.Vector2
 #wh = 846
 ww = 1600  # window width
 wh = 900  # window height
-gw = 3508  # game world width
-gh = 4961  # game world height
+gw = 4961  # game world width
+gh = 3508  # game world height
 fps = 120
 acceleration = 0.2
 friction = -0.04
@@ -43,8 +43,8 @@ class World(pygame.sprite.Sprite):
 class Player(pygame.sprite.Sprite):
     def __init__(self, player_image):
         super().__init__()
-        #self.image = pygame.transform.scale2x(pygame.image.load(player_image).convert_alpha())
-        self.image = pygame.image.load(player_image).convert_alpha()
+        self.image = pygame.transform.scale2x(pygame.image.load(player_image).convert_alpha())
+        #self.image = pygame.image.load(player_image).convert_alpha()
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
         self.pos = vec((ww/8, wh-wh/5))
@@ -103,16 +103,20 @@ player_group = pygame.sprite.GroupSingle()
 player_group.add(player)
 
 #collision = World('drawn-level-alpha-test.png')
-collision = World('drawn-level-alpha-test-2.png')
+#collision = World('drawn-level-alpha-test-2.png')
+collision = World('col-1.png')
 #taakse = World('drawn-alusta.png')
-taakse = World('drawn-level-alpha-test-2.png')
-eteen = World('drawn-eteen.png')
+#taakse = World('drawn-level-alpha-test-2.png')
+taakse = World('bg-lines-1.png')
+#eteen = World('drawn-eteen.png')
+eteen = World('fg-1.png')
 
 col_group = pygame.sprite.Group()
 col_group.add(collision)
 sprite_group = pygame.sprite.Group()
 # sprite_group.add(collision)
 sprite_group.add(taakse)
+sprite_group.add(player)
 sprite_group.add(eteen)
 world_list = [eteen, taakse, collision]
 
@@ -169,14 +173,14 @@ while run:
     col_group.update()
     player_group.update()
     player.update()
-    window.fill(black)
+    window.fill(white)
     sprite_group.draw(window)
-    player_group.draw(window)
+    #player_group.draw(window)
     player.move()
     game_font.render_to(window, (0, 0), 'player.vel.x - ' +
-                        str(player.vel.x), (white))
+                        str(player.vel.x), (black))
     game_font.render_to(window, (0, 30), 'player.vel.y - ' +
-                        str(player.vel.y), (white))
+                        str(player.vel.y), (black))
     pygame.display.flip()
     clock.tick(fps)
 
