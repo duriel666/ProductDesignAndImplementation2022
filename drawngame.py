@@ -9,12 +9,17 @@ vec = pygame.math.Vector2
 
 #ww = 1504
 #wh = 846
-ww = 1600
-wh = 900
+ww = 1600  # window width
+wh = 900  # window height
+gw = 4961  # game world width
+gh = 3508  # game world height
 fps = 120
 acceleration = 0.2
 friction = -0.04
 black = (0,  0,  0)
+white = (255, 255, 255)
+
+game_font = pygame.freetype.Font('HelveticaNeue Light.ttf', 30)
 
 
 class World(pygame.sprite.Sprite):
@@ -23,7 +28,7 @@ class World(pygame.sprite.Sprite):
         self.image = pygame.image.load(world_image).convert_alpha()
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
-        self.pos = vec((0, 0))
+        self.pos = vec((0, -gh+wh))
         self.vel = vec(0, 0)
 
     def scroll_x(self, speed):
@@ -38,11 +43,11 @@ class World(pygame.sprite.Sprite):
 class Player(pygame.sprite.Sprite):
     def __init__(self, player_image):
         super().__init__()
-        self.image = pygame.transform.scale2x(
-            pygame.image.load(player_image).convert_alpha())
+        self.image = pygame.transform.scale2x(pygame.image.load(player_image).convert_alpha())
+        #self.image = pygame.image.load(player_image).convert_alpha()
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
-        self.pos = vec((ww/2, wh/2))
+        self.pos = vec((ww/8, wh-wh/5))
         self.vel = vec(0, 0)
         self.acc = vec(0, 0)
         self.jumping = False
@@ -62,7 +67,7 @@ class Player(pygame.sprite.Sprite):
                 self.vel.y -= 1
         if self.acc.y < 0:
             if (pygame.sprite.spritecollide(self.overlap(), col_group, False, collided=pygame.sprite.collide_mask)) and (pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask)):
-                self.vel.y -= 1
+                self.vel.y -= -1
 
         self.acc.x += self.vel.x * friction
         self.vel += self.acc
@@ -90,7 +95,6 @@ class Player(pygame.sprite.Sprite):
                 self.jumping = False
 
 
-#SURFACE = pygame.HWSURFACE | pygame.DOUBLEBUF
 window = pygame.display.set_mode((ww, wh))
 pygame.display.set_caption("Drawn-testi 01")
 
@@ -99,16 +103,20 @@ player_group = pygame.sprite.GroupSingle()
 player_group.add(player)
 
 #collision = World('drawn-level-alpha-test.png')
-collision = World('drawn-level-alpha-test-2.png')
+#collision = World('drawn-level-alpha-test-2.png')
+collision = World('col-1.png')
 #taakse = World('drawn-alusta.png')
-taakse = World('drawn-level-alpha-test-2.png')
-eteen = World('drawn-eteen.png')
+#taakse = World('drawn-level-alpha-test-2.png')
+taakse = World('bg-lines-1.png')
+#eteen = World('drawn-eteen.png')
+eteen = World('fg-1.png')
 
 col_group = pygame.sprite.Group()
 col_group.add(collision)
 sprite_group = pygame.sprite.Group()
 # sprite_group.add(collision)
 sprite_group.add(taakse)
+sprite_group.add(player)
 sprite_group.add(eteen)
 world_list = [eteen, taakse, collision]
 
@@ -132,22 +140,22 @@ while run:
 
     speed_x = player.vel.x
     speed_y = player.vel.y
-    if player.pos.x < ww/5 and player.vel.x < 0:
+    if player.pos.x < ww/4 and player.vel.x < 0 and collision.pos.x < 0:
         for world in world_list:
             world.scroll_x(-(speed_x))
         player.vel.x = 0
         player.pos.x -= speed_x
-    elif player.pos.x > ww-(ww/5) and player.vel.x > 0:
+    elif player.pos.x > ww-(ww/4) and player.vel.x > 0 and collision.pos.x > (-gw+ww):
         for world in world_list:
             world.scroll_x(-(speed_x))
         player.vel.x = 0
         player.pos.x -= speed_x
-    if player.pos.y < wh/3 and player.vel.y < 0:
+    if player.pos.y < wh/3 and player.vel.y < 0 and collision.pos.y < 0:
         for world in world_list:
             world.scroll_y(-(speed_y))
         player.vel.y = 0
         player.pos.y -= speed_y
-    elif player.pos.y > wh-(wh/3) and player.vel.y > 0:
+    elif player.pos.y > wh-(wh/3) and player.vel.y > 0 and collision.pos.y > (-gh+wh):
         for world in world_list:
             world.scroll_y(-(speed_y))
         player.vel.y = 0
@@ -165,10 +173,14 @@ while run:
     col_group.update()
     player_group.update()
     player.update()
-    window.fill(black)
+    window.fill(white)
     sprite_group.draw(window)
-    player_group.draw(window)
+    #player_group.draw(window)
     player.move()
+    game_font.render_to(window, (0, 0), 'player.vel.x - ' +
+                        str(player.vel.x), (black))
+    game_font.render_to(window, (0, 30), 'player.vel.y - ' +
+                        str(player.vel.y), (black))
     pygame.display.flip()
     clock.tick(fps)
 
