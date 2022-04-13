@@ -22,6 +22,28 @@ white = (255, 255, 255)
 game_font = pygame.freetype.Font('HelveticaNeue Light.ttf', 30)
 
 
+class Point(pygame.sprite.Sprite):
+    def __init__(self, pos):
+        super().__init__()
+        self.image = pygame.image.load('point.png').convert_alpha()
+        self.mask = pygame.mask.from_surface(self.image)
+        self.rect = self.image.get_rect()
+        self.pos = vec(pos)
+        self.vel = vec(0, 0)
+
+    '''def update(self):
+        if (pygame.sprite.spritecollide(self, player, False, collided=pygame.sprite.collide_mask)):
+            self.kill()'''
+
+    def scroll_x(self, speed):
+        self.rect.topleft = self.pos
+        self.pos.x += speed
+
+    def scroll_y(self, speed):
+        self.rect.topleft = self.pos
+        self.pos.y += speed
+
+
 class World(pygame.sprite.Sprite):
     def __init__(self, world_image):
         super().__init__()
@@ -43,7 +65,8 @@ class World(pygame.sprite.Sprite):
 class Player(pygame.sprite.Sprite):
     def __init__(self, player_image):
         super().__init__()
-        self.image = pygame.transform.scale2x(pygame.image.load(player_image).convert_alpha())
+        self.image = pygame.transform.scale2x(
+            pygame.image.load(player_image).convert_alpha())
         #self.image = pygame.image.load(player_image).convert_alpha()
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
@@ -68,6 +91,9 @@ class Player(pygame.sprite.Sprite):
         if self.acc.y < 0:
             if (pygame.sprite.spritecollide(self.overlap(), col_group, False, collided=pygame.sprite.collide_mask)) and (pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask)):
                 self.vel.y -= -1
+    
+        '''if (pygame.sprite.spritecollide(self, point_group, False, collided=pygame.sprite.collide_mask)):
+            self.score += 1'''
 
         self.acc.x += self.vel.x * friction
         self.vel += self.acc
@@ -111,14 +137,24 @@ taakse = World('bg-lines-1.png')
 #eteen = World('drawn-eteen.png')
 eteen = World('fg-1.png')
 
+points=[]
+points.append(Point((500,500)))
+points.append(Point((800,500)))
+points.append(Point((1500,500)))
+point_group = pygame.sprite.Group()
+for point in points:
+    point_group.add(point)
+
 col_group = pygame.sprite.Group()
 col_group.add(collision)
 sprite_group = pygame.sprite.Group()
-#sprite_group.add(collision)
+# sprite_group.add(collision)
 sprite_group.add(taakse)
 sprite_group.add(player)
 sprite_group.add(eteen)
 world_list = [eteen, taakse, collision]
+for point in points:
+    world_list.append(point)
 
 clock = pygame.time.Clock()
 
@@ -169,18 +205,27 @@ while run:
     player.vel.x = speed_x
     player.vel.y = speed_y
 
+    for point in points:
+        if (pygame.sprite.spritecollide(point, player_group, False, collided=pygame.sprite.collide_mask)):
+            player.score+=1
+            point.kill()
+
     sprite_group.update()
     col_group.update()
     player_group.update()
+    point_group.update()
     player.update()
     window.fill(white)
     sprite_group.draw(window)
-    #player_group.draw(window)
+    point_group.draw(window)
+    # player_group.draw(window)
     player.move()
     game_font.render_to(window, (0, 0), 'player.vel.x - ' +
                         str(player.vel.x), (black))
     game_font.render_to(window, (0, 30), 'player.vel.y - ' +
                         str(player.vel.y), (black))
+    game_font.render_to(window, (0, 60), 'player.score - ' +
+                        str(player.score), (black))
     pygame.display.flip()
     clock.tick(fps)
 
