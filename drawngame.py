@@ -137,6 +137,7 @@ points.append(Point((1500, 400)))
 points.append(Point((1920, 550)))
 points.append(Point((2500, -200)))
 
+points_found = []
 
 point_group = pygame.sprite.Group()
 for point in points:
@@ -206,6 +207,7 @@ while run:
     for point in points:
         if (pygame.sprite.spritecollide(point, player_group, False, collided=pygame.sprite.collide_mask)):
             point.kill()
+            points_found.append(point)
             points.remove(point)
 
     player.score = -int(len(points))+int(score_count)
@@ -217,8 +219,8 @@ while run:
     window.fill(white)
     sprite_group.draw(window)
     point_group.draw(window)
-    # player_group.draw(window)
     player.move()
+
     game_font.render_to(window, (0, 0), 'player.vel.x - ' +
                         str(player.vel.x), (black))
     game_font.render_to(window, (0, 30), 'player.vel.y - ' +
@@ -227,6 +229,7 @@ while run:
                         str(player.score), (black))
     game_font.render_to(window, (0, 90), 'points length - ' +
                         str(str(len(points))), (black))
+
     pygame.display.flip()
     clock.tick(fps)
 
