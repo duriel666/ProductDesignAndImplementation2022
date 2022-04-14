@@ -209,8 +209,8 @@ while run:
             point.kill()
             points_found.append(point)
             points.remove(point)
-
     player.score = -int(len(points))+int(score_count)
+
     sprite_group.update()
     col_group.update()
     player_group.update()
