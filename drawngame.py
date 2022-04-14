@@ -59,7 +59,7 @@ class World(pygame.sprite.Sprite):
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, player_image):
+    def __init__(self):
         super().__init__()
         self.index = 0
         self.images = []
@@ -128,7 +128,7 @@ class Player(pygame.sprite.Sprite):
 window = pygame.display.set_mode((ww, wh))
 pygame.display.set_caption("Drawn-testi 01")
 
-player = Player('drawn-mario.png')
+player = Player()
 player_group = pygame.sprite.GroupSingle()
 player_group.add(player)
 
