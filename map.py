@@ -1,7 +1,10 @@
+import imp
 import pygame
 from pygame.locals import *
 import sys
 import time
+import importlib
+import os
 
 pygame.init()
 pygame.font.init()
@@ -15,7 +18,7 @@ gw = 4961  # game world width
 gh = 3508  # game world height
 fps = 120
 acceleration = 0.2
-friction = -0.04
+friction = -0.08
 black = (0,  0,  0)
 white = (255, 255, 255)
 
@@ -23,13 +26,14 @@ game_font = pygame.freetype.Font('HelveticaNeue Light.ttf', 30)
 
 
 class Point(pygame.sprite.Sprite):
-    def __init__(self, pos):
+    def __init__(self, pos, level):
         super().__init__()
         self.image = pygame.image.load('point.png').convert_alpha()
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
         self.pos = vec(pos)
         self.vel = vec(0, 0)
+        self.level=level
 
     def scroll_x(self, speed):
         self.rect.topleft = self.pos
@@ -38,6 +42,14 @@ class Point(pygame.sprite.Sprite):
     def scroll_y(self, speed):
         self.rect.topleft = self.pos
         self.pos.y += speed
+    
+    def select(self):
+        level=self.level
+        imp.load_source(level)
+        #import level 
+        self.level.main()
+
+
 
 
 class World(pygame.sprite.Sprite):
@@ -59,20 +71,12 @@ class World(pygame.sprite.Sprite):
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, player_image):
+    def __init__(self):
         super().__init__()
         self.index=0
         self.images = []
-        self.images.append(pygame.image.load('puolukka1.png'))
-        self.images.append(pygame.image.load('puolukka2.png'))
-        self.images.append(pygame.image.load('puolukka3.png'))
-        self.images.append(pygame.image.load('puolukka4.png'))
-        self.images.append(pygame.image.load('puolukka5.png'))
-        self.images.append(pygame.image.load('puolukka6.png'))
-        self.images.append(pygame.image.load('puolukka7.png'))
-        self.images.append(pygame.image.load('puolukka8.png'))
-        '''self.image = pygame.transform.scale2x(
-            pygame.image.load(player_image).convert_alpha())'''
+        for i in range(0, 72):
+            self.images.append(pygame.image.load('puolukka'+str(i+1)+'.png'))
         self.image = self.images[self.index].convert_alpha()
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
@@ -82,7 +86,7 @@ class Player(pygame.sprite.Sprite):
         self.score = 0
 
     def move(self):
-        self.acc = vec(0, acceleration)
+        self.acc = vec(0, 0)
         pressed_keys = pygame.key.get_pressed()
 
         if pressed_keys[K_a]:
@@ -90,36 +94,33 @@ class Player(pygame.sprite.Sprite):
             self.index-=1
             if self.index<=0:
                 self.index=len(self.images)-1
-            if (pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask)):
-                self.vel.y -= 1
+            if pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask):
+                self.vel.x = 2
         if pressed_keys[K_d]:
             self.acc.x = acceleration
             self.index+=1
             if self.index>=len(self.images):
                 self.index=0
-            if (pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask)):
-                self.vel.y -= 1
+            if pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask):
+                self.vel.x = -2
         if pressed_keys[K_w]:
             self.acc.y = -acceleration
             self.index-=1
             if self.index<=0:
                 self.index=len(self.images)-1
-            if (pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask)):
-                self.vel.y -= 1
+            if pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask):
+                self.vel.y = 2
         if pressed_keys[K_s]:
             self.acc.y = acceleration
             self.index+=1
             if self.index>=len(self.images):
                 self.index=0
-            if (pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask)):
-                self.vel.y -= 1
-        if self.acc.y < 0:
-            if (pygame.sprite.spritecollide(self.overlap(), col_group, False, collided=pygame.sprite.collide_mask)) and (pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask)):
-                self.vel.y -= -1
+            if pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask):
+                self.vel.y = -2
         
         self.image = self.images[self.index]
 
-        self.acc.x += self.vel.x * friction
+        self.acc += self.vel * friction
         self.vel += self.acc
         self.pos += self.vel + acceleration * self.acc
 
@@ -127,9 +128,9 @@ class Player(pygame.sprite.Sprite):
 
 
 window = pygame.display.set_mode((ww, wh))
-pygame.display.set_caption("Drawn-testi 01")
+pygame.display.set_caption("Drawn-map")
 
-player = Player('drawn-mario.png')
+player = Player()
 player_group = pygame.sprite.GroupSingle()
 player_group.add(player)
 
@@ -138,11 +139,7 @@ taakse = World('bg-lines-1.png')
 eteen = World('fg-1.png')
 
 points = []
-points.append(Point((500, 450)))
-points.append(Point((800, 500)))
-points.append(Point((1500, 400)))
-points.append(Point((1920, 550)))
-points.append(Point((2500, -200)))
+points.append(Point((500, 450), ('main', './drawngame.py')))
 
 points_found = []
 
@@ -208,9 +205,10 @@ while run:
     player.vel.y = speed_y
 
     for point in points:
-        if (pygame.sprite.spritecollide(point, player_group, False, collided=pygame.sprite.collide_mask)):
-            points_found.append(point)
-            points.remove(point)
+        if pygame.sprite.spritecollide(point, player_group, False, collided=pygame.sprite.collide_mask):
+            pressed_keys = pygame.key.get_pressed()
+            if pressed_keys[K_e]:
+                point.select()
     player.score = -int(len(points))+int(score_count)
 
     sprite_group.update()
