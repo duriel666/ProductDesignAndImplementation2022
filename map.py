@@ -1,8 +1,10 @@
+import imp
 import pygame
 from pygame.locals import *
 import sys
 import time
-from drawngame import *
+import importlib
+import os
 
 pygame.init()
 pygame.font.init()
@@ -42,7 +44,10 @@ class Point(pygame.sprite.Sprite):
         self.pos.y += speed
     
     def select(self):
-        jo=0
+        level=self.level
+        imp.load_source(level)
+        #import level 
+        self.level.main()
 
 
 
@@ -134,7 +139,7 @@ taakse = World('bg-lines-1.png')
 eteen = World('fg-1.png')
 
 points = []
-points.append(Point((500, 450)), 'forest')
+points.append(Point((500, 450), ('main', './drawngame.py')))
 
 points_found = []
 
@@ -201,7 +206,8 @@ while run:
 
     for point in points:
         if pygame.sprite.spritecollide(point, player_group, False, collided=pygame.sprite.collide_mask):
-            if pygame.key.get_pressed(K_e):
+            pressed_keys = pygame.key.get_pressed()
+            if pressed_keys[K_e]:
                 point.select()
     player.score = -int(len(points))+int(score_count)
 
