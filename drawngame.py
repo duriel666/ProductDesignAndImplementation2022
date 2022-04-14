@@ -144,6 +144,7 @@ for point in points:
     point_group.add(point)
 
 score_count = int(len(points))
+
 col_group = pygame.sprite.Group()
 col_group.add(collision)
 sprite_group = pygame.sprite.Group()
@@ -151,6 +152,7 @@ sprite_group = pygame.sprite.Group()
 sprite_group.add(taakse)
 sprite_group.add(player)
 sprite_group.add(eteen)
+
 world_list = [eteen, taakse, collision]
 for point in points:
     world_list.append(point)
