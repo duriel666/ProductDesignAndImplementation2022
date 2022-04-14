@@ -61,18 +61,10 @@ class World(pygame.sprite.Sprite):
 class Player(pygame.sprite.Sprite):
     def __init__(self, player_image):
         super().__init__()
-        self.index=0
+        self.index = 0
         self.images = []
-        self.images.append(pygame.image.load('puolukka1.png'))
-        self.images.append(pygame.image.load('puolukka2.png'))
-        self.images.append(pygame.image.load('puolukka3.png'))
-        self.images.append(pygame.image.load('puolukka4.png'))
-        self.images.append(pygame.image.load('puolukka5.png'))
-        self.images.append(pygame.image.load('puolukka6.png'))
-        self.images.append(pygame.image.load('puolukka7.png'))
-        self.images.append(pygame.image.load('puolukka8.png'))
-        '''self.image = pygame.transform.scale2x(
-            pygame.image.load(player_image).convert_alpha())'''
+        for i in range(0, 72):
+            self.images.append(pygame.image.load('puolukka'+str(i+1)+'.png'))
         self.image = self.images[self.index].convert_alpha()
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
@@ -88,22 +80,23 @@ class Player(pygame.sprite.Sprite):
 
         if pressed_keys[K_a]:
             self.acc.x = -acceleration
-            self.index-=1
-            if self.index<=0:
-                self.index=len(self.images)-1
-            if (pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask)):
+            self.index -= 1
+            if self.index <= 0:
+                self.index = len(self.images)-1
+            if pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask):
                 self.vel.y -= 1
+                # if self.rect.top
         if pressed_keys[K_d]:
             self.acc.x = acceleration
-            self.index+=1
-            if self.index>=len(self.images):
-                self.index=0
-            if (pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask)):
+            self.index += 1
+            if self.index >= len(self.images):
+                self.index = 0
+            if pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask):
                 self.vel.y -= 1
         if self.acc.y < 0:
-            if (pygame.sprite.spritecollide(self.overlap(), col_group, False, collided=pygame.sprite.collide_mask)) and (pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask)):
+            if self.rect.top < pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask):
                 self.vel.y -= -1
-        
+
         self.image = self.images[self.index]
 
         self.acc.x += self.vel.x * friction
