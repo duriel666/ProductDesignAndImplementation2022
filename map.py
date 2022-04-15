@@ -166,6 +166,11 @@ def start_game(run):
                     run = False
             if event.type == pygame.QUIT:
                 run = False
+            for point in points:
+                if pygame.sprite.spritecollide(point, player_group, False, collided=pygame.sprite.collide_mask):
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_e:
+                            point.select()
 
         speed_x = player.vel.x
         speed_y = player.vel.y
@@ -198,11 +203,6 @@ def start_game(run):
         player.vel.x = speed_x
         player.vel.y = speed_y
 
-        for point in points:
-            if pygame.sprite.spritecollide(point, player_group, False, collided=pygame.sprite.collide_mask):
-                pressed_keys = pygame.key.get_pressed()
-                if pressed_keys[K_e]:
-                    point.select()
         player.score = -int(len(points))+int(score_count)
 
         sprite_group.update()

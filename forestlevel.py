@@ -42,12 +42,10 @@ class Door(pygame.sprite.Sprite):
         self.pos.y += speed
 
     def select(self):
-        global run
+        if self.level == 'map':
+            return 'map'
         if self.level == 'tile':
             select_forest_tile()
-    
-    def back(self):
-        return self.level
 
 
 class Point(pygame.sprite.Sprite):
@@ -105,6 +103,7 @@ class Player(pygame.sprite.Sprite):
         self.dy = self.mask.overlap_area(
             col_group, (ww, wh+1)) - self.mask.overlap_area(col_group, (ww, wh-1))'''
         self.jumping = False
+        self.button = False
         self.score = 0
 
     def move(self):
@@ -181,7 +180,7 @@ for point in points:
     point_group.add(point)
 
 doors = []
-doors.append(Door((200, 770), 'map', 'gfx/drawn-mario.png'))
+doors.append(Door((400, 770), 'map', 'gfx/drawn-mario.png'))
 doors.append(Door((2000, -2000), 'tile', 'gfx/drawn-mario.png'))
 door_group = pygame.sprite.Group()
 for door in doors:
@@ -220,6 +219,14 @@ def start_game(run):
                     player.cancel_jump()
             if event.type == pygame.QUIT:
                 run = False
+            for door in doors:
+                if pygame.sprite.spritecollide(door, player_group, False, collided=pygame.sprite.collide_mask):
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_e:
+                            if door.select() == 'map':
+                                run = False
+                            else:
+                                door.select()
 
         speed_x = player.vel.x
         speed_y = player.vel.y
@@ -258,15 +265,6 @@ def start_game(run):
                 points_found.append(point)
                 points.remove(point)
         player.score = -int(len(points))+int(score_count)
-
-        for door in doors:
-            if pygame.sprite.spritecollide(door, player_group, False, collided=pygame.sprite.collide_mask):
-                pressed_keys = pygame.key.get_pressed()
-                if pressed_keys[K_e]:
-                    if door==Door((200, 770), 'map', 'gfx/drawn-mario.png'):
-                        run=False
-                    else:
-                        door.select()
 
         sprite_group.update()
         col_group.update()
