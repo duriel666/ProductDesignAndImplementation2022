@@ -135,7 +135,7 @@ taakse = World('gfx/map.png')
 #eteen = World('fg-1.png')
 
 points = []
-points.append(Point((500, 450), 'forest'))
+points.append(Point((1500, -50), 'forest'))
 
 points_found = []
 
