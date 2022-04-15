@@ -33,12 +33,12 @@ class Player(pygame.sprite.Sprite):
         keys = pygame.key.get_pressed()
         self.index = 0
 
-        if keys[pygame.K_a]:
+        if keys[pygame.K_d]:
             self.direction.x = 1
             self.index += 1
             if self.index >= len(self.images):
                 self.index = 0
-        elif keys[pygame.K_d]:
+        elif keys[pygame.K_a]:
             self.direction.x = -1
             self.index -= 1
             if self.index <= 0:

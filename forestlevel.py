@@ -181,7 +181,7 @@ for point in points:
 
 doors = []
 doors.append(Door((400, 770), 'map', 'gfx/drawn-mario.png'))
-doors.append(Door((4650, -2600), 'tile', 'gfx/drawn-mario.png'))
+doors.append(Door((4650, -1808), 'tile', 'gfx/drawn-mario.png'))
 door_group = pygame.sprite.Group()
 for door in doors:
     door_group.add(door)
