@@ -5,7 +5,7 @@ from tilethings import import_folder
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos):
         super().__init__()
-        #self.import_character()
+        # self.import_character()
         self.frame_index = 0
         self.animation_speed = 0.15
         self.index = 0

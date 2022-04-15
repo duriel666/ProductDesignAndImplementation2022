@@ -1,6 +1,6 @@
 import pygame
 from pygame.locals import *
-from world import *  # import world data from another file
+from extra.world import *  # import world data from another file
 from pygame import mixer
 from enemy import Enemy  # import enemy from another file
 

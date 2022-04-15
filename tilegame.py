@@ -1,6 +1,7 @@
 from tkinter import EventType
-import pygame, sys
-from tilemap import * 
+import pygame
+import sys
+from tilemap import *
 from tilelevel import Level
 
 pygame.init()
@@ -8,6 +9,7 @@ pygame.init()
 screen = pygame.display.set_mode((screen_width, screen_height))
 clock = pygame.time.Clock()
 level = Level(level_map, screen)
+
 
 def start_game(run):
     while run:
