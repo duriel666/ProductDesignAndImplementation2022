@@ -110,6 +110,16 @@ class Player(pygame.sprite.Sprite):
 
         self.rect.midbottom = self.pos
 
+        hits = pygame.sprite.spritecollide(
+            self, col_group, False, collided=pygame.sprite.collide_mask)
+        if self.vel.y > 0:
+            if hits:
+                if self.vel.y<=-0.6:
+                    self.vel.y = -self.vel.y*.5
+                else:
+                    self.vel.y=-0.6
+                self.jumping = False
+
     def jump(self):
         if not self.jumping:
             self.jumping = True
@@ -119,15 +129,6 @@ class Player(pygame.sprite.Sprite):
         if self.jumping:
             if self.vel.y < -3:
                 self.vel.y = -3
-
-    def update(self):
-        hits = pygame.sprite.spritecollide(
-            self, col_group, False, collided=pygame.sprite.collide_mask)
-        if self.vel.y > 0:
-            if hits:
-                self.pos.y -= 1
-                self.vel.y = 0
-                self.jumping = False
 
 
 window = pygame.display.set_mode((ww, wh))
@@ -228,7 +229,6 @@ def start_game(run):
         col_group.update()
         player_group.update()
         point_group.update()
-        player.update()
         window.fill(white)
         sprite_group.draw(window)
         point_group.draw(window)
@@ -245,3 +245,5 @@ def start_game(run):
 
         pygame.display.flip()
         clock.tick(fps)
+
+start_game(True)
