@@ -169,7 +169,7 @@ taakse = World(f'gfx/forest-bg.png')
 eteen = World('gfx/forest-fg.png')
 
 points = []
-points.append(Point((500, 450)))
+points.append(Point((150, 450)))
 points.append(Point((800, 500)))
 points.append(Point((1500, 400)))
 points.append(Point((1920, 550)))
