@@ -19,13 +19,13 @@ friction = -0.04
 black = (0,  0,  0)
 white = (255, 255, 255)
 
-game_font = pygame.freetype.Font('HelveticaNeue Light.ttf', 30)
+game_font = pygame.freetype.Font('fonts/HelveticaNeue Light.ttf', 30)
 
 
 class Point(pygame.sprite.Sprite):
     def __init__(self, pos):
         super().__init__()
-        self.image = pygame.image.load('point.png').convert_alpha()
+        self.image = pygame.image.load('gfx/point.png').convert_alpha()
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
         self.pos = vec(pos)
@@ -64,13 +64,17 @@ class Player(pygame.sprite.Sprite):
         self.index = 0
         self.images = []
         for i in range(0, 72):
-            self.images.append(pygame.image.load('puolukka'+str(i+1)+'.png'))
+            self.images.append(pygame.image.load('gfx/puolukka'+str(i+1)+'.png'))
         self.image = self.images[self.index].convert_alpha()
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
         self.pos = vec((ww/8, wh-wh/8))
         self.vel = vec(0, 0)
         self.acc = vec(0, 0)
+        '''self.dx = self.mask.overlap_area(
+            col_group, (ww+1, wh)) - self.mask.overlap_area(col_group, (ww-1, wh))
+        self.dy = self.mask.overlap_area(
+            col_group, (ww, wh+1)) - self.mask.overlap_area(col_group, (ww, wh-1))'''
         self.jumping = False
         self.score = 0
 
@@ -83,7 +87,7 @@ class Player(pygame.sprite.Sprite):
             self.index -= 1
             if self.index <= 0:
                 self.index = len(self.images)-1
-            if pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask) and self.vel.y >= -3:
+            if pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask) and self.vel.y >= -4:
                 self.vel.y -= 1
                 # if self.rect.top
         if pressed_keys[K_d]:
@@ -91,7 +95,7 @@ class Player(pygame.sprite.Sprite):
             self.index += 1
             if self.index >= len(self.images):
                 self.index = 0
-            if pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask) and self.vel.y >= -3:
+            if pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask) and self.vel.y >= -4:
                 self.vel.y -= 1
         '''if self.acc.y < 0:
             if pygame.sprite.spritecollide(self.overlap_mask(0, 1), col_group, False, collided=pygame.sprite.collide_mask):
@@ -134,12 +138,12 @@ player_group.add(player)
 
 #collision = World('drawn-level-alpha-test.png')
 #collision = World('drawn-level-alpha-test-2.png')
-collision = World('col-1.png')
+collision = World('gfx/col-1.png')
 #taakse = World('drawn-alusta.png')
 #taakse = World('drawn-level-alpha-test-2.png')
-taakse = World('bg-lines-1.png')
+taakse = World('gfx/bg-lines-1.png')
 #eteen = World('drawn-eteen.png')
-eteen = World('fg-1.png')
+eteen = World('gfx/fg-1.png')
 
 points = []
 points.append(Point((500, 450)))
