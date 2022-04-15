@@ -1,5 +1,6 @@
 import pygame
 from pygame.locals import *
+from selecttilelevel import *
 import sys
 import time
 
@@ -22,10 +23,37 @@ white = (255, 255, 255)
 game_font = pygame.freetype.Font('fonts/HelveticaNeue Light.ttf', 30)
 
 
+class Door(pygame.sprite.Sprite):
+    def __init__(self, pos, level, door_image):
+        super().__init__()
+        self.image = pygame.image.load(door_image).convert_alpha()
+        self.mask = pygame.mask.from_surface(self.image)
+        self.rect = self.image.get_rect()
+        self.pos = vec(pos)
+        self.vel = vec(0, 0)
+        self.level = level
+
+    def scroll_x(self, speed):
+        self.rect.topleft = self.pos
+        self.pos.x += speed
+
+    def scroll_y(self, speed):
+        self.rect.topleft = self.pos
+        self.pos.y += speed
+
+    def select(self):
+        global run
+        if self.level == 'tile':
+            select_forest_tile()
+    
+    def back(self):
+        return self.level
+
+
 class Point(pygame.sprite.Sprite):
     def __init__(self, pos):
         super().__init__()
-        self.image = pygame.image.load('gfx/point.png').convert_alpha()
+        self.image = pygame.image.load('gfx/forest-point.png').convert_alpha()
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
         self.pos = vec(pos)
@@ -65,7 +93,7 @@ class Player(pygame.sprite.Sprite):
         self.images = []
         for i in range(0, 72):
             self.images.append(pygame.image.load(
-                'gfx/puolukka'+str(i+1)+'.png'))
+                f'gfx/puolukka{str(i+1)}.png'))
         self.image = self.images[self.index].convert_alpha()
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
@@ -137,10 +165,9 @@ player = Player()
 player_group = pygame.sprite.GroupSingle()
 player_group.add(player)
 
-
-collision = World('gfx/col-1.png')
-taakse = World('gfx/bg-lines-1.png')
-eteen = World('gfx/fg-1.png')
+collision = World('gfx/forest-col.png')
+taakse = World(f'gfx/forest-bg.png')
+eteen = World('gfx/forest-fg.png')
 
 points = []
 points.append(Point((500, 450)))
@@ -148,19 +175,23 @@ points.append(Point((800, 500)))
 points.append(Point((1500, 400)))
 points.append(Point((1920, 550)))
 points.append(Point((2500, -200)))
-
 points_found = []
-
 point_group = pygame.sprite.Group()
 for point in points:
     point_group.add(point)
+
+doors = []
+doors.append(Door((200, 770), 'map', 'gfx/drawn-mario.png'))
+doors.append(Door((2000, -2000), 'tile', 'gfx/drawn-mario.png'))
+door_group = pygame.sprite.Group()
+for door in doors:
+    door_group.add(door)
 
 score_count = int(len(points))
 
 col_group = pygame.sprite.Group()
 col_group.add(collision)
 sprite_group = pygame.sprite.Group()
-# sprite_group.add(collision)
 sprite_group.add(taakse)
 sprite_group.add(player)
 sprite_group.add(eteen)
@@ -168,6 +199,8 @@ sprite_group.add(eteen)
 world_list = [eteen, taakse, collision]
 for point in points:
     world_list.append(point)
+for door in doors:
+    world_list.append(door)
 
 clock = pygame.time.Clock()
 
@@ -226,11 +259,21 @@ def start_game(run):
                 points.remove(point)
         player.score = -int(len(points))+int(score_count)
 
+        for door in doors:
+            if pygame.sprite.spritecollide(door, player_group, False, collided=pygame.sprite.collide_mask):
+                pressed_keys = pygame.key.get_pressed()
+                if pressed_keys[K_e]:
+                    if door==Door((200, 770), 'map', 'gfx/drawn-mario.png'):
+                        run=False
+                    else:
+                        door.select()
+
         sprite_group.update()
         col_group.update()
         player_group.update()
         point_group.update()
         window.fill(white)
+        door_group.draw(window)
         sprite_group.draw(window)
         point_group.draw(window)
         player.move()
@@ -246,6 +289,3 @@ def start_game(run):
 
         pygame.display.flip()
         clock.tick(fps)
-
-
-
