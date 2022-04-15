@@ -64,7 +64,8 @@ class Player(pygame.sprite.Sprite):
         self.index = 0
         self.images = []
         for i in range(0, 72):
-            self.images.append(pygame.image.load('gfx/puolukka'+str(i+1)+'.png'))
+            self.images.append(pygame.image.load(
+                'gfx/puolukka'+str(i+1)+'.png'))
         self.image = self.images[self.index].convert_alpha()
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
@@ -136,13 +137,9 @@ player = Player()
 player_group = pygame.sprite.GroupSingle()
 player_group.add(player)
 
-#collision = World('drawn-level-alpha-test.png')
-#collision = World('drawn-level-alpha-test-2.png')
+
 collision = World('gfx/col-1.png')
-#taakse = World('drawn-alusta.png')
-#taakse = World('drawn-level-alpha-test-2.png')
 taakse = World('gfx/bg-lines-1.png')
-#eteen = World('drawn-eteen.png')
 eteen = World('gfx/fg-1.png')
 
 points = []
