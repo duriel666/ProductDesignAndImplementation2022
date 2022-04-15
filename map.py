@@ -80,7 +80,7 @@ class Player(pygame.sprite.Sprite):
         self.image = self.images[self.index].convert_alpha()
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
-        self.pos = vec((ww/8, wh-wh/8))
+        self.pos = vec((ww/2, wh-wh/2))
         self.vel = vec(0, 0)
         self.acc = vec(0, 0)
         self.score = 0
@@ -134,9 +134,9 @@ player = Player()
 player_group = pygame.sprite.GroupSingle()
 player_group.add(player)
 
-collision = World('col-1.png')
-taakse = World('bg-lines-1.png')
-eteen = World('fg-1.png')
+collision = World('map-col.png')
+taakse = World('map.png')
+#eteen = World('fg-1.png')
 
 points = []
 points.append(Point((500, 450), ('main', './drawngame.py')))
@@ -155,9 +155,9 @@ sprite_group = pygame.sprite.Group()
 # sprite_group.add(collision)
 sprite_group.add(taakse)
 sprite_group.add(player)
-sprite_group.add(eteen)
+#sprite_group.add(eteen)
 
-world_list = [eteen, taakse, collision]
+world_list = [taakse, collision]
 for point in points:
     world_list.append(point)
 

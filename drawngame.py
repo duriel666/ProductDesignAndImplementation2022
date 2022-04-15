@@ -83,7 +83,7 @@ class Player(pygame.sprite.Sprite):
             self.index -= 1
             if self.index <= 0:
                 self.index = len(self.images)-1
-            if pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask):
+            if pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask) and self.vel.y >= -3:
                 self.vel.y -= 1
                 # if self.rect.top
         if pressed_keys[K_d]:
@@ -91,11 +91,11 @@ class Player(pygame.sprite.Sprite):
             self.index += 1
             if self.index >= len(self.images):
                 self.index = 0
-            if pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask):
+            if pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask) and self.vel.y >= -3:
                 self.vel.y -= 1
-        if self.acc.y < 0:
-            if self.rect.top < pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask):
-                self.vel.y -= -1
+        '''if self.acc.y < 0:
+            if pygame.sprite.spritecollide(self.overlap_mask(0, 1), col_group, False, collided=pygame.sprite.collide_mask):
+                self.vel.y += 1'''
 
         self.image = self.images[self.index]
 
@@ -240,8 +240,8 @@ while run:
                         str(player.vel.y), (black))
     game_font.render_to(window, (0, 60), 'player.score - ' +
                         str(player.score), (black))
-    game_font.render_to(window, (0, 90), 'points length - ' +
-                        str(str(len(points))), (black))
+    game_font.render_to(window, (0, 90), 'position - ' +
+                        str(player.pos), (black))
 
     pygame.display.flip()
     clock.tick(fps)
