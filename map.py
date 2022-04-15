@@ -124,7 +124,6 @@ class Player(pygame.sprite.Sprite):
 
 
 window = pygame.display.set_mode((ww, wh))
-pygame.display.set_caption("Drawn-map")
 
 player = Player()
 player_group = pygame.sprite.GroupSingle()
