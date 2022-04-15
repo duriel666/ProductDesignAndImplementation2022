@@ -22,13 +22,13 @@ friction = -0.08
 black = (0,  0,  0)
 white = (255, 255, 255)
 
-game_font = pygame.freetype.Font('HelveticaNeue Light.ttf', 30)
+game_font = pygame.freetype.Font('fonts/HelveticaNeue Light.ttf', 30)
 
 
 class Point(pygame.sprite.Sprite):
     def __init__(self, pos, level):
         super().__init__()
-        self.image = pygame.image.load('point.png').convert_alpha()
+        self.image = pygame.image.load('gfx/point.png').convert_alpha()
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
         self.pos = vec(pos)
@@ -76,11 +76,11 @@ class Player(pygame.sprite.Sprite):
         self.index=0
         self.images = []
         for i in range(0, 72):
-            self.images.append(pygame.image.load('puolukka'+str(i+1)+'.png'))
+            self.images.append(pygame.image.load('gfx/puolukka'+str(i+1)+'.png'))
         self.image = self.images[self.index].convert_alpha()
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
-        self.pos = vec((ww/8, wh-wh/8))
+        self.pos = vec((ww/2, wh-wh/2))
         self.vel = vec(0, 0)
         self.acc = vec(0, 0)
         self.score = 0
@@ -134,12 +134,12 @@ player = Player()
 player_group = pygame.sprite.GroupSingle()
 player_group.add(player)
 
-collision = World('col-1.png')
-taakse = World('bg-lines-1.png')
-eteen = World('fg-1.png')
+collision = World('gfx/map-col.png')
+taakse = World('gfx/map.png')
+#eteen = World('fg-1.png')
 
 points = []
-points.append(Point((500, 450), ('main', './drawngame.py')))
+points.append(Point((500, 450), ('main', '/drawngame.py')))
 
 points_found = []
 
@@ -155,9 +155,9 @@ sprite_group = pygame.sprite.Group()
 # sprite_group.add(collision)
 sprite_group.add(taakse)
 sprite_group.add(player)
-sprite_group.add(eteen)
+#sprite_group.add(eteen)
 
-world_list = [eteen, taakse, collision]
+world_list = [taakse, collision]
 for point in points:
     world_list.append(point)
 
