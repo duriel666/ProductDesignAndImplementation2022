@@ -1,10 +1,6 @@
-import imp
 import pygame
 from pygame.locals import *
-import sys
-import time
-import importlib
-import os
+from selectlevel import *
 
 pygame.init()
 pygame.font.init()
@@ -45,9 +41,9 @@ class Point(pygame.sprite.Sprite):
     
     def select(self):
         level=self.level
-        imp.load_source(level)
-        #import level 
-        self.level.main()
+        if level=='forest':
+            select_forest()
+
 
 
 
@@ -128,7 +124,6 @@ class Player(pygame.sprite.Sprite):
 
 
 window = pygame.display.set_mode((ww, wh))
-pygame.display.set_caption("Drawn-map")
 
 player = Player()
 player_group = pygame.sprite.GroupSingle()
@@ -139,7 +134,7 @@ taakse = World('gfx/map.png')
 #eteen = World('fg-1.png')
 
 points = []
-points.append(Point((500, 450), ('main', '/drawngame.py')))
+points.append(Point((1500, -50), 'forest'))
 
 points_found = []
 
@@ -163,74 +158,72 @@ for point in points:
 
 clock = pygame.time.Clock()
 
-run = True
-
-while run:
-    for event in pygame.event.get():
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_ESCAPE:
+def start_game(run):
+    while run:
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    run = False
+            if event.type == pygame.QUIT:
                 run = False
-        if event.type == pygame.QUIT:
-            run = False
 
-    speed_x = player.vel.x
-    speed_y = player.vel.y
-    if player.pos.x < ww/4 and player.vel.x < 0 and collision.pos.x < 0:
-        for world in world_list:
-            world.scroll_x(-(speed_x))
-        player.vel.x = 0
-        player.pos.x -= speed_x
-    elif player.pos.x > ww-(ww/4) and player.vel.x > 0 and collision.pos.x > (-gw+ww):
-        for world in world_list:
-            world.scroll_x(-(speed_x))
-        player.vel.x = 0
-        player.pos.x -= speed_x
-    if player.pos.y < wh/3 and player.vel.y < 0 and collision.pos.y < 0:
-        for world in world_list:
-            world.scroll_y(-(speed_y))
-        player.vel.y = 0
-        player.pos.y -= speed_y
-    elif player.pos.y > wh-(wh/3) and player.vel.y > 0 and collision.pos.y > (-gh+wh):
-        for world in world_list:
-            world.scroll_y(-(speed_y))
-        player.vel.y = 0
-        player.pos.y -= speed_y
-    else:
-        for world in world_list:
-            world.scroll_x(0)
-            world.scroll_y(0)
+        speed_x = player.vel.x
+        speed_y = player.vel.y
+        if player.pos.x < ww/4 and player.vel.x < 0 and collision.pos.x < 0:
+            for world in world_list:
+                world.scroll_x(-(speed_x))
+            player.vel.x = 0
+            player.pos.x -= speed_x
+        elif player.pos.x > ww-(ww/4) and player.vel.x > 0 and collision.pos.x > (-gw+ww):
+            for world in world_list:
+                world.scroll_x(-(speed_x))
+            player.vel.x = 0
+            player.pos.x -= speed_x
+        if player.pos.y < wh/3 and player.vel.y < 0 and collision.pos.y < 0:
+            for world in world_list:
+                world.scroll_y(-(speed_y))
+            player.vel.y = 0
+            player.pos.y -= speed_y
+        elif player.pos.y > wh-(wh/3) and player.vel.y > 0 and collision.pos.y > (-gh+wh):
+            for world in world_list:
+                world.scroll_y(-(speed_y))
+            player.vel.y = 0
+            player.pos.y -= speed_y
+        else:
+            for world in world_list:
+                world.scroll_x(0)
+                world.scroll_y(0)
+            player.vel.x = speed_x
+            player.vel.y = speed_y
         player.vel.x = speed_x
         player.vel.y = speed_y
-    player.vel.x = speed_x
-    player.vel.y = speed_y
 
-    for point in points:
-        if pygame.sprite.spritecollide(point, player_group, False, collided=pygame.sprite.collide_mask):
-            pressed_keys = pygame.key.get_pressed()
-            if pressed_keys[K_e]:
-                point.select()
-    player.score = -int(len(points))+int(score_count)
+        for point in points:
+            if pygame.sprite.spritecollide(point, player_group, False, collided=pygame.sprite.collide_mask):
+                pressed_keys = pygame.key.get_pressed()
+                if pressed_keys[K_e]:
+                    point.select()
+        player.score = -int(len(points))+int(score_count)
 
-    sprite_group.update()
-    col_group.update()
-    player_group.update()
-    point_group.update()
-    player.update()
-    window.fill(white)
-    sprite_group.draw(window)
-    point_group.draw(window)
-    player.move()
+        sprite_group.update()
+        col_group.update()
+        player_group.update()
+        point_group.update()
+        player.update()
+        window.fill(white)
+        sprite_group.draw(window)
+        point_group.draw(window)
+        player.move()
 
-    game_font.render_to(window, (0, 0), 'player.vel.x - ' +
-                        str(player.vel.x), (black))
-    game_font.render_to(window, (0, 30), 'player.vel.y - ' +
-                        str(player.vel.y), (black))
-    game_font.render_to(window, (0, 60), 'player.score - ' +
-                        str(player.score), (black))
-    game_font.render_to(window, (0, 90), 'points length - ' +
-                        str(str(len(points))), (black))
+        game_font.render_to(window, (0, 0), 'player.vel.x - ' +
+                            str(player.vel.x), (black))
+        game_font.render_to(window, (0, 30), 'player.vel.y - ' +
+                            str(player.vel.y), (black))
+        game_font.render_to(window, (0, 60), 'player.score - ' +
+                            str(player.score), (black))
+        game_font.render_to(window, (0, 90), 'points length - ' +
+                            str(str(len(points))), (black))
 
-    pygame.display.flip()
-    clock.tick(fps)
+        pygame.display.flip()
+        clock.tick(fps)
 
-pygame.quit()

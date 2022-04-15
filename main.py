@@ -4,18 +4,16 @@ from menu import *
 
 pygame.init()
 
-ww = 1600
-wh = 900
-fps = 120
-acceleration = 0.2
-friction = -0.04
+pygame.display.set_caption("Game - 0.2")
+
+
+ww = 1600  # window width
+wh = 900  # window height
+
 black = (0,  0,  0)
+white = (255, 255, 255)
 
 time_start = time.time()
-
-SURFACE = pygame.HWSURFACE | pygame.DOUBLEBUF
-window = pygame.display.set_mode((ww, wh), SURFACE)
-pygame.display.set_caption("Drawn-testi 01")
 
 if __name__ == "__main__":
     gamemenu()

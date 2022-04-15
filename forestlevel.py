@@ -82,25 +82,27 @@ class Player(pygame.sprite.Sprite):
     def move(self):
         self.acc = vec(0, acceleration)
         pressed_keys = pygame.key.get_pressed()
+        hits = pygame.sprite.spritecollide(
+            self, col_group, False, collided=pygame.sprite.collide_mask)
 
         if pressed_keys[K_a]:
             self.acc.x = -acceleration
             self.index -= 1
             if self.index <= 0:
                 self.index = len(self.images)-1
-            if pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask) and self.vel.y >= -4:
+            if hits and self.vel.y >= -4:
                 self.vel.y -= 1
-                # if self.rect.top
         if pressed_keys[K_d]:
             self.acc.x = acceleration
             self.index += 1
             if self.index >= len(self.images):
                 self.index = 0
-            if pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask) and self.vel.y >= -4:
+            if hits and self.vel.y >= -4:
                 self.vel.y -= 1
-        '''if self.acc.y < 0:
-            if pygame.sprite.spritecollide(self.overlap_mask(0, 1), col_group, False, collided=pygame.sprite.collide_mask):
-                self.vel.y += 1'''
+        '''if hits and self.vel.x != 0:
+            self.pos.y-=1
+            if hits:
+                self.vel.x = -self.vel.x'''
 
         self.image = self.images[self.index]
 
@@ -109,6 +111,14 @@ class Player(pygame.sprite.Sprite):
         self.pos += self.vel + acceleration * self.acc
 
         self.rect.midbottom = self.pos
+
+        if self.vel.y > 0:
+            if hits:
+                if self.vel.y >= 0.6:
+                    self.vel.y = -self.vel.y*.6
+                else:
+                    self.vel.y = -0.6
+                self.jumping = False
 
     def jump(self):
         if not self.jumping:
@@ -120,18 +130,8 @@ class Player(pygame.sprite.Sprite):
             if self.vel.y < -3:
                 self.vel.y = -3
 
-    def update(self):
-        hits = pygame.sprite.spritecollide(
-            self, col_group, False, collided=pygame.sprite.collide_mask)
-        if self.vel.y > 0:
-            if hits:
-                self.pos.y -= 1
-                self.vel.y = 0
-                self.jumping = False
-
 
 window = pygame.display.set_mode((ww, wh))
-pygame.display.set_caption("Drawn-testi 01")
 
 player = Player()
 player_group = pygame.sprite.GroupSingle()
@@ -171,80 +171,81 @@ for point in points:
 
 clock = pygame.time.Clock()
 
-run = True
 
-while run:
-    for event in pygame.event.get():
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_ESCAPE:
+def start_game(run):
+    while run:
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    run = False
+                    return player.score
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_w:
+                    player.jump()
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_w:
+                    player.cancel_jump()
+            if event.type == pygame.QUIT:
                 run = False
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_w:
-                player.jump()
-        if event.type == pygame.KEYUP:
-            if event.key == pygame.K_w:
-                player.cancel_jump()
-        if event.type == pygame.QUIT:
-            run = False
 
-    speed_x = player.vel.x
-    speed_y = player.vel.y
-    if player.pos.x < ww/4 and player.vel.x < 0 and collision.pos.x < 0:
-        for world in world_list:
-            world.scroll_x(-(speed_x))
-        player.vel.x = 0
-        player.pos.x -= speed_x
-    elif player.pos.x > ww-(ww/4) and player.vel.x > 0 and collision.pos.x > (-gw+ww):
-        for world in world_list:
-            world.scroll_x(-(speed_x))
-        player.vel.x = 0
-        player.pos.x -= speed_x
-    if player.pos.y < wh/3 and player.vel.y < 0 and collision.pos.y < 0:
-        for world in world_list:
-            world.scroll_y(-(speed_y))
-        player.vel.y = 0
-        player.pos.y -= speed_y
-    elif player.pos.y > wh-(wh/3) and player.vel.y > 0 and collision.pos.y > (-gh+wh):
-        for world in world_list:
-            world.scroll_y(-(speed_y))
-        player.vel.y = 0
-        player.pos.y -= speed_y
-    else:
-        for world in world_list:
-            world.scroll_x(0)
-            world.scroll_y(0)
+        speed_x = player.vel.x
+        speed_y = player.vel.y
+        if player.pos.x < ww/4 and player.vel.x < 0 and collision.pos.x < 0:
+            for world in world_list:
+                world.scroll_x(-(speed_x))
+            player.vel.x = 0
+            player.pos.x -= speed_x
+        elif player.pos.x > ww-(ww/4) and player.vel.x > 0 and collision.pos.x > (-gw+ww):
+            for world in world_list:
+                world.scroll_x(-(speed_x))
+            player.vel.x = 0
+            player.pos.x -= speed_x
+        if player.pos.y < wh/3 and player.vel.y < 0 and collision.pos.y < 0:
+            for world in world_list:
+                world.scroll_y(-(speed_y))
+            player.vel.y = 0
+            player.pos.y -= speed_y
+        elif player.pos.y > wh-(wh/3) and player.vel.y > 0 and collision.pos.y > (-gh+wh):
+            for world in world_list:
+                world.scroll_y(-(speed_y))
+            player.vel.y = 0
+            player.pos.y -= speed_y
+        else:
+            for world in world_list:
+                world.scroll_x(0)
+                world.scroll_y(0)
+            player.vel.x = speed_x
+            player.vel.y = speed_y
         player.vel.x = speed_x
         player.vel.y = speed_y
-    player.vel.x = speed_x
-    player.vel.y = speed_y
 
-    for point in points:
-        if (pygame.sprite.spritecollide(point, player_group, False, collided=pygame.sprite.collide_mask)):
-            point.kill()
-            points_found.append(point)
-            points.remove(point)
-    player.score = -int(len(points))+int(score_count)
+        for point in points:
+            if (pygame.sprite.spritecollide(point, player_group, False, collided=pygame.sprite.collide_mask)):
+                point.kill()
+                points_found.append(point)
+                points.remove(point)
+        player.score = -int(len(points))+int(score_count)
 
-    sprite_group.update()
-    col_group.update()
-    player_group.update()
-    point_group.update()
-    player.update()
-    window.fill(white)
-    sprite_group.draw(window)
-    point_group.draw(window)
-    player.move()
+        sprite_group.update()
+        col_group.update()
+        player_group.update()
+        point_group.update()
+        window.fill(white)
+        sprite_group.draw(window)
+        point_group.draw(window)
+        player.move()
 
-    game_font.render_to(window, (0, 0), 'player.vel.x - ' +
-                        str(player.vel.x), (black))
-    game_font.render_to(window, (0, 30), 'player.vel.y - ' +
-                        str(player.vel.y), (black))
-    game_font.render_to(window, (0, 60), 'player.score - ' +
-                        str(player.score), (black))
-    game_font.render_to(window, (0, 90), 'position - ' +
-                        str(player.pos), (black))
+        game_font.render_to(window, (0, 0), 'player.vel.x - ' +
+                            str(player.vel.x), (black))
+        game_font.render_to(window, (0, 30), 'player.vel.y - ' +
+                            str(player.vel.y), (black))
+        game_font.render_to(window, (0, 60), 'player.score - ' +
+                            str(player.score), (black))
+        game_font.render_to(window, (0, 90), 'position - ' +
+                            str(player.pos), (black))
 
-    pygame.display.flip()
-    clock.tick(fps)
+        pygame.display.flip()
+        clock.tick(fps)
 
-pygame.quit()
+
+start_game(True)
