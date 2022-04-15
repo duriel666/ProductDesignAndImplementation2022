@@ -248,4 +248,4 @@ def start_game(run):
         clock.tick(fps)
 
 
-start_game(True)
+

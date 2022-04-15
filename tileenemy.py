@@ -7,7 +7,7 @@ class Enemy(pygame.sprite.Sprite): #pygame sprite has a buildin draw method
     def __init__(self, pos):
         pygame.sprite.Sprite.__init__(self)
 		
-        self.image = pygame.image.load('enemy.png')
+        self.image = pygame.image.load('gfx/enemy.png')
         self.rect = self.image.get_rect()
         self.rect.x = pos[0]
         self.rect.y = pos[1]

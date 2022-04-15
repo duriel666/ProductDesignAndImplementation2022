@@ -22,9 +22,9 @@ game_font = pygame.freetype.Font('fonts/HelveticaNeue Light.ttf', 30)
 
 
 class Point(pygame.sprite.Sprite):
-    def __init__(self, pos, level):
+    def __init__(self, pos, level, level_image):
         super().__init__()
-        self.image = pygame.image.load('gfx/point.png').convert_alpha()
+        self.image = pygame.image.load(level_image).convert_alpha()
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
         self.pos = vec(pos)
@@ -134,7 +134,9 @@ taakse = World('gfx/map.png')
 #eteen = World('fg-1.png')
 
 points = []
-points.append(Point((1500, -50), 'forest'))
+points.append(Point((1500, -50), 'forest', 'gfx/drawn-mario.png'))
+points.append(Point((1000, -850), 'level2', 'gfx/drawn-mario.png'))
+points.append(Point((800, 550), 'beach', 'gfx/drawn-mario.png'))
 
 points_found = []
 
