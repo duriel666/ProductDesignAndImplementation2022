@@ -1,10 +1,5 @@
 import pygame
-from drawngame import *
-
-
-def select():
-    print()
-
+from map import *
 
 def gamemenu():
-    select()
+    start_game(True)
