@@ -82,25 +82,27 @@ class Player(pygame.sprite.Sprite):
     def move(self):
         self.acc = vec(0, acceleration)
         pressed_keys = pygame.key.get_pressed()
+        hits = pygame.sprite.spritecollide(
+            self, col_group, False, collided=pygame.sprite.collide_mask)
 
         if pressed_keys[K_a]:
             self.acc.x = -acceleration
             self.index -= 1
             if self.index <= 0:
                 self.index = len(self.images)-1
-            if pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask) and self.vel.y >= -4:
+            if hits and self.vel.y >= -4:
                 self.vel.y -= 1
-                # if self.rect.top
         if pressed_keys[K_d]:
             self.acc.x = acceleration
             self.index += 1
             if self.index >= len(self.images):
                 self.index = 0
-            if pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask) and self.vel.y >= -4:
+            if hits and self.vel.y >= -4:
                 self.vel.y -= 1
-        '''if self.acc.y < 0:
-            if pygame.sprite.spritecollide(self.overlap_mask(0, 1), col_group, False, collided=pygame.sprite.collide_mask):
-                self.vel.y += 1'''
+        '''if hits and self.vel.x != 0:
+            self.pos.y-=1
+            if hits:
+                self.vel.x = -self.vel.x'''
 
         self.image = self.images[self.index]
 
@@ -110,14 +112,12 @@ class Player(pygame.sprite.Sprite):
 
         self.rect.midbottom = self.pos
 
-        hits = pygame.sprite.spritecollide(
-            self, col_group, False, collided=pygame.sprite.collide_mask)
         if self.vel.y > 0:
             if hits:
-                if self.vel.y<=-0.6:
-                    self.vel.y = -self.vel.y*.5
+                if self.vel.y >= 0.6:
+                    self.vel.y = -self.vel.y*.6
                 else:
-                    self.vel.y=-0.6
+                    self.vel.y = -0.6
                 self.jumping = False
 
     def jump(self):
@@ -170,6 +170,7 @@ for point in points:
     world_list.append(point)
 
 clock = pygame.time.Clock()
+
 
 def start_game(run):
     while run:
@@ -245,5 +246,6 @@ def start_game(run):
 
         pygame.display.flip()
         clock.tick(fps)
+
 
 start_game(True)
