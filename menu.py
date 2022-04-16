@@ -12,12 +12,22 @@ res = (720, 720)
 
 
 black = (0,  0,  0)
-white = (200, 200, 200)
-grey = (50, 50, 50)
+white = (180, 180, 180)
+white2 = (230, 230, 230)
+select = (255, 255, 255,50)
+background=(50,150,50)
+shadow=(10,10,10,150)
+shadow2=(10,10,10,150)
 ww = screen.get_width()
 wh = screen.get_height()
-text = game_font.render('quit', True, grey)
 
+menu_bg = pygame.image.load('gfx/menu-bg.png')
+menu_bg = pygame.transform.scale(menu_bg, (ww, wh))
+
+def rect_a(surface, color, rect):
+    shape_surf = pygame.Surface(pygame.Rect(rect).size, pygame.SRCALPHA)
+    pygame.draw.rect(shape_surf, color, shape_surf.get_rect())
+    surface.blit(shape_surf, rect)
 
 def gamemenu(run):
     while run:
@@ -28,18 +38,30 @@ def gamemenu(run):
             if event.type == pygame.QUIT:
                 pygame.quit()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if ww/2-625 <= mouse[0] <= ww/2-325 and wh/2-265 <= mouse[1] <= wh/2-190:
+                if 175 <= mouse[0] <= 500 and 185 <= mouse[1] <= 260:
                     start_game(True)
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if ww/2-625 <= mouse[0] <= ww/2-325 and wh/2-165 <= mouse[1] <= wh/2-90:
+                if 175 <= mouse[0] <= 500 and 285 <= mouse[1] <= 360:
                     pygame.quit()
                     run = False
-        screen.fill((black))
+        screen.fill((background))
+        window.blit(menu_bg,(0,0))
         mouse = pygame.mouse.get_pos()
-        if ww/2-625 <= mouse[0] <= ww/2-325 and wh/2-265 <= mouse[1] <= wh/2-190:
-            pygame.draw.rect(screen, grey, [ww/2-625, wh/2-265, 300, 75])
-        if ww/2-625 <= mouse[0] <= ww/2-325 and wh/2-165 <= mouse[1] <= wh/2-90:
-            pygame.draw.rect(screen, grey, [ww/2-625, wh/2-165, 300, 75])
-        game_font.render_to(window, (ww/2-600, wh/2-250), 'START', (white))
-        game_font.render_to(window, (ww/2-600, wh/2-150), 'QUIT', (white))
+        if 175 <= mouse[0] <= 525 and 185 <= mouse[1] <= 260:
+            #pygame.draw.rect(screen, select, [ww/2-625, wh/2-265, 300, 75])
+            rect_a(window,select,(175, 185, 400, 75))
+            game_font.render_to(window, (197, 203), 'START', (shadow2))
+            game_font.render_to(window, (200, 200), 'START', (white2))
+        else:
+            game_font.render_to(window, (197, 203), 'START', (shadow))
+            game_font.render_to(window, (200, 200), 'START', (white))
+        if 175 <= mouse[0] <= 525 and 285 <= mouse[1] <= 360:
+            #pygame.draw.rect(screen, select, [ww/2-625, wh/2-165, 300, 75])
+            rect_a(window,select,(175, 285, 400, 75))
+            game_font.render_to(window, (197, 303), 'QUIT', (shadow2))
+            game_font.render_to(window, (200, 300), 'QUIT', (white2))
+        else:
+            game_font.render_to(window, (197, 303), 'QUIT', (shadow))
+            game_font.render_to(window, (200, 300), 'QUIT', (white))
+
         pygame.display.update()
