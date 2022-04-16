@@ -117,9 +117,9 @@ class Player(pygame.sprite.Sprite):
                 self.index = len(self.images)-1
             if hits and self.vel.y >= -4:
                 self.vel.y -= 1
-            if self.vel.x<0:
+            if self.vel.x < 0:
                 if hits_wall:
-                    self.vel.x=2
+                    self.vel.x = 2
         if pressed_keys[K_d]:
             self.acc.x = acceleration
             self.index += 1
@@ -127,14 +127,14 @@ class Player(pygame.sprite.Sprite):
                 self.index = 0
             if hits and self.vel.y >= -4:
                 self.vel.y -= 1
-            if self.vel.x>0:
+            if self.vel.x > 0:
                 if hits_wall:
-                    self.vel.x=-2
-        if self.vel.y<0:
+                    self.vel.x = -2
+        if self.vel.y < 0:
             if hits_wall:
-                self.vel.y=-self.vel.y
+                self.vel.y = -self.vel.y
             if hits and hits_wall:
-                self.vel.y=-3
+                self.vel.y = -3
         self.image = self.images[self.index]
 
         self.acc.x += self.vel.x * friction
@@ -209,7 +209,7 @@ sprite_group.add(taakse)
 sprite_group.add(player)
 sprite_group.add(eteen)
 
-world_list = [eteen, taakse, collision_wall,collision_floor]
+world_list = [eteen, taakse, collision_wall, collision_floor]
 for point in points:
     world_list.append(point)
 for door in doors:
