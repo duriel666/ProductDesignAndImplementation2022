@@ -5,7 +5,7 @@ from tilethings import import_folder
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos):
         super().__init__()
-        #self.import_character()
+        # self.import_character()
         self.frame_index = 0
         self.animation_speed = 0.15
         self.index = 0
@@ -33,19 +33,19 @@ class Player(pygame.sprite.Sprite):
         keys = pygame.key.get_pressed()
         self.index = 0
 
-        if keys[pygame.K_RIGHT]:
+        if keys[pygame.K_d]:
             self.direction.x = 1
             self.index += 1
             if self.index >= len(self.images):
                 self.index = 0
-        elif keys[pygame.K_LEFT]:
+        elif keys[pygame.K_a]:
             self.direction.x = -1
             self.index -= 1
             if self.index <= 0:
                 self.index = len(self.images)-1
         else:
             self.direction.x = 0
-        if keys[pygame.K_SPACE]:
+        if keys[pygame.K_w]:
             self.jump()
 
     def add_gravity(self):

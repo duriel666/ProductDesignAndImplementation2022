@@ -6,7 +6,6 @@ pygame.init()
 
 pygame.display.set_caption("Game - 0.2")
 
-
 ww = 1600  # window width
 wh = 900  # window height
 
@@ -16,4 +15,4 @@ white = (255, 255, 255)
 time_start = time.time()
 
 if __name__ == "__main__":
-    gamemenu()
+    gamemenu(True)

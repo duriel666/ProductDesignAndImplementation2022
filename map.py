@@ -1,6 +1,6 @@
 import pygame
 from pygame.locals import *
-from selectlevel import *
+from selectdrawnlevel import *
 
 pygame.init()
 pygame.font.init()
@@ -29,7 +29,7 @@ class Point(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.pos = vec(pos)
         self.vel = vec(0, 0)
-        self.level=level
+        self.level = level
 
     def scroll_x(self, speed):
         self.rect.topleft = self.pos
@@ -38,14 +38,10 @@ class Point(pygame.sprite.Sprite):
     def scroll_y(self, speed):
         self.rect.topleft = self.pos
         self.pos.y += speed
-    
+
     def select(self):
-        level=self.level
-        if level=='forest':
+        if self.level == 'forest':
             select_forest()
-
-
-
 
 
 class World(pygame.sprite.Sprite):
@@ -69,10 +65,11 @@ class World(pygame.sprite.Sprite):
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.index=0
+        self.index = 0
         self.images = []
         for i in range(0, 72):
-            self.images.append(pygame.image.load('gfx/puolukka'+str(i+1)+'.png'))
+            self.images.append(pygame.image.load(
+                'gfx/puolukka'+str(i+1)+'.png'))
         self.image = self.images[self.index].convert_alpha()
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
@@ -87,33 +84,33 @@ class Player(pygame.sprite.Sprite):
 
         if pressed_keys[K_a]:
             self.acc.x = -acceleration
-            self.index-=1
-            if self.index<=0:
-                self.index=len(self.images)-1
+            self.index -= 1
+            if self.index <= 0:
+                self.index = len(self.images)-1
             if pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask):
                 self.vel.x = 2
         if pressed_keys[K_d]:
             self.acc.x = acceleration
-            self.index+=1
-            if self.index>=len(self.images):
-                self.index=0
+            self.index += 1
+            if self.index >= len(self.images):
+                self.index = 0
             if pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask):
                 self.vel.x = -2
         if pressed_keys[K_w]:
             self.acc.y = -acceleration
-            self.index-=1
-            if self.index<=0:
-                self.index=len(self.images)-1
+            self.index -= 1
+            if self.index <= 0:
+                self.index = len(self.images)-1
             if pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask):
                 self.vel.y = 2
         if pressed_keys[K_s]:
             self.acc.y = acceleration
-            self.index+=1
-            if self.index>=len(self.images):
-                self.index=0
+            self.index += 1
+            if self.index >= len(self.images):
+                self.index = 0
             if pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask):
                 self.vel.y = -2
-        
+
         self.image = self.images[self.index]
 
         self.acc += self.vel * friction
@@ -152,13 +149,14 @@ sprite_group = pygame.sprite.Group()
 # sprite_group.add(collision)
 sprite_group.add(taakse)
 sprite_group.add(player)
-#sprite_group.add(eteen)
+# sprite_group.add(eteen)
 
 world_list = [taakse, collision]
 for point in points:
     world_list.append(point)
 
 clock = pygame.time.Clock()
+
 
 def start_game(run):
     while run:
@@ -168,6 +166,11 @@ def start_game(run):
                     run = False
             if event.type == pygame.QUIT:
                 run = False
+            for point in points:
+                if pygame.sprite.spritecollide(point, player_group, False, collided=pygame.sprite.collide_mask):
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_e:
+                            point.select()
 
         speed_x = player.vel.x
         speed_y = player.vel.y
@@ -200,11 +203,6 @@ def start_game(run):
         player.vel.x = speed_x
         player.vel.y = speed_y
 
-        for point in points:
-            if pygame.sprite.spritecollide(point, player_group, False, collided=pygame.sprite.collide_mask):
-                pressed_keys = pygame.key.get_pressed()
-                if pressed_keys[K_e]:
-                    point.select()
         player.score = -int(len(points))+int(score_count)
 
         sprite_group.update()
@@ -228,4 +226,3 @@ def start_game(run):
 
         pygame.display.flip()
         clock.tick(fps)
-
