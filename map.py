@@ -41,7 +41,7 @@ class Point(pygame.sprite.Sprite):
 
     def select(self):
         if self.level == 'forest':
-            select_forest()
+            return select_forest(player.score)
 
 
 class World(pygame.sprite.Sprite):
@@ -76,7 +76,7 @@ class Player(pygame.sprite.Sprite):
         self.pos = vec((ww/2, wh-wh/2))
         self.vel = vec(0, 0)
         self.acc = vec(0, 0)
-        self.score = 0
+        self.score = player.score
 
     def move(self):
         self.acc = vec(0, 0)
@@ -164,8 +164,10 @@ def start_game(run):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     run = False
+                    return player.score
             if event.type == pygame.QUIT:
                 run = False
+                return player.score
             for point in points:
                 if pygame.sprite.spritecollide(point, player_group, False, collided=pygame.sprite.collide_mask):
                     if event.type == pygame.KEYDOWN:
@@ -202,8 +204,6 @@ def start_game(run):
             player.vel.y = speed_y
         player.vel.x = speed_x
         player.vel.y = speed_y
-
-        player.score = -int(len(points))+int(score_count)
 
         sprite_group.update()
         col_group.update()

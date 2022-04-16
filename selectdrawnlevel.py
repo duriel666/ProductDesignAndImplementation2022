@@ -2,6 +2,5 @@ import pygame
 from forestlevel import *
 
 
-def select_forest():
-    score = start_game(True)
-    return score
+def select_forest(score):
+    return start_game(True, score)

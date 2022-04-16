@@ -35,12 +35,14 @@ def gamemenu(run):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     run = False
+                    return player.score
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if 175 <= mouse[0] <= 575 and 185 <= mouse[1] <= 260:
                     start_game(True)
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if 175 <= mouse[0] <= 575 and 285 <= mouse[1] <= 360:
                     run = False
+                    return player.score
             if event.type == pygame.QUIT:
                 pygame.quit()
         screen.fill((background))

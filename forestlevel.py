@@ -45,7 +45,7 @@ class Door(pygame.sprite.Sprite):
         if self.level == 'map':
             return 'map'
         if self.level == 'tile':
-            select_forest_tile()
+            return select_forest_tile(player.score)
 
 
 class Point(pygame.sprite.Sprite):
@@ -218,7 +218,8 @@ for door in doors:
 clock = pygame.time.Clock()
 
 
-def start_game(run):
+def start_game(run, score):
+    player.score = score
     while run:
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
@@ -233,12 +234,14 @@ def start_game(run):
                     player.cancel_jump()
             if event.type == pygame.QUIT:
                 run = False
+                return player.score
             for door in doors:
                 if pygame.sprite.spritecollide(door, player_group, False, collided=pygame.sprite.collide_mask):
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_e:
                             if door.select() == 'map':
                                 run = False
+                                return player.score
                             else:
                                 door.select()
 
