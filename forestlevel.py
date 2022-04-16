@@ -72,7 +72,7 @@ class World(pygame.sprite.Sprite):
         self.image = pygame.image.load(world_image).convert_alpha()
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
-        self.pos = vec((0, -gh+wh))
+        self.pos = vec(0, -gh+wh)
         self.vel = vec(0, 0)
 
     def scroll_x(self, speed):
@@ -95,13 +95,9 @@ class Player(pygame.sprite.Sprite):
         self.image = self.images[self.index].convert_alpha()
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
-        self.pos = vec((ww/8, wh-wh/8))
+        self.pos = vec(ww/8, wh-wh/8)
         self.vel = vec(0, 0)
         self.acc = vec(0, 0)
-        '''self.dx = self.mask.overlap_area(
-            col_group, (ww+1, wh)) - self.mask.overlap_area(col_group, (ww-1, wh))
-        self.dy = self.mask.overlap_area(
-            col_group, (ww, wh+1)) - self.mask.overlap_area(col_group, (ww, wh-1))'''
         self.jumping = False
         self.button = False
         self.score = 0
@@ -111,6 +107,8 @@ class Player(pygame.sprite.Sprite):
         pressed_keys = pygame.key.get_pressed()
         hits = pygame.sprite.spritecollide(
             self, col_group, False, collided=pygame.sprite.collide_mask)
+        hits_wall = pygame.sprite.spritecollide(
+            self, col_group_wall, False, collided=pygame.sprite.collide_mask)
 
         if pressed_keys[K_a]:
             self.acc.x = -acceleration
@@ -119,6 +117,9 @@ class Player(pygame.sprite.Sprite):
                 self.index = len(self.images)-1
             if hits and self.vel.y >= -4:
                 self.vel.y -= 1
+            if self.vel.x<0:
+                if hits_wall:
+                    self.vel.x=2
         if pressed_keys[K_d]:
             self.acc.x = acceleration
             self.index += 1
@@ -126,11 +127,14 @@ class Player(pygame.sprite.Sprite):
                 self.index = 0
             if hits and self.vel.y >= -4:
                 self.vel.y -= 1
-        '''if hits and self.vel.x != 0:
-            self.pos.y-=1
-            if hits:
-                self.vel.x = -self.vel.x'''
-
+            if self.vel.x>0:
+                if hits_wall:
+                    self.vel.x=-2
+        if self.vel.y<0:
+            if hits_wall:
+                self.vel.y=-self.vel.y
+            if hits and hits_wall:
+                self.vel.y=-3
         self.image = self.images[self.index]
 
         self.acc.x += self.vel.x * friction
@@ -141,6 +145,12 @@ class Player(pygame.sprite.Sprite):
 
         if self.vel.y > 0:
             if hits:
+                if self.vel.y >= 0.6:
+                    self.vel.y = -self.vel.y*.6
+                else:
+                    self.vel.y = -0.6
+                self.jumping = False
+            if hits and hits_wall:
                 if self.vel.y >= 0.6:
                     self.vel.y = -self.vel.y*.6
                 else:
@@ -164,7 +174,9 @@ player = Player()
 player_group = pygame.sprite.GroupSingle()
 player_group.add(player)
 
-collision = World('gfx/forest-col.png')
+#collision = World('gfx/forest-col.png')
+collision_wall = World('gfx/forest-col-wall.png')
+collision_floor = World('gfx/forest-col-floor.png')
 taakse = World(f'gfx/forest-bg.png')
 eteen = World('gfx/forest-fg.png')
 
@@ -180,7 +192,7 @@ for point in points:
     point_group.add(point)
 
 doors = []
-doors.append(Door((400, 770), 'map', 'gfx/drawn-mario.png'))
+doors.append(Door((200, 770), 'map', 'gfx/drawn-mario.png'))
 doors.append(Door((4650, -1808), 'tile', 'gfx/drawn-mario.png'))
 door_group = pygame.sprite.Group()
 for door in doors:
@@ -189,13 +201,15 @@ for door in doors:
 score_count = int(len(points))
 
 col_group = pygame.sprite.Group()
-col_group.add(collision)
+col_group.add(collision_floor)
+col_group_wall = pygame.sprite.Group()
+col_group_wall.add(collision_wall)
 sprite_group = pygame.sprite.Group()
 sprite_group.add(taakse)
 sprite_group.add(player)
 sprite_group.add(eteen)
 
-world_list = [eteen, taakse, collision]
+world_list = [eteen, taakse, collision_wall,collision_floor]
 for point in points:
     world_list.append(point)
 for door in doors:
@@ -230,22 +244,22 @@ def start_game(run):
 
         speed_x = player.vel.x
         speed_y = player.vel.y
-        if player.pos.x < ww/4 and player.vel.x < 0 and collision.pos.x < 0:
+        if player.pos.x < ww/4 and player.vel.x < 0 and collision_floor.pos.x < 0:
             for world in world_list:
                 world.scroll_x(-(speed_x))
             player.vel.x = 0
             player.pos.x -= speed_x
-        elif player.pos.x > ww-(ww/4) and player.vel.x > 0 and collision.pos.x > (-gw+ww):
+        elif player.pos.x > ww-(ww/4) and player.vel.x > 0 and collision_floor.pos.x > (-gw+ww):
             for world in world_list:
                 world.scroll_x(-(speed_x))
             player.vel.x = 0
             player.pos.x -= speed_x
-        if player.pos.y < wh/3 and player.vel.y < 0 and collision.pos.y < 0:
+        if player.pos.y < wh/3 and player.vel.y < 0 and collision_floor.pos.y < 0:
             for world in world_list:
                 world.scroll_y(-(speed_y))
             player.vel.y = 0
             player.pos.y -= speed_y
-        elif player.pos.y > wh-(wh/3) and player.vel.y > 0 and collision.pos.y > (-gh+wh):
+        elif player.pos.y > wh-(wh/3) and player.vel.y > 0 and collision_floor.pos.y > (-gh+wh):
             for world in world_list:
                 world.scroll_y(-(speed_y))
             player.vel.y = 0
