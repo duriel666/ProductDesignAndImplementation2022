@@ -4,7 +4,7 @@ from tilegame import *
 
 
 def select_beach_tile(score):
-    nothing = 0
+    return start_game(True, score)
 
 
 def select_forest_tile(score):

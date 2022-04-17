@@ -233,7 +233,7 @@ for door in doors:
 clock = pygame.time.Clock()
 
 
-def start_game(run, score):
+def start_game_forest(run, score):
     player.score = score
     music_volume = 0
     while run:
