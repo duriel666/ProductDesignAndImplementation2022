@@ -24,6 +24,10 @@ white = (255, 255, 255)
 game_font = pygame.freetype.Font('fonts/HelveticaNeue Light.ttf', 30)
 
 volume_up, timer = pygame.USEREVENT+1, 100
+bounce = pygame.mixer.Sound('audio/ball-on-grass.mp3')
+point_get = pygame.mixer.Sound('audio/forest-point.mp3')
+point_get.set_volume(0.4)
+
 pygame.time.set_timer(volume_up, timer)
 
 
@@ -108,6 +112,7 @@ class Player(pygame.sprite.Sprite):
 
     def move(self):
         self.acc = vec(0, acceleration)
+        sound_volume = 0
         key = pygame.key.get_pressed()
         hits = pygame.sprite.spritecollide(
             self, col_group, False, collided=pygame.sprite.collide_mask)
@@ -160,6 +165,13 @@ class Player(pygame.sprite.Sprite):
                 else:
                     self.vel.y = -0.6
                 self.jumping = False
+        sound_volume = -self.vel.y/40
+        if sound_volume > 1:
+            sound_volume = 1
+
+        if hits or hits_wall and sound_volume > 0.3:
+            bounce.set_volume(sound_volume)
+            bounce.play()
 
     def jump(self):
         if not self.jumping:
@@ -293,6 +305,7 @@ def start_game(run, score):
                 point.kill()
                 points_found.append(point)
                 points.remove(point)
+                point_get.play()
         player.score = -int(len(points))+int(score_count)
 
         sprite_group.update()
