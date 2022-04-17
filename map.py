@@ -89,65 +89,73 @@ class Player(pygame.sprite.Sprite):
             self.index -= 1
             if self.index <= 0:
                 self.index = len(self.images)-1
-            if pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask):
-                self.vel.x = 2
-                self.vel.y = 2
+
         elif pressed_keys[K_a] and pressed_keys[K_s]:
             self.acc.x = -acceleration*0.707
             self.acc.y = acceleration*0.707
             self.index -= 1
             if self.index <= 0:
                 self.index = len(self.images)-1
-            if pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask):
-                self.vel.x = 2
-                self.vel.y = -2
+
         elif pressed_keys[K_d] and pressed_keys[K_w]:
             self.acc.x = acceleration*0.707
             self.acc.y = -acceleration*0.707
             self.index += 1
             if self.index >= len(self.images):
                 self.index = 0
-            if pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask):
-                self.vel.x = -2
-                self.vel.y = 2
+
         elif pressed_keys[K_d] and pressed_keys[K_s]:
             self.acc.x = acceleration*0.707
             self.acc.y = acceleration*0.707
             self.index += 1
             if self.index >= len(self.images):
                 self.index = 0
-            if pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask):
-                self.vel.x = -2
-                self.vel.y = -2
 
         elif pressed_keys[K_a]:
             self.acc.x = -acceleration
             self.index -= 1
             if self.index <= 0:
                 self.index = len(self.images)-1
-            if pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask):
-                self.vel.x = 2
+
         elif pressed_keys[K_d]:
             self.acc.x = acceleration
             self.index += 1
             if self.index >= len(self.images):
                 self.index = 0
-            if pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask):
-                self.vel.x = -2
+
         elif pressed_keys[K_w]:
             self.acc.y = -acceleration
             self.index -= 1
             if self.index <= 0:
                 self.index = len(self.images)-1
-            if pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask):
-                self.vel.y = 2
+
         elif pressed_keys[K_s]:
             self.acc.y = acceleration
             self.index += 1
             if self.index >= len(self.images):
                 self.index = 0
-            if pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask):
-                self.vel.y = -2
+
+        if pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask) and self.vel != 0:
+            if self.vel.x < 0 and self.vel.y < 0:
+                self.pos.x += 1*-self.vel.x
+                self.pos.y += 1*-self.vel.y
+            elif self.vel.x < 0 and self.vel.y > 0:
+                self.pos.x += 1*-self.vel.x
+                self.pos.y += -1*self.vel.y
+            elif self.vel.x > 0 and self.vel.y < 0:
+                self.pos.x += -1*self.vel.x
+                self.pos.y += 1*-self.vel.y
+            elif self.vel.x > 0 and self.vel.y > 0:
+                self.pos.x += -1*self.vel.x
+                self.pos.y += -1*self.vel.y
+            elif self.vel.x < 0:
+                self.pos.x += 1*-self.vel.x
+            elif self.vel.x > 0:
+                self.pos.x += -1*self.vel.x
+            elif self.vel.y < 0:
+                self.pos.y += 1*-self.vel.y
+            elif self.vel.y > 0:
+                self.pos.y += -1*self.vel.y
 
         self.image = self.images[self.index]
 
@@ -168,7 +176,7 @@ class Shadow(pygame.sprite.Sprite):
 
     def update(self):
         self.pos = player.pos
-        self.rect.midbottom = self.pos + (0,30)
+        self.rect.midbottom = self.pos + (0, 30)
 
 
 window = pygame.display.set_mode((ww, wh))

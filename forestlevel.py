@@ -123,25 +123,25 @@ class Player(pygame.sprite.Sprite):
             if self.index <= 0:
                 self.index = len(self.images)-1
             if hits and self.vel.y >= -4:
-                self.vel.y -= 1
+                self.vel =-self.vel
             if self.vel.x < 0:
                 if hits_wall:
-                    self.vel.x = 2
+                    self.vel = -self.vel
         if key[K_d]:
             self.acc.x = acceleration
             self.index += 1
             if self.index >= len(self.images):
                 self.index = 0
             if hits and self.vel.y >= -4:
-                self.vel.y -= 1
+                self.vel =-self.vel
             if self.vel.x > 0:
                 if hits_wall:
-                    self.vel.x = -2
+                    self.vel=-self.vel
         if self.vel.y < 0:
             if hits_wall:
-                self.vel.y = -self.vel.y
+                self.vel = -self.vel
             if hits and hits_wall:
-                self.vel.y = -3
+                self.vel = -self.vel
         self.image = self.images[self.index]
 
         self.acc.x += self.vel.x * friction
