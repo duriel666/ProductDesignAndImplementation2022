@@ -135,9 +135,9 @@ class Player(pygame.sprite.Sprite):
                 self.vel.x = -2
         elif pressed_keys[K_w]:
             self.acc.y = -acceleration
-            self.index += 1
-            if self.index >= len(self.images):
-                self.index = 0
+            self.index -= 1
+            if self.index <= 0:
+                self.index = len(self.images)-1
             if pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask):
                 self.vel.y = 2
         elif pressed_keys[K_s]:

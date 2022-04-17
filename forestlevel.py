@@ -9,8 +9,6 @@ pygame.font.init()
 
 vec = pygame.math.Vector2
 
-#ww = 1504
-#wh = 846
 ww = screen.get_width()
 wh = screen.get_height()
 gw = 4961  # game world width
@@ -107,8 +105,8 @@ class Player(pygame.sprite.Sprite):
         self.vel = vec(0, 0)
         self.acc = vec(0, 0)
         self.jumping = False
-        self.button = False
         self.score = 0
+        self.keys = 0
 
     def move(self):
         self.acc = vec(0, acceleration)
