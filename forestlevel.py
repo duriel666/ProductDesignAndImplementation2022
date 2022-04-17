@@ -10,8 +10,8 @@ vec = pygame.math.Vector2
 
 #ww = 1504
 #wh = 846
-ww = 1600  # window width
-wh = 900  # window height
+ww = screen.get_width()
+wh = screen.get_height()
 gw = 4961  # game world width
 gh = 3508  # game world height
 fps = 120
@@ -104,13 +104,13 @@ class Player(pygame.sprite.Sprite):
 
     def move(self):
         self.acc = vec(0, acceleration)
-        pressed_keys = pygame.key.get_pressed()
+        key = pygame.key.get_pressed()
         hits = pygame.sprite.spritecollide(
             self, col_group, False, collided=pygame.sprite.collide_mask)
         hits_wall = pygame.sprite.spritecollide(
             self, col_group_wall, False, collided=pygame.sprite.collide_mask)
 
-        if pressed_keys[K_a]:
+        if key[K_a]:
             self.acc.x = -acceleration
             self.index -= 1
             if self.index <= 0:
@@ -120,7 +120,7 @@ class Player(pygame.sprite.Sprite):
             if self.vel.x < 0:
                 if hits_wall:
                     self.vel.x = 2
-        if pressed_keys[K_d]:
+        if key[K_d]:
             self.acc.x = acceleration
             self.index += 1
             if self.index >= len(self.images):
@@ -247,22 +247,22 @@ def start_game(run, score):
 
         speed_x = player.vel.x
         speed_y = player.vel.y
-        if player.pos.x < ww/4 and player.vel.x < 0 and collision_floor.pos.x < 0:
+        if player.pos.x < 400 and player.vel.x < 0 and collision_floor.pos.x < 0:
             for world in world_list:
                 world.scroll_x(-(speed_x))
             player.vel.x = 0
             player.pos.x -= speed_x
-        elif player.pos.x > ww-(ww/4) and player.vel.x > 0 and collision_floor.pos.x > (-gw+ww):
+        elif player.pos.x > ww-400 and player.vel.x > 0 and collision_floor.pos.x > (-gw+ww):
             for world in world_list:
                 world.scroll_x(-(speed_x))
             player.vel.x = 0
             player.pos.x -= speed_x
-        if player.pos.y < wh/3 and player.vel.y < 0 and collision_floor.pos.y < 0:
+        if player.pos.y < 300 and player.vel.y < 0 and collision_floor.pos.y < 0:
             for world in world_list:
                 world.scroll_y(-(speed_y))
             player.vel.y = 0
             player.pos.y -= speed_y
-        elif player.pos.y > wh-(wh/3) and player.vel.y > 0 and collision_floor.pos.y > (-gh+wh):
+        elif player.pos.y > wh-300 and player.vel.y > 0 and collision_floor.pos.y > (-gh+wh):
             for world in world_list:
                 world.scroll_y(-(speed_y))
             player.vel.y = 0
@@ -293,14 +293,16 @@ def start_game(run, score):
         point_group.draw(window)
         player.move()
 
-        game_font.render_to(window, (0, 0), 'player.vel.x - ' +
-                            str(player.vel.x), (black))
-        game_font.render_to(window, (0, 30), 'player.vel.y - ' +
-                            str(player.vel.y), (black))
-        game_font.render_to(window, (0, 60), 'player.score - ' +
-                            str(player.score), (black))
-        game_font.render_to(window, (0, 90), 'position - ' +
-                            str(player.pos), (black))
+        game_font.render_to(
+            window, (0, 0), f'player.vel.x - {player.vel.x:,.3f}', (black))
+        game_font.render_to(
+            window, (0, 30), f'player.vel.y - {player.vel.y:,.3f}', (black))
+        game_font.render_to(
+            window, (0, 60), f'player.score - {player.score}', (black))
+        game_font.render_to(
+            window, (0, 90), f'player.pos.x - {player.pos[0]:,.2f}', (black))
+        game_font.render_to(
+            window, (0, 120), f'player.pos.x - {player.pos[1]:,.2f}', (black))
 
         pygame.display.flip()
         clock.tick(fps)
