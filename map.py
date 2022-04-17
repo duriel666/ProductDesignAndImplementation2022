@@ -65,8 +65,6 @@ class World(pygame.sprite.Sprite):
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.shadow = pygame.image.load(
-            'gfx/puolukka-shadow.png').convert_alpha()
         self.index = 0
         self.images = []
         for i in range(0, 72):
@@ -75,7 +73,6 @@ class Player(pygame.sprite.Sprite):
         self.image = self.images[self.index].convert_alpha()
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
-        self.shadow_rect = self.shadow.get_rect()
         self.pos = vec((ww/2, wh-wh/2))
         self.shadow_pos = vec((self.pos.x-20, self.pos.y-20))
         self.vel = vec(0, 0)
@@ -161,11 +158,28 @@ class Player(pygame.sprite.Sprite):
         self.rect.midbottom = self.pos
 
 
+class Shadow(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.image = pygame.image.load(
+            'gfx/puolukka-shadow.png').convert_alpha()
+        self.rect = self.image.get_rect()
+        self.pos = vec((ww/2, wh-wh/2))
+
+    def update(self):
+        self.pos = player.pos
+        self.rect.midbottom = self.pos + (0,30)
+
+
 window = pygame.display.set_mode((ww, wh))
 
 player = Player()
 player_group = pygame.sprite.GroupSingle()
 player_group.add(player)
+
+shadow = Shadow()
+shadow_group = pygame.sprite.GroupSingle()
+shadow_group.add(shadow)
 
 collision = World('gfx/map-col.png')
 taakse = World('gfx/map.png')
@@ -189,6 +203,7 @@ col_group.add(collision)
 sprite_group = pygame.sprite.Group()
 # sprite_group.add(collision)
 sprite_group.add(taakse)
+sprite_group.add(shadow)
 sprite_group.add(player)
 # sprite_group.add(eteen)
 
@@ -248,8 +263,10 @@ def start_game(run):
 
         sprite_group.update()
         col_group.update()
+        shadow_group.update()
         player_group.update()
         point_group.update()
+        shadow.update()
         player.update()
         window.fill(white)
         sprite_group.draw(window)
