@@ -6,6 +6,7 @@ import time
 
 pygame.init()
 pygame.font.init()
+
 vec = pygame.math.Vector2
 
 #ww = 1504
@@ -21,6 +22,9 @@ black = (0,  0,  0)
 white = (255, 255, 255)
 
 game_font = pygame.freetype.Font('fonts/HelveticaNeue Light.ttf', 30)
+
+volume_up, timer = pygame.USEREVENT+1, 100
+pygame.time.set_timer(volume_up, timer)
 
 
 class Door(pygame.sprite.Sprite):
@@ -144,13 +148,13 @@ class Player(pygame.sprite.Sprite):
         self.rect.midbottom = self.pos
 
         if self.vel.y > 0:
-            if hits:
+            if hits and hits_wall:
                 if self.vel.y >= 0.6:
                     self.vel.y = -self.vel.y*.6
                 else:
                     self.vel.y = -0.6
                 self.jumping = False
-            if hits and hits_wall:
+            elif hits:
                 if self.vel.y >= 0.6:
                     self.vel.y = -self.vel.y*.6
                 else:
@@ -220,10 +224,16 @@ clock = pygame.time.Clock()
 
 def start_game(run, score):
     player.score = score
+    music_volume = 0
     while run:
         for event in pygame.event.get():
+            if event.type == volume_up:
+                if music_volume < 0.3:
+                    music_volume += 0.001
+                    pygame.mixer.music.set_volume(music_volume)
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
+                    pygame.mixer.music.stop()
                     run = False
                     return player.score
             if event.type == pygame.KEYDOWN:
@@ -233,12 +243,14 @@ def start_game(run, score):
                 if event.key == pygame.K_w:
                     player.cancel_jump()
             if event.type == pygame.QUIT:
+                pygame.mixer.music.stop()
                 run = False
                 return player.score
             for door in doors:
                 if pygame.sprite.spritecollide(door, player_group, False, collided=pygame.sprite.collide_mask):
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_e:
+                            pygame.mixer.music.stop()
                             if door.select() == 'map':
                                 run = False
                                 return player.score

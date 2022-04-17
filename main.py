@@ -3,6 +3,7 @@ import time
 from menu import *
 
 pygame.init()
+pygame.mixer.init()
 
 pygame.display.set_caption('Game - 0.2')
 
