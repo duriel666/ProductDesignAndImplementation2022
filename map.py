@@ -65,15 +65,19 @@ class World(pygame.sprite.Sprite):
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
+        self.shadow = pygame.image.load(
+            'gfx/puolukka-shadow.png').convert_alpha()
         self.index = 0
         self.images = []
         for i in range(0, 72):
             self.images.append(pygame.image.load(
-                'gfx/puolukka'+str(i+1)+'.png'))
+                f'gfx/puolukka{str(i+1)}.png'))
         self.image = self.images[self.index].convert_alpha()
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
+        self.shadow_rect = self.shadow.get_rect()
         self.pos = vec((ww/2, wh-wh/2))
+        self.shadow_pos = vec((self.pos.x-20, self.pos.y-20))
         self.vel = vec(0, 0)
         self.acc = vec(0, 0)
         self.score = player.score
