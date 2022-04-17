@@ -43,7 +43,7 @@ class Point(pygame.sprite.Sprite):
         if self.level == 'forest':
             return select_forest(player.score)
         if self.level == 'beach':
-            return select_forest(player.score)
+            return select_beach(player.score)
 
 
 class World(pygame.sprite.Sprite):
