@@ -25,9 +25,9 @@ menu_bg = pygame.image.load('gfx/menu-bg.png')
 menu_bg = pygame.transform.scale(menu_bg, (ww, wh))
 
 def rect_a(surface, color, rect):
-    shape_surf = pygame.Surface(pygame.Rect(rect).size, pygame.SRCALPHA)
-    pygame.draw.rect(shape_surf, color, shape_surf.get_rect())
-    surface.blit(shape_surf, rect)
+    shape = pygame.Surface(pygame.Rect(rect).size, pygame.SRCALPHA)
+    pygame.draw.rect(shape, color, shape.get_rect())
+    surface.blit(shape, rect)
 
 def gamemenu(run):
     while run:
