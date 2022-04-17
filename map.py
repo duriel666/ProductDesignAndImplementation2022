@@ -91,15 +91,6 @@ class Player(pygame.sprite.Sprite):
             if pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask):
                 self.vel.x = 2
                 self.vel.y = 2
-        elif pressed_keys[K_d] and pressed_keys[K_w]:
-            self.acc.x = acceleration*0.707
-            self.acc.y = -acceleration*0.707
-            self.index += 1
-            if self.index >= len(self.images):
-                self.index = 0
-            if pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask):
-                self.vel.x = -2
-                self.vel.y = 2
         elif pressed_keys[K_a] and pressed_keys[K_s]:
             self.acc.x = -acceleration*0.707
             self.acc.y = acceleration*0.707
@@ -109,6 +100,15 @@ class Player(pygame.sprite.Sprite):
             if pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask):
                 self.vel.x = 2
                 self.vel.y = -2
+        elif pressed_keys[K_d] and pressed_keys[K_w]:
+            self.acc.x = acceleration*0.707
+            self.acc.y = -acceleration*0.707
+            self.index += 1
+            if self.index >= len(self.images):
+                self.index = 0
+            if pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask):
+                self.vel.x = -2
+                self.vel.y = 2
         elif pressed_keys[K_d] and pressed_keys[K_s]:
             self.acc.x = acceleration*0.707
             self.acc.y = acceleration*0.707
