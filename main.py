@@ -17,4 +17,13 @@ time_start = time.time()
 
 if __name__ == "__main__":
     print(f'Score: {gamemenu(True)}')
-    print(f'Time played: {(time.time()-time_start)/60:.2f} minutes')
+    time_played = time.time()-time_start
+    if time_played > 60:
+        time_played = time_played/60
+        if time_played > 60:
+            time_played = time_played/60
+            print(f'Time played: {time_played:.2f} hours')
+        else:
+            print(f'Time played: {time_played:.2f} minutes')
+    else:
+        print(f'Time played: {time_played:.2f} seconds')
