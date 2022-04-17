@@ -22,7 +22,7 @@ white = (255, 255, 255)
 game_font = pygame.freetype.Font('fonts/HelveticaNeue Light.ttf', 30)
 
 volume_up, timer = pygame.USEREVENT+1, 200
-bounce = pygame.mixer.Sound('sfx/forest-bounce.mp3')
+bounce = pygame.mixer.Sound('sfx/beach-bounce.mp3')
 point_get = pygame.mixer.Sound('sfx/beach-point.mp3')
 point_get.set_volume(0.3)
 
