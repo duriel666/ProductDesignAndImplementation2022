@@ -4,6 +4,7 @@ from selecttilelevel import *
 import sys
 import time
 
+
 pygame.init()
 pygame.font.init()
 
@@ -14,7 +15,6 @@ wh = screen.get_height()
 gw = 4961  # game world width
 gh = 3508  # game world height
 fps = 120
-acceleration = 0.2
 friction = -0.04
 black = (0,  0,  0)
 white = (255, 255, 255)
@@ -126,9 +126,10 @@ class Player(pygame.sprite.Sprite):
         self.score = 0
         self.keys = 0
         self.health = 3
+        self.gravity = 0.2
 
     def move(self):
-        self.acc = vec(0, acceleration)
+        self.acc = vec(0, self.gravity)
         sound_volume = 0
         key = pygame.key.get_pressed()
         hits = pygame.sprite.spritecollide(
@@ -137,7 +138,7 @@ class Player(pygame.sprite.Sprite):
             self, col_group_wall, False, collided=pygame.sprite.collide_mask)
 
         if key[K_a]:
-            self.acc.x = -acceleration
+            self.acc.x = -self.gravity
             self.index -= 1
             if self.index <= 0:
                 self.index = len(self.images)-1
@@ -147,7 +148,7 @@ class Player(pygame.sprite.Sprite):
             if hits_wall:
                 self.vel.x = 2
         if key[K_d]:
-            self.acc.x = acceleration
+            self.acc.x = self.gravity
             self.index += 1
             if self.index >= len(self.images):
                 self.index = 0
@@ -166,7 +167,7 @@ class Player(pygame.sprite.Sprite):
 
         self.acc.x += self.vel.x * friction
         self.vel += self.acc
-        self.pos += self.vel + acceleration * self.acc
+        self.pos += self.vel + self.gravity * self.acc
 
         self.rect.midbottom = self.pos
 
@@ -236,7 +237,7 @@ enemies_soft = []
 enemies_soft.append(Enemy_soft((1000, 400), 'gfx/drawn-mario.png'))
 enemies_soft.append(Enemy_soft((1200, 400), 'gfx/drawn-mario.png'))
 enemies_soft.append(Enemy_soft((1400, 400), 'gfx/drawn-mario.png'))
-enemies_soft_hit= []
+enemies_soft_hit = []
 enemy_soft_group = pygame.sprite.Group()
 for enemy_soft in enemies_soft:
     enemy_soft_group.add(enemy_soft)
@@ -261,6 +262,12 @@ for enemy_soft in enemies_soft:
     world_list.append(enemy_soft)
 
 clock = pygame.time.Clock()
+
+
+def rect_a(surface, color, rect):
+    shape = pygame.Surface(pygame.Rect(rect).size, pygame.SRCALPHA)
+    pygame.draw.rect(shape, color, shape.get_rect())
+    surface.blit(shape, rect)
 
 
 def start_game_forest(run, score):
@@ -342,7 +349,6 @@ def start_game_forest(run, score):
                 enemy_soft.kill()
                 enemies_soft_hit.append(enemy_soft)
                 enemies_soft.remove(enemy_soft)
-                
 
         sprite_group.update()
         col_group.update()
@@ -368,10 +374,12 @@ def start_game_forest(run, score):
             window, (0, 120), f'player.pos.x - {player.pos[1]:,.2f}', (black))
         game_font.render_to(
             window, (0, 150), f'player.health - {int(player.health)} {len(enemies_soft_hit)}', (black))
-        if len(enemies_soft_hit)==int(player.health):
+        if len(enemies_soft_hit) == int(player.health):
             game_font.render_to(window, (400, 50), f'You died!', (black))
-
-        
-
+            rect_a(window, (255, 0, 0, 80), (0, 0, ww, wh))
+            player.gravity = 0
+            player.acc = (0, 0)
+            player.vel.x = 0
+            player.vel.y = 0
         pygame.display.flip()
         clock.tick(fps)

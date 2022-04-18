@@ -14,7 +14,6 @@ wh = screen.get_height()
 gw = 4961  # game world width
 gh = 3508  # game world height
 fps = 120
-acceleration = 0.2
 friction = -0.04
 black = (0,  0,  0)
 white = (255, 255, 255)
@@ -107,9 +106,10 @@ class Player(pygame.sprite.Sprite):
         self.jumping = False
         self.score = 0
         self.keys = 0
+        self.gravity = 0.2
 
     def move(self):
-        self.acc = vec(0, acceleration)
+        self.acc = vec(0, self.gravity)
         sound_volume = 0
         key = pygame.key.get_pressed()
         hits = pygame.sprite.spritecollide(
@@ -118,7 +118,7 @@ class Player(pygame.sprite.Sprite):
             self, col_group_wall, False, collided=pygame.sprite.collide_mask)
 
         if key[K_a]:
-            self.acc.x = -acceleration
+            self.acc.x = -self.gravity
             self.index -= 1
             if self.index <= 0:
                 self.index = len(self.images)-1
@@ -128,7 +128,7 @@ class Player(pygame.sprite.Sprite):
             if hits_wall:
                 self.vel.x = 2
         if key[K_d]:
-            self.acc.x = acceleration
+            self.acc.x = self.gravity
             self.index += 1
             if self.index >= len(self.images):
                 self.index = 0
@@ -147,7 +147,7 @@ class Player(pygame.sprite.Sprite):
 
         self.acc.x += self.vel.x * friction
         self.vel += self.acc
-        self.pos += self.vel + acceleration * self.acc
+        self.pos += self.vel + self.gravity * self.acc
 
         self.rect.midbottom = self.pos
 
