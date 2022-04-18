@@ -13,7 +13,6 @@ wh = screen.get_height()
 gw = 4961  # game world width
 gh = 3508  # game world height
 fps = 120
-acceleration = 0.2
 friction = -0.08
 black = (0,  0,  0)
 white = (255, 255, 255)
@@ -80,59 +79,60 @@ class Player(pygame.sprite.Sprite):
         self.vel = vec(0, 0)
         self.acc = vec(0, 0)
         self.score = player.score
+        self.acceleration = 0.2
 
     def move(self):
         self.acc = vec(0, 0)
         pressed_keys = pygame.key.get_pressed()
 
         if pressed_keys[K_a] and pressed_keys[K_w]:
-            self.acc.x = -acceleration*0.707
-            self.acc.y = -acceleration*0.707
+            self.acc.x = -self.acceleration*0.707
+            self.acc.y = -self.acceleration*0.707
             self.index -= 1
             if self.index <= 0:
                 self.index = len(self.images)-1
 
         elif pressed_keys[K_a] and pressed_keys[K_s]:
-            self.acc.x = -acceleration*0.707
-            self.acc.y = acceleration*0.707
+            self.acc.x = -self.acceleration*0.707
+            self.acc.y = self.acceleration*0.707
             self.index -= 1
             if self.index <= 0:
                 self.index = len(self.images)-1
 
         elif pressed_keys[K_d] and pressed_keys[K_w]:
-            self.acc.x = acceleration*0.707
-            self.acc.y = -acceleration*0.707
+            self.acc.x = self.acceleration*0.707
+            self.acc.y = -self.acceleration*0.707
             self.index += 1
             if self.index >= len(self.images):
                 self.index = 0
 
         elif pressed_keys[K_d] and pressed_keys[K_s]:
-            self.acc.x = acceleration*0.707
-            self.acc.y = acceleration*0.707
+            self.acc.x = self.acceleration*0.707
+            self.acc.y = self.acceleration*0.707
             self.index += 1
             if self.index >= len(self.images):
                 self.index = 0
 
         elif pressed_keys[K_a]:
-            self.acc.x = -acceleration
+            self.acc.x = -self.acceleration
             self.index -= 1
             if self.index <= 0:
                 self.index = len(self.images)-1
 
         elif pressed_keys[K_d]:
-            self.acc.x = acceleration
+            self.acc.x = self.acceleration
             self.index += 1
             if self.index >= len(self.images):
                 self.index = 0
 
         elif pressed_keys[K_w]:
-            self.acc.y = -acceleration
+            self.acc.y = -self.acceleration
             self.index -= 1
             if self.index <= 0:
                 self.index = len(self.images)-1
 
         elif pressed_keys[K_s]:
-            self.acc.y = acceleration
+            self.acc.y = self.acceleration
             self.index += 1
             if self.index >= len(self.images):
                 self.index = 0
@@ -163,7 +163,7 @@ class Player(pygame.sprite.Sprite):
 
         self.acc += self.vel * friction
         self.vel += self.acc
-        self.pos += self.vel + acceleration * self.acc
+        self.pos += self.vel + self.acceleration * self.acc
 
         self.rect.midbottom = self.pos
 
