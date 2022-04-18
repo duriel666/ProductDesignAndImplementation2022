@@ -122,21 +122,35 @@ class Player(pygame.sprite.Sprite):
             self.index -= 1
             if self.index <= 0:
                 self.index = len(self.images)-1
-        if hits and self.vel.y >= -4:
-            self.vel.y -= 1
-        if self.vel.x < 0:
-            if hits_wall:
-                self.vel.x = 2
         if key[K_d]:
             self.acc.x = self.gravity
             self.index += 1
             if self.index >= len(self.images):
                 self.index = 0
-        if hits and self.vel.y >= -4:
-            self.vel.y -= 1
+
+        if self.vel.x < 0:
+            if hits_wall:
+                self.pos.x += 2
+                self.vel.x = 0
+                self.acc.x = 0
         if self.vel.x > 0:
             if hits_wall:
-                self.vel.x = -2
+                self.pos.x -= 2
+                self.vel.x = 0
+                self.acc.x = 0
+        if hits and self.vel.y >= -4:
+            self.vel.y -= 1
+            if hits and hits_wall:
+                if self.vel.x < 0:
+                    if hits_wall:
+                        self.pos.x += 2
+                        self.vel.x = 0
+                        self.acc.x = 0
+                if self.vel.x > 0:
+                    if hits_wall:
+                        self.pos.x -= 2
+                        self.vel.x = 0
+                        self.acc.x = 0
         if self.vel.y < 0:
             if hits_wall:
                 self.vel.y = -self.vel.y

@@ -141,21 +141,35 @@ def start_game_forest(run, score):
                     self.index -= 1
                     if self.index <= 0:
                         self.index = len(self.images)-1
-                if hits and self.vel.y >= -4:
-                    self.vel.y -= 1
-                if self.vel.x < 0:
-                    if hits_wall:
-                        self.vel.x = 2
                 if key[K_d]:
                     self.acc.x = self.gravity
                     self.index += 1
                     if self.index >= len(self.images):
                         self.index = 0
-                if hits and self.vel.y >= -4:
-                    self.vel.y -= 1
+
+                if self.vel.x < 0:
+                    if hits_wall:
+                        self.pos.x += 2
+                        self.vel.x = 0
+                        self.acc.x = 0
                 if self.vel.x > 0:
                     if hits_wall:
-                        self.vel.x = -2
+                        self.pos.x -= 2
+                        self.vel.x = 0
+                        self.acc.x = 0
+                if hits and self.vel.y >= -4:
+                    self.vel.y -= 1
+                    if hits and hits_wall:
+                        if self.vel.x < 0:
+                            if hits_wall:
+                                self.pos.x += 2
+                                self.vel.x = 0
+                                self.acc.x = 0
+                        if self.vel.x > 0:
+                            if hits_wall:
+                                self.pos.x -= 2
+                                self.vel.x = 0
+                                self.acc.x = 0
                 if self.vel.y < 0:
                     if hits_wall:
                         self.vel.y = -self.vel.y
@@ -267,7 +281,7 @@ def start_game_forest(run, score):
 
         player.score = score
         music_volume = 0
-        
+
         while run:
             for event in pygame.event.get():
                 if event.type == volume_up:
@@ -370,7 +384,8 @@ def start_game_forest(run, score):
             game_font.render_to(
                 window, (0, 150), f'player.health - {int(player.health)} {len(enemies_soft_hit)}', (black))
             if len(enemies_soft_hit) == int(player.health):
-                game_font.render_to(window, (400, 50), f'You died! press esc to exit', (black))
+                game_font.render_to(window, (400, 50),
+                                    f'You died! press esc to exit', (black))
                 rect_a(window, (255, 0, 0, 80), (0, 0, ww, wh))
                 player.gravity = 0
                 player.acc = (0, 0)
