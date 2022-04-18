@@ -267,6 +267,7 @@ def start_game_forest(run, score):
 
         player.score = score
         music_volume = 0
+        
         while run:
             for event in pygame.event.get():
                 if event.type == volume_up:
