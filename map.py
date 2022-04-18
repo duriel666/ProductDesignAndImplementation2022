@@ -278,7 +278,6 @@ def start_game(run):
         point_group.update()
         shadow.update()
         player.update()
-        window.fill(white)
         sprite_group.draw(window)
         point_group.draw(window)
         player.move()
