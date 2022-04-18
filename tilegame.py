@@ -9,6 +9,7 @@ pygame.init()
 screen = pygame.display.set_mode((screen_width, screen_height))
 clock = pygame.time.Clock()
 level = Level(level_map, screen)
+score = 0
 
 
 def start_game(run):
@@ -17,6 +18,7 @@ def start_game(run):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     run = False
+                    return score
         screen.fill('pink')
         level.run()
         pygame.display.update()

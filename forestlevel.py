@@ -6,12 +6,11 @@ import time
 
 pygame.init()
 pygame.font.init()
+
 vec = pygame.math.Vector2
 
-#ww = 1504
-#wh = 846
-ww = 1600  # window width
-wh = 900  # window height
+ww = screen.get_width()
+wh = screen.get_height()
 gw = 4961  # game world width
 gh = 3508  # game world height
 fps = 120
@@ -21,6 +20,13 @@ black = (0,  0,  0)
 white = (255, 255, 255)
 
 game_font = pygame.freetype.Font('fonts/HelveticaNeue Light.ttf', 30)
+
+volume_up, timer = pygame.USEREVENT+1, 200
+bounce = pygame.mixer.Sound('sfx/forest-bounce.mp3')
+point_get = pygame.mixer.Sound('sfx/forest-point.mp3')
+point_get.set_volume(0.4)
+
+pygame.time.set_timer(volume_up, timer)
 
 
 class Door(pygame.sprite.Sprite):
@@ -45,7 +51,7 @@ class Door(pygame.sprite.Sprite):
         if self.level == 'map':
             return 'map'
         if self.level == 'tile':
-            select_forest_tile()
+            return select_forest_tile(player.score)
 
 
 class Point(pygame.sprite.Sprite):
@@ -99,42 +105,44 @@ class Player(pygame.sprite.Sprite):
         self.vel = vec(0, 0)
         self.acc = vec(0, 0)
         self.jumping = False
-        self.button = False
         self.score = 0
+        self.keys = 0
 
     def move(self):
         self.acc = vec(0, acceleration)
-        pressed_keys = pygame.key.get_pressed()
+        sound_volume = 0
+        key = pygame.key.get_pressed()
         hits = pygame.sprite.spritecollide(
             self, col_group, False, collided=pygame.sprite.collide_mask)
         hits_wall = pygame.sprite.spritecollide(
             self, col_group_wall, False, collided=pygame.sprite.collide_mask)
 
-        if pressed_keys[K_a]:
+        if key[K_a]:
             self.acc.x = -acceleration
             self.index -= 1
             if self.index <= 0:
                 self.index = len(self.images)-1
-            if hits and self.vel.y >= -4:
-                self.vel.y -= 1
-            if self.vel.x < 0:
-                if hits_wall:
-                    self.vel.x = 2
-        if pressed_keys[K_d]:
+        if hits and self.vel.y >= -4:
+            self.vel.y -= 1
+        if self.vel.x < 0:
+            if hits_wall:
+                self.vel.x = 2
+        if key[K_d]:
             self.acc.x = acceleration
             self.index += 1
             if self.index >= len(self.images):
                 self.index = 0
-            if hits and self.vel.y >= -4:
-                self.vel.y -= 1
-            if self.vel.x > 0:
-                if hits_wall:
-                    self.vel.x = -2
+        if hits and self.vel.y >= -4:
+            self.vel.y -= 1
+        if self.vel.x > 0:
+            if hits_wall:
+                self.vel.x = -2
         if self.vel.y < 0:
             if hits_wall:
                 self.vel.y = -self.vel.y
             if hits and hits_wall:
                 self.vel.y = -3
+
         self.image = self.images[self.index]
 
         self.acc.x += self.vel.x * friction
@@ -144,18 +152,25 @@ class Player(pygame.sprite.Sprite):
         self.rect.midbottom = self.pos
 
         if self.vel.y > 0:
-            if hits:
-                if self.vel.y >= 0.6:
-                    self.vel.y = -self.vel.y*.6
-                else:
-                    self.vel.y = -0.6
-                self.jumping = False
             if hits and hits_wall:
                 if self.vel.y >= 0.6:
                     self.vel.y = -self.vel.y*.6
                 else:
                     self.vel.y = -0.6
                 self.jumping = False
+            elif hits:
+                if self.vel.y >= 0.6:
+                    self.vel.y = -self.vel.y*.6
+                else:
+                    self.vel.y = -0.6
+                self.jumping = False
+        sound_volume = -self.vel.y/40
+        if sound_volume > 1:
+            sound_volume = 1
+
+        if hits or hits_wall and sound_volume > 0.3:
+            bounce.set_volume(sound_volume)
+            bounce.play()
 
     def jump(self):
         if not self.jumping:
@@ -218,11 +233,18 @@ for door in doors:
 clock = pygame.time.Clock()
 
 
-def start_game(run):
+def start_game_forest(run, score):
+    player.score = score
+    music_volume = 0
     while run:
         for event in pygame.event.get():
+            if event.type == volume_up:
+                if music_volume < 0.3:
+                    music_volume += 0.001
+                    pygame.mixer.music.set_volume(music_volume)
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
+                    pygame.mixer.music.stop()
                     run = False
                     return player.score
             if event.type == pygame.KEYDOWN:
@@ -232,34 +254,38 @@ def start_game(run):
                 if event.key == pygame.K_w:
                     player.cancel_jump()
             if event.type == pygame.QUIT:
+                pygame.mixer.music.stop()
                 run = False
+                return player.score
             for door in doors:
                 if pygame.sprite.spritecollide(door, player_group, False, collided=pygame.sprite.collide_mask):
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_e:
+                            pygame.mixer.music.stop()
                             if door.select() == 'map':
                                 run = False
+                                return player.score
                             else:
                                 door.select()
 
         speed_x = player.vel.x
         speed_y = player.vel.y
-        if player.pos.x < ww/4 and player.vel.x < 0 and collision_floor.pos.x < 0:
+        if player.pos.x < 400 and player.vel.x < 0 and collision_floor.pos.x < 0:
             for world in world_list:
                 world.scroll_x(-(speed_x))
             player.vel.x = 0
             player.pos.x -= speed_x
-        elif player.pos.x > ww-(ww/4) and player.vel.x > 0 and collision_floor.pos.x > (-gw+ww):
+        elif player.pos.x > ww-400 and player.vel.x > 0 and collision_floor.pos.x > (-gw+ww):
             for world in world_list:
                 world.scroll_x(-(speed_x))
             player.vel.x = 0
             player.pos.x -= speed_x
-        if player.pos.y < wh/3 and player.vel.y < 0 and collision_floor.pos.y < 0:
+        if player.pos.y < 300 and player.vel.y < 0 and collision_floor.pos.y < 0:
             for world in world_list:
                 world.scroll_y(-(speed_y))
             player.vel.y = 0
             player.pos.y -= speed_y
-        elif player.pos.y > wh-(wh/3) and player.vel.y > 0 and collision_floor.pos.y > (-gh+wh):
+        elif player.pos.y > wh-300 and player.vel.y > 0 and collision_floor.pos.y > (-gh+wh):
             for world in world_list:
                 world.scroll_y(-(speed_y))
             player.vel.y = 0
@@ -278,6 +304,7 @@ def start_game(run):
                 point.kill()
                 points_found.append(point)
                 points.remove(point)
+                point_get.play()
         player.score = -int(len(points))+int(score_count)
 
         sprite_group.update()
@@ -290,14 +317,16 @@ def start_game(run):
         point_group.draw(window)
         player.move()
 
-        game_font.render_to(window, (0, 0), 'player.vel.x - ' +
-                            str(player.vel.x), (black))
-        game_font.render_to(window, (0, 30), 'player.vel.y - ' +
-                            str(player.vel.y), (black))
-        game_font.render_to(window, (0, 60), 'player.score - ' +
-                            str(player.score), (black))
-        game_font.render_to(window, (0, 90), 'position - ' +
-                            str(player.pos), (black))
+        game_font.render_to(
+            window, (0, 0), f'player.vel.x - {player.vel.x:,.3f}', (black))
+        game_font.render_to(
+            window, (0, 30), f'player.vel.y - {player.vel.y:,.3f}', (black))
+        game_font.render_to(
+            window, (0, 60), f'player.score - {player.score}', (black))
+        game_font.render_to(
+            window, (0, 90), f'player.pos.x - {player.pos[0]:,.2f}', (black))
+        game_font.render_to(
+            window, (0, 120), f'player.pos.x - {player.pos[1]:,.2f}', (black))
 
         pygame.display.flip()
         clock.tick(fps)

@@ -15,9 +15,8 @@ class Player(pygame.sprite.Sprite):
                 'gfx/puolukka'+str(i+1)+'.png'))
         self.image = self.images[self.index].convert_alpha()
         self.rect = self.image.get_rect(topleft=pos)
-
+        self.score = 0
         self.direction = pygame.math.Vector2(0, 0)
-
         self.gravity = 1
         self.jumpspeed = -16
         self.speed = 8
