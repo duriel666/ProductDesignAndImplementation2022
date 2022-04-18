@@ -209,7 +209,6 @@ player = Player()
 player_group = pygame.sprite.GroupSingle()
 player_group.add(player)
 
-#collision = World('gfx/forest-col.png')
 collision_wall = World('gfx/forest-col-wall.png')
 collision_floor = World('gfx/forest-col-floor.png')
 taakse = World(f'gfx/forest-bg.png')
