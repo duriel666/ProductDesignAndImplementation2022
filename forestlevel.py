@@ -72,6 +72,24 @@ class Point(pygame.sprite.Sprite):
         self.pos.y += speed
 
 
+class Enemy_soft(pygame.sprite.Sprite):
+    def __init__(self, pos, enemy_image):
+        super().__init__()
+        self.image = pygame.image.load(enemy_image).convert_alpha()
+        self.mask = pygame.mask.from_surface(self.image)
+        self.rect = self.image.get_rect()
+        self.pos = vec(pos)
+        self.vel = vec(0, 0)
+
+    def scroll_x(self, speed):
+        self.rect.topleft = self.pos
+        self.pos.x += speed
+
+    def scroll_y(self, speed):
+        self.rect.topleft = self.pos
+        self.pos.y += speed
+
+
 class World(pygame.sprite.Sprite):
     def __init__(self, world_image):
         super().__init__()
@@ -107,6 +125,7 @@ class Player(pygame.sprite.Sprite):
         self.jumping = False
         self.score = 0
         self.keys = 0
+        self.health = 3
 
     def move(self):
         self.acc = vec(0, acceleration)
@@ -213,6 +232,15 @@ door_group = pygame.sprite.Group()
 for door in doors:
     door_group.add(door)
 
+enemies_soft = []
+enemies_soft.append(Enemy_soft((1000, 400), 'gfx/drawn-mario.png'))
+enemies_soft.append(Enemy_soft((1200, 400), 'gfx/drawn-mario.png'))
+enemies_soft.append(Enemy_soft((1400, 400), 'gfx/drawn-mario.png'))
+enemies_soft_hit= []
+enemy_soft_group = pygame.sprite.Group()
+for enemy_soft in enemies_soft:
+    enemy_soft_group.add(enemy_soft)
+
 score_count = int(len(points))
 
 col_group = pygame.sprite.Group()
@@ -229,6 +257,8 @@ for point in points:
     world_list.append(point)
 for door in doors:
     world_list.append(door)
+for enemy_soft in enemies_soft:
+    world_list.append(enemy_soft)
 
 clock = pygame.time.Clock()
 
@@ -300,21 +330,30 @@ def start_game_forest(run, score):
         player.vel.y = speed_y
 
         for point in points:
-            if (pygame.sprite.spritecollide(point, player_group, False, collided=pygame.sprite.collide_mask)):
+            if pygame.sprite.spritecollide(point, player_group, False, collided=pygame.sprite.collide_mask):
                 point.kill()
                 points_found.append(point)
                 points.remove(point)
                 point_get.play()
         player.score = -int(len(points))+int(score_count)
 
+        for enemy_soft in enemies_soft:
+            if pygame.sprite.spritecollide(enemy_soft, player_group, False, collided=pygame.sprite.collide_mask):
+                enemy_soft.kill()
+                enemies_soft_hit.append(enemy_soft)
+                enemies_soft.remove(enemy_soft)
+                
+
         sprite_group.update()
         col_group.update()
         player_group.update()
         point_group.update()
+        enemy_soft_group.update()
         window.fill(white)
         door_group.draw(window)
         sprite_group.draw(window)
         point_group.draw(window)
+        enemy_soft_group.draw(window)
         player.move()
 
         game_font.render_to(
@@ -327,6 +366,12 @@ def start_game_forest(run, score):
             window, (0, 90), f'player.pos.x - {player.pos[0]:,.2f}', (black))
         game_font.render_to(
             window, (0, 120), f'player.pos.x - {player.pos[1]:,.2f}', (black))
+        game_font.render_to(
+            window, (0, 150), f'player.health - {int(player.health)} {len(enemies_soft_hit)}', (black))
+        if len(enemies_soft_hit)==int(player.health):
+            game_font.render_to(window, (400, 50), f'You died!', (black))
+
+        
 
         pygame.display.flip()
         clock.tick(fps)
