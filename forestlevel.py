@@ -25,8 +25,8 @@ def start_game_forest(run, score):
         game_font = pygame.freetype.Font('fonts/HelveticaNeue Light.ttf', 30)
 
         volume_up, timer = pygame.USEREVENT+1, 200
-        bounce = pygame.mixer.Sound('sfx/forest-bounce.mp3')
-        point_get = pygame.mixer.Sound('sfx/forest-point.mp3')
+        bounce = pygame.mixer.Sound('sfx/forest-bounce.wav')
+        point_get = pygame.mixer.Sound('sfx/forest-point.wav')
         point_get.set_volume(0.4)
 
         pygame.time.set_timer(volume_up, timer)
