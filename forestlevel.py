@@ -291,7 +291,7 @@ def start_game_forest(run, score):
 
         lights = []
         lights.append(Polygon((50, 50), window, (255, 255, 0, 100), [
-                      (200, 50), (100, 100), (300, 720), (800, 720)]))
+                      (200, 50), (100, 100), (300, 900),(800,800), (1200, 900)]))
 
         world_list = [eteen, taakse, collision_wall, collision_floor]
         for point in points:
