@@ -7,7 +7,7 @@ pygame.mixer.init()
 
 pygame.display.set_caption('Game - 0.2')
 
-ww = 16000  # window width
+ww = 1600  # window width
 wh = 900  # window height
 
 black = (0,  0,  0)
