@@ -2,9 +2,6 @@ import pygame
 from forestlevel import *
 from beachlevel import *
 
-ww = screen.get_width()
-wh = screen.get_height()
-
 black = (0,  0,  0)
 white = (180, 180, 180)
 

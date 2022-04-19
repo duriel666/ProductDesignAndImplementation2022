@@ -18,8 +18,6 @@ select = (255, 255, 255,50)
 background=(50,150,50)
 shadow=(10,10,10,150)
 shadow2=(10,10,10,150)
-ww = screen.get_width()
-wh = screen.get_height()
 
 menu_bg = pygame.image.load('gfx/menu-bg.png')
 menu_bg = pygame.transform.scale(menu_bg, (ww, wh))

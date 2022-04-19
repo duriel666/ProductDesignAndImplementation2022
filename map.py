@@ -8,8 +8,6 @@ vec = pygame.math.Vector2
 
 #ww = 1504
 #wh = 846
-ww = screen.get_width()
-wh = screen.get_height()
 gw = 4961  # game world width
 gh = 3508  # game world height
 fps = 120
