@@ -77,7 +77,7 @@ class World(pygame.sprite.Sprite):
         self.image = pygame.image.load(world_image).convert_alpha()
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
-        self.pos = vec(0, -gh+wh)
+        self.pos = vec(-gw+ww, -gh+wh)
         self.vel = vec(0, 0)
 
     def scroll_x(self, speed):
@@ -100,7 +100,7 @@ class Player(pygame.sprite.Sprite):
         self.image = self.images[self.index].convert_alpha()
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
-        self.pos = vec(ww/8, wh-wh/8)
+        self.pos = vec(ww-(ww/8), wh-wh/8)
         self.vel = vec(0, 0)
         self.acc = vec(0, 0)
         self.jumping = False
@@ -210,7 +210,7 @@ taakse = World(f'gfx/forest-bg.png')
 eteen = World('gfx/forest-fg.png')
 
 points = []
-points.append(Point((150, 450)))
+points.append(Point((-3211, 450)))
 points.append(Point((800, 500)))
 points.append(Point((1500, 400)))
 points.append(Point((1920, 550)))
@@ -284,22 +284,22 @@ def start_game_beach(run, score):
 
         speed_x = player.vel.x
         speed_y = player.vel.y
-        if player.pos.x < 400 and player.vel.x < 0 and collision_floor.pos.x < 0:
+        if player.pos.x < ww/3.2 and player.vel.x < 0 and collision_floor.pos.x < 0:
             for world in world_list:
                 world.scroll_x(-(speed_x))
             player.vel.x = 0
             player.pos.x -= speed_x
-        elif player.pos.x > ww-400 and player.vel.x > 0 and collision_floor.pos.x > (-gw+ww):
+        elif player.pos.x > ww-(ww/3.2) and player.vel.x > 0 and collision_floor.pos.x > (-gw+ww):
             for world in world_list:
                 world.scroll_x(-(speed_x))
             player.vel.x = 0
             player.pos.x -= speed_x
-        if player.pos.y < 300 and player.vel.y < 0 and collision_floor.pos.y < 0:
+        if player.pos.y < wh/3 and player.vel.y < 0 and collision_floor.pos.y < 0:
             for world in world_list:
                 world.scroll_y(-(speed_y))
             player.vel.y = 0
             player.pos.y -= speed_y
-        elif player.pos.y > wh-300 and player.vel.y > 0 and collision_floor.pos.y > (-gh+wh):
+        elif player.pos.y > wh-(wh/3) and player.vel.y > 0 and collision_floor.pos.y > (-gh+wh):
             for world in world_list:
                 world.scroll_y(-(speed_y))
             player.vel.y = 0
