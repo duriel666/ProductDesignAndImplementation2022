@@ -12,7 +12,7 @@ level = Level(level_map, screen)
 score = 0
 
 
-def start_game(run):
+def start_game(run, score):
     while run:
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
