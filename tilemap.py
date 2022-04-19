@@ -16,5 +16,3 @@ level_map = [
 ]
 
 tile_size = 64
-screen_width = 1600
-screen_height = 900
