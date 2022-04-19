@@ -238,8 +238,6 @@ def start_game_forest(run, score):
                     if self.vel.y < -3:
                         self.vel.y = -3
 
-        window = pygame.display.set_mode((ww, wh))
-
         player = Player()
         player_group = pygame.sprite.GroupSingle()
         player_group.add(player)
@@ -289,7 +287,7 @@ def start_game_forest(run, score):
 
         lights = []
         lights.append(Polygon((50, 50), window, (255, 255, 0, 100), [
-                      (200, 50), (100, 100), (300, 900),(800,800), (1200, 900)]))
+                      (200, 50), (100, 100), (300, 900), (800, 800), (1200, 900)]))
 
         world_list = [eteen, taakse, collision_wall, collision_floor]
         for point in points:

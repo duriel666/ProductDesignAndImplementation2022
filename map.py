@@ -11,8 +11,6 @@ friction = -0.08
 black = (0,  0,  0)
 white = (255, 255, 255)
 
-game_font = pygame.freetype.Font('fonts/HelveticaNeue Light.ttf', 30)
-
 
 class Point(pygame.sprite.Sprite):
     def __init__(self, pos, level, level_image):

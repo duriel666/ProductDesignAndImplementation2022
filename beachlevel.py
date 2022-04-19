@@ -177,10 +177,10 @@ class Player(pygame.sprite.Sprite):
                     self.vel.y = -0.6
                 self.jumping = False
         sound_volume = -self.vel.y/40
-        if sound_volume > 1:
-            sound_volume = 1
+        if sound_volume > 0.5:
+            sound_volume = 0.5
 
-        if hits or hits_wall and sound_volume > 0.3:
+        if hits or hits_wall and sound_volume > 0.1:
             bounce.set_volume(sound_volume)
             bounce.play()
 
@@ -194,8 +194,6 @@ class Player(pygame.sprite.Sprite):
             if self.vel.y < -3:
                 self.vel.y = -3
 
-
-window = pygame.display.set_mode((ww, wh))
 
 player = Player()
 player_group = pygame.sprite.GroupSingle()
