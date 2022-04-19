@@ -6,9 +6,6 @@ from tilelevel import Level
 
 pygame.init()
 
-ww = 1600  # window width
-wh = 900  # window height
-
 screen = pygame.display.set_mode((ww, wh))
 clock = pygame.time.Clock()
 level = Level(level_map, screen)
