@@ -7,8 +7,8 @@ pygame.mixer.init()
 
 pygame.display.set_caption('Game - 0.2')
 
-ww = 1600  # window width
-wh = 900  # window height
+ww = 1280  # window width
+wh = 720  # window height
 
 black = (0,  0,  0)
 white = (255, 255, 255)
@@ -22,8 +22,8 @@ if __name__ == "__main__":
         time_played = time_played/60
         if time_played > 60:
             time_played = time_played/60
-            print(f'Time played: {time_played:.2f} hours')
+            print(f'Time played: {time_played:.1f} hours')
         else:
-            print(f'Time played: {time_played:.2f} minutes')
+            print(f'Time played: {time_played:.1f} minutes')
     else:
-        print(f'Time played: {time_played:.2f} seconds')
+        print(f'Time played: {time_played:.1f} seconds')
