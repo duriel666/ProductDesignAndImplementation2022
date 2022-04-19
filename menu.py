@@ -3,9 +3,6 @@ from pygame.locals import *
 from map import *
 import sys
 
-pygame.init()
-pygame.font.init()
-
 game_font = pygame.freetype.Font('fonts/HelveticaNeue Light.ttf', 60)
 
 res = (720, 720)

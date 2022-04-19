@@ -2,10 +2,6 @@ import pygame
 from pygame.locals import *
 from selectdrawnlevel import *
 
-pygame.init()
-pygame.font.init()
-vec = pygame.math.Vector2
-
 #ww = 1504
 #wh = 846
 gw = 4961  # game world width
