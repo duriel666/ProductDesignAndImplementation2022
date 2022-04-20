@@ -43,16 +43,18 @@ class World(pygame.sprite.Sprite):
         self.image = pygame.image.load(world_image).convert_alpha()
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
-        self.pos = vec((0, -gh+wh))
+        self.width = self.image.get_width()
+        self.height = self.image.get_height()
+        self.pos = vec(0, wh-self.height)
         self.vel = vec(0, 0)
 
     def scroll_x(self, speed):
         self.rect.topleft = self.pos
-        self.pos.x += speed
+        self.pos.x += speed*((self.width-ww)/(gw-ww))
 
     def scroll_y(self, speed):
         self.rect.topleft = self.pos
-        self.pos.y += speed
+        self.pos.y += speed*((self.height-wh)/(gh-wh))
 
 
 class Player(pygame.sprite.Sprite):
@@ -185,7 +187,7 @@ shadow_group.add(shadow)
 
 collision = World('gfx/map-col.png')
 taakse = World('gfx/map.png')
-#eteen = World('fg-1.png')
+eteen = World('gfx/map-clouds.png')
 
 points = []
 points.append(Point((1500, -50), 'forest', 'gfx/drawn-mario.png'))
@@ -207,9 +209,9 @@ sprite_group = pygame.sprite.Group()
 sprite_group.add(taakse)
 sprite_group.add(shadow)
 sprite_group.add(player)
-# sprite_group.add(eteen)
+sprite_group.add(eteen)
 
-world_list = [taakse, collision]
+world_list = [eteen, taakse, collision]
 for point in points:
     world_list.append(point)
 
