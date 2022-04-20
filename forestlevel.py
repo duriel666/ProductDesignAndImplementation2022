@@ -126,11 +126,17 @@ def start_game_forest(run, score):
 
             def scroll_x(self, speed):
                 self.rect.topleft = self.pos
-                self.pos.x += speed*(self.width/gw)
+                if self.width==gw:
+                    self.pos.x += speed
+                else:
+                    self.pos.x += speed*(self.width/(gw*1.15))
 
             def scroll_y(self, speed):
                 self.rect.topleft = self.pos
-                self.pos.y += speed*(self.height/gh)
+                if self.height==gh:
+                    self.pos.y += speed
+                else:
+                    self.pos.y += speed*(self.height/(gh*1.15))
 
         class Player(pygame.sprite.Sprite):
             def __init__(self):
