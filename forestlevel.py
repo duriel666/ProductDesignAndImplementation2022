@@ -55,22 +55,24 @@ def start_game_forest(run, score):
                 self.surface.blit(self.shape, self.rect)
 
         class Door(pygame.sprite.Sprite):
-            def __init__(self, pos, level, door_image):
+            def __init__(self, pos, level, door_image, size):
                 super().__init__()
                 self.image = pygame.image.load(door_image).convert_alpha()
                 self.mask = pygame.mask.from_surface(self.image)
                 self.rect = self.image.get_rect()
+                self.width = size[0]
+                self.height = size[1]
                 self.pos = vec(pos)
                 self.vel = vec(0, 0)
                 self.level = level
 
             def scroll_x(self, speed):
                 self.rect.topleft = self.pos
-                self.pos.x += speed
+                self.pos.x += speed*((self.width-ww)/(gw-ww))
 
             def scroll_y(self, speed):
                 self.rect.topleft = self.pos
-                self.pos.y += speed
+                self.pos.y += speed*((self.height-wh)/(gh-wh))
 
             def select(self):
                 if self.level == 'map':
@@ -262,8 +264,10 @@ def start_game_forest(run, score):
             point_group.add(point)
 
         doors = []
-        doors.append(Door((200, 770), 'map', 'gfx/drawn-mario.png'))
-        doors.append(Door((4650, -1808), 'tile', 'gfx/drawn-mario.png'))
+        doors.append(
+            Door((200, 770), 'map', 'gfx/drawn-mario.png', (gw*1.05, gh*1.05)))
+        doors.append(Door((4650, -1808), 'tile',
+                     'gfx/drawn-mario.png', (gw*1.05, gh*1.05)))
         door_group = pygame.sprite.Group()
         for door in doors:
             door_group.add(door)
@@ -284,7 +288,8 @@ def start_game_forest(run, score):
         col_group_wall = pygame.sprite.Group()
         col_group_wall.add(collision_wall)
         sprite_group = pygame.sprite.Group()
-        sprite_group.add(testi)
+        sprite_group_back = pygame.sprite.Group()
+        sprite_group_back.add(testi)
         sprite_group.add(taakse)
         sprite_group.add(player)
         sprite_group2 = pygame.sprite.Group()
@@ -397,6 +402,7 @@ def start_game_forest(run, score):
             point_group.update()
             enemy_soft_group.update()
             window.fill(white)
+            sprite_group_back.draw(window)
             door_group.draw(window)
             sprite_group.draw(window)
             point_group.draw(window)
