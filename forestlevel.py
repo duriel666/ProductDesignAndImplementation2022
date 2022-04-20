@@ -120,7 +120,7 @@ def start_game_forest(run, score):
                 self.mask = pygame.mask.from_surface(self.image)
                 self.rect = self.image.get_rect()
                 self.size = size
-                self.pos = vec(self.size[0]-gw, wh-self.size[1])
+                self.pos = vec(0, wh-self.size[1])
                 self.vel = vec(0, 0)
 
             def scroll_x(self, speed):
