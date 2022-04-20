@@ -126,17 +126,11 @@ def start_game_forest(run, score):
 
             def scroll_x(self, speed):
                 self.rect.topleft = self.pos
-                if self.width==gw:
-                    self.pos.x += speed
-                else:
-                    self.pos.x += speed*(self.width/(gw*1.15))
+                self.pos.x += speed*(self.width/gw)
 
             def scroll_y(self, speed):
                 self.rect.topleft = self.pos
-                if self.height==gh:
-                    self.pos.y += speed
-                else:
-                    self.pos.y += speed*(self.height/(gh*1.15))
+                self.pos.y += speed*(self.height/gh)
 
         class Player(pygame.sprite.Sprite):
             def __init__(self):
@@ -356,22 +350,22 @@ def start_game_forest(run, score):
             speed_y = player.vel.y
             if player.pos.x < ww/3.2 and player.vel.x < 0 and collision_floor.pos.x < 0:
                 for world in world_list:
-                    world.scroll_x(-(speed_x))
+                    world.scroll_x(-speed_x)
                 player.vel.x = 0
                 player.pos.x -= speed_x
             elif player.pos.x > ww-(ww/3.2) and player.vel.x > 0 and collision_floor.pos.x > (-gw+ww):
                 for world in world_list:
-                    world.scroll_x(-(speed_x))
+                    world.scroll_x(-speed_x)
                 player.vel.x = 0
                 player.pos.x -= speed_x
             if player.pos.y < wh/3 and player.vel.y < 0 and collision_floor.pos.y < 0:
                 for world in world_list:
-                    world.scroll_y(-(speed_y))
+                    world.scroll_y(-speed_y)
                 player.vel.y = 0
                 player.pos.y -= speed_y
             elif player.pos.y > wh-(wh/3) and player.vel.y > 0 and collision_floor.pos.y > (-gh+wh):
                 for world in world_list:
-                    world.scroll_y(-(speed_y))
+                    world.scroll_y(-speed_y)
                 player.vel.y = 0
                 player.pos.y -= speed_y
             else:
