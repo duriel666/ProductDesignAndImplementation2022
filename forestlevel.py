@@ -296,8 +296,10 @@ def start_game_forest(run, score):
         sprite_group2.add(eteen)
 
         lights = []
-        lights.append(Polygon((0, 0), window, (255, 255, 0, 100), [
-                      (200, 50), (100, 100), (300, 900), (800, 800), (2500, 900)]))
+        lights.append(Polygon((0, -2360), window, (255, 255, 200, 50),
+                      [(-1, -2360), (-1, -2200), (2400, 901), (3000, 901)]))
+        lights.append(Polygon((0, -200), window, (255, 255, 200, 50),
+                      [(-1, -200), (-1, -20), (650, 901), (1000, 901)]))
 
         world_list = [testi, eteen, taakse, collision_wall, collision_floor]
         for point in points:
