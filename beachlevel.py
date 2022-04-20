@@ -75,7 +75,7 @@ class World(pygame.sprite.Sprite):
         self.image = pygame.image.load(world_image).convert_alpha()
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
-        self.pos = vec(-gw+ww, -gh+wh)
+        self.pos = vec(ww-gw, wh-gh)
         self.vel = vec(0, 0)
 
     def scroll_x(self, speed):

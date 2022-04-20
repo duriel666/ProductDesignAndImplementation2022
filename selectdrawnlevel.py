@@ -6,11 +6,13 @@ black = (0,  0,  0)
 white = (180, 180, 180)
 
 loading_font = pygame.freetype.Font('fonts/HelveticaNeue Light.ttf', 50)
+loading = 'Loading...'
 
 
 def load_screen():
     window.fill(black)
-    loading_font.render_to(window, (ww-270, wh-60), 'Loading...', (white))
+    loading_font.render_to(
+        window, (ww-270, wh-60), loading, (white))
     pygame.display.flip()
 
 

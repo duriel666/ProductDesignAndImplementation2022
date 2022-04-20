@@ -114,21 +114,22 @@ def start_game_forest(run, score):
                 self.pos.y += speed
 
         class World(pygame.sprite.Sprite):
-            def __init__(self, world_image):
+            def __init__(self, world_image, size):
                 super().__init__()
                 self.image = pygame.image.load(world_image).convert_alpha()
                 self.mask = pygame.mask.from_surface(self.image)
                 self.rect = self.image.get_rect()
-                self.pos = vec(0, -gh+wh)
+                self.size = size
+                self.pos = vec(self.size[0]-gw, wh-self.size[1])
                 self.vel = vec(0, 0)
 
             def scroll_x(self, speed):
                 self.rect.topleft = self.pos
-                self.pos.x += speed
+                self.pos.x += speed*(self.size[0]/gw)
 
             def scroll_y(self, speed):
                 self.rect.topleft = self.pos
-                self.pos.y += speed
+                self.pos.y += speed*(self.size[1]/gh)
 
         class Player(pygame.sprite.Sprite):
             def __init__(self):
@@ -242,10 +243,11 @@ def start_game_forest(run, score):
         player_group = pygame.sprite.GroupSingle()
         player_group.add(player)
 
-        collision_wall = World('gfx/forest-col-wall.png')
-        collision_floor = World('gfx/forest-col-floor.png')
-        taakse = World(f'gfx/forest-bg.png')
-        eteen = World('gfx/forest-fg.png')
+        collision_wall = World('gfx/forest-col-wall.png', (4961, 3508))
+        collision_floor = World('gfx/forest-col-floor.png', (4961, 3508))
+        taakse = World(f'gfx/forest-bg.png', (4961, 3508))
+        eteen = World('gfx/forest-fg.png', (4961, 3508))
+        testi = World(f'gfx/menu-bg.png', (3840, 2160))
 
         points = []
         points.append(Point((150, 450)))
@@ -281,15 +283,17 @@ def start_game_forest(run, score):
         col_group_wall = pygame.sprite.Group()
         col_group_wall.add(collision_wall)
         sprite_group = pygame.sprite.Group()
+        sprite_group.add(testi)
         sprite_group.add(taakse)
         sprite_group.add(player)
-        sprite_group.add(eteen)
+        sprite_group2 = pygame.sprite.Group()
+        sprite_group2.add(eteen)
 
         lights = []
-        lights.append(Polygon((50, 50), window, (255, 255, 0, 100), [
-                      (200, 50), (100, 100), (300, 900), (800, 800), (1200, 900)]))
+        lights.append(Polygon((0, 0), window, (255, 255, 0, 100), [
+                      (200, 50), (100, 100), (300, 900), (800, 800), (2500, 900)]))
 
-        world_list = [eteen, taakse, collision_wall, collision_floor]
+        world_list = [testi, eteen, taakse, collision_wall, collision_floor]
         for point in points:
             world_list.append(point)
         for door in doors:
@@ -399,6 +403,8 @@ def start_game_forest(run, score):
             player.move()
             for light in lights:
                 light.update()
+            sprite_group2.update()
+            sprite_group2.draw(window)
 
             game_font.render_to(
                 window, (0, 0), f'player.vel.x - {player.vel.x:,.3f}', (black))
@@ -412,6 +418,9 @@ def start_game_forest(run, score):
                 window, (0, 120), f'player.pos.x - {player.pos[1]:,.2f}', (black))
             game_font.render_to(
                 window, (0, 150), f'player.health - {int(player.health)} {len(enemies_soft_hit)}', (black))
+            game_font.render_to(
+                window, (0, 180), f'fps - {clock.get_fps()}', (black))
+
             if len(enemies_soft_hit) == int(player.health):
                 game_font.render_to(window, (400, 50),
                                     f'You died! press esc to exit', (black))
@@ -421,5 +430,6 @@ def start_game_forest(run, score):
                 player.vel.x = 0
                 player.vel.y = 0
                 alive = False
+
             pygame.display.flip()
             clock.tick(fps)
