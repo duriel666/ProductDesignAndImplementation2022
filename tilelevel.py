@@ -1,6 +1,6 @@
 import pygame
 from tiletile import Tile
-from tilemap import tile_size, screen_width
+from tilemap import tile_size, ww
 from tileplayer import *
 from tileenemy import *
 
@@ -36,10 +36,10 @@ class Level:
         player_x = player.rect.centerx
         direction_x = player.direction.x
 
-        if player_x < screen_width / 4 and direction_x < 0:
+        if player_x < ww / 4 and direction_x < 0:
             self.worldmove = 8
             player.speed = 0
-        elif player_x > screen_width - (screen_width / 4) and direction_x > 0:
+        elif player_x > ww - (ww / 4) and direction_x > 0:
             self.worldmove = -8
             player.speed = 0
 

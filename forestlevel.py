@@ -13,8 +13,6 @@ def start_game_forest(run, score):
 
         vec = pygame.math.Vector2
 
-        ww = screen.get_width()
-        wh = screen.get_height()
         gw = 4961  # game world width
         gh = 3508  # game world height
         fps = 120
@@ -30,6 +28,31 @@ def start_game_forest(run, score):
         point_get.set_volume(0.4)
 
         pygame.time.set_timer(volume_up, timer)
+
+        class Polygon(pygame.sprite.Sprite):
+            def __init__(self, pos, surface, color, points):
+                super().__init__()
+                self.surface = surface
+                lx, ly = zip(*points)
+                min_x, min_y, max_x, max_y = min(lx), min(ly), max(lx), max(ly)
+                self.rect = pygame.Rect(
+                    pos[0], pos[1], max_x - min_x, max_y - min_y)
+                self.shape = pygame.Surface(self.rect.size, pygame.SRCALPHA)
+                pygame.draw.polygon(self.shape, color, [
+                                    (x - min_x, y - min_y) for x, y in points])
+                self.pos = vec(pos)
+                self.vel = vec(0, 0)
+
+            def scroll_x(self, speed):
+                self.rect.topleft = self.pos
+                self.pos.x += speed
+
+            def scroll_y(self, speed):
+                self.rect.topleft = self.pos
+                self.pos.y += speed
+
+            def update(self):
+                self.surface.blit(self.shape, self.rect)
 
         class Door(pygame.sprite.Sprite):
             def __init__(self, pos, level, door_image):
@@ -215,8 +238,6 @@ def start_game_forest(run, score):
                     if self.vel.y < -3:
                         self.vel.y = -3
 
-        window = pygame.display.set_mode((ww, wh))
-
         player = Player()
         player_group = pygame.sprite.GroupSingle()
         player_group.add(player)
@@ -264,6 +285,10 @@ def start_game_forest(run, score):
         sprite_group.add(player)
         sprite_group.add(eteen)
 
+        lights = []
+        lights.append(Polygon((50, 50), window, (255, 255, 0, 100), [
+                      (200, 50), (100, 100), (300, 900), (800, 800), (1200, 900)]))
+
         world_list = [eteen, taakse, collision_wall, collision_floor]
         for point in points:
             world_list.append(point)
@@ -271,6 +296,8 @@ def start_game_forest(run, score):
             world_list.append(door)
         for enemy_soft in enemies_soft:
             world_list.append(enemy_soft)
+        for light in lights:
+            world_list.append(light)
 
         clock = pygame.time.Clock()
 
@@ -316,22 +343,22 @@ def start_game_forest(run, score):
 
             speed_x = player.vel.x
             speed_y = player.vel.y
-            if player.pos.x < 400 and player.vel.x < 0 and collision_floor.pos.x < 0:
+            if player.pos.x < ww/3.2 and player.vel.x < 0 and collision_floor.pos.x < 0:
                 for world in world_list:
                     world.scroll_x(-(speed_x))
                 player.vel.x = 0
                 player.pos.x -= speed_x
-            elif player.pos.x > ww-400 and player.vel.x > 0 and collision_floor.pos.x > (-gw+ww):
+            elif player.pos.x > ww-(ww/3.2) and player.vel.x > 0 and collision_floor.pos.x > (-gw+ww):
                 for world in world_list:
                     world.scroll_x(-(speed_x))
                 player.vel.x = 0
                 player.pos.x -= speed_x
-            if player.pos.y < 300 and player.vel.y < 0 and collision_floor.pos.y < 0:
+            if player.pos.y < wh/3 and player.vel.y < 0 and collision_floor.pos.y < 0:
                 for world in world_list:
                     world.scroll_y(-(speed_y))
                 player.vel.y = 0
                 player.pos.y -= speed_y
-            elif player.pos.y > wh-300 and player.vel.y > 0 and collision_floor.pos.y > (-gh+wh):
+            elif player.pos.y > wh-(wh/3) and player.vel.y > 0 and collision_floor.pos.y > (-gh+wh):
                 for world in world_list:
                     world.scroll_y(-(speed_y))
                 player.vel.y = 0
@@ -370,6 +397,8 @@ def start_game_forest(run, score):
             point_group.draw(window)
             enemy_soft_group.draw(window)
             player.move()
+            for light in lights:
+                light.update()
 
             game_font.render_to(
                 window, (0, 0), f'player.vel.x - {player.vel.x:,.3f}', (black))

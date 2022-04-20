@@ -2,22 +2,14 @@ import pygame
 from pygame.locals import *
 from selectdrawnlevel import *
 
-pygame.init()
-pygame.font.init()
-vec = pygame.math.Vector2
-
 #ww = 1504
 #wh = 846
-ww = screen.get_width()
-wh = screen.get_height()
 gw = 4961  # game world width
 gh = 3508  # game world height
 fps = 120
 friction = -0.08
 black = (0,  0,  0)
 white = (255, 255, 255)
-
-game_font = pygame.freetype.Font('fonts/HelveticaNeue Light.ttf', 30)
 
 
 class Point(pygame.sprite.Sprite):
