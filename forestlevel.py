@@ -114,22 +114,23 @@ def start_game_forest(run, score):
                 self.pos.y += speed
 
         class World(pygame.sprite.Sprite):
-            def __init__(self, world_image, size):
+            def __init__(self, world_image):
                 super().__init__()
                 self.image = pygame.image.load(world_image).convert_alpha()
                 self.mask = pygame.mask.from_surface(self.image)
                 self.rect = self.image.get_rect()
-                self.size = size
-                self.pos = vec(0, wh-self.size[1])
+                self.width = self.image.get_width()
+                self.height = self.image.get_height()
+                self.pos = vec(0, wh-self.height)
                 self.vel = vec(0, 0)
 
             def scroll_x(self, speed):
                 self.rect.topleft = self.pos
-                self.pos.x += speed*(self.size[0]/gw)
+                self.pos.x += speed*(self.width/gw)
 
             def scroll_y(self, speed):
                 self.rect.topleft = self.pos
-                self.pos.y += speed*(self.size[1]/gh)
+                self.pos.y += speed*(self.height/gh)
 
         class Player(pygame.sprite.Sprite):
             def __init__(self):
@@ -243,11 +244,11 @@ def start_game_forest(run, score):
         player_group = pygame.sprite.GroupSingle()
         player_group.add(player)
 
-        collision_wall = World('gfx/forest-col-wall.png', (4961, 3508))
-        collision_floor = World('gfx/forest-col-floor.png', (4961, 3508))
-        taakse = World(f'gfx/forest-bg.png', (4961, 3508))
-        eteen = World('gfx/forest-fg.png', (4961, 3508))
-        testi = World(f'gfx/menu-bg.png', (3840, 2160))
+        collision_wall = World('gfx/forest-col-wall.png')
+        collision_floor = World('gfx/forest-col-floor.png')
+        taakse = World(f'gfx/forest-bg.png')
+        eteen = World('gfx/forest-fg.png')
+        testi = World(f'gfx/menu-bg.png')
 
         points = []
         points.append(Point((150, 450)))
