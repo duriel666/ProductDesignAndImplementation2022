@@ -12,7 +12,7 @@ def start_game_forest(run, score):
         gw = 4961  # game world width
         gh = 3508  # game world height
         fps = 60
-        friction = -0.05
+        friction = -0.06
         black = (0,  0,  0)
         white = (255, 255, 255)
 
@@ -149,28 +149,60 @@ def start_game_forest(run, score):
                 self.keys = 0
                 self.health = 3
                 self.gravity = 0.4
+                self.acceleration = 0.4
 
             def move(self):
                 self.acc = vec(0, self.gravity)
-                sound_volume = 0
+                vol = 40
                 key = pygame.key.get_pressed()
-                hits = pygame.sprite.spritecollide(
+                hits_floor = pygame.sprite.spritecollide(
                     self, col_group, False, collided=pygame.sprite.collide_mask)
                 hits_wall = pygame.sprite.spritecollide(
                     self, col_group_wall, False, collided=pygame.sprite.collide_mask)
 
+                if bounce.get_num_channels() < 1:
+                    if hits_floor and self.vel.y != 0:
+                        sound_volumey = self.vel.x/vol
+                        bounce.set_volume(sound_volumey)
+                        bounce.play()
+                    if hits_wall and self.vel.x != 0:
+                        sound_volumex = self.vel.x/vol
+                        bounce.set_volume(sound_volumex)
+                        bounce.play()
+
                 if key[K_a]:
-                    self.acc.x = -self.gravity
+                    self.acc.x = -self.acceleration
                     self.index -= 1
                     if self.index <= 0:
                         self.index = len(self.images)-1
                 if key[K_d]:
-                    self.acc.x = self.gravity
+                    self.acc.x = self.acceleration
                     self.index += 1
                     if self.index >= len(self.images):
                         self.index = 0
 
-                if self.vel.x < 0:
+                if hits_floor or hits_wall:
+                    if self.jumping:
+                        self.jumping = False
+                    if hits_wall:
+                        if self.vel.x > 0:
+                            self.pos.x -= 2
+                        if self.vel.x < 0:
+                            self.pos.x += 2
+                        if self.vel.y < 0:
+                            self.vel.y = 0
+                        self.vel.x = 0
+                if hits_floor:
+                    self.gravity = 0
+                    self.vel.y = 0
+                    if self.vel.y > 10:
+                        self.vel.y = -self.vel.y*0.7
+                    elif self.vel.y <= 7:
+                        self.vel.y = -7
+                if not hits_floor:
+                    self.gravity = 0.4
+
+                '''if self.vel.x < 0:
                     if hits_wall:
                         self.pos.x += 2
                         self.vel.x = 0
@@ -180,9 +212,9 @@ def start_game_forest(run, score):
                         self.pos.x -= 2
                         self.vel.x = 0
                         self.acc.x = 0
-                if hits and self.vel.y >= -6:
+                if hits_floor and self.vel.y >= -6:
                     self.vel.y -= 3
-                    if hits and hits_wall:
+                    if hits_floor and hits_wall:
                         if self.vel.x < 0:
                             if hits_wall:
                                 self.pos.x += 2
@@ -196,21 +228,21 @@ def start_game_forest(run, score):
                 if self.vel.y < 0:
                     if hits_wall:
                         self.vel.y = -self.vel.y
-                    if hits and hits_wall:
+                    if hits_floor and hits_wall:
                         self.vel.y = -3
                 if self.vel.y > 0:
-                    if hits and hits_wall:
+                    if hits_floor and hits_wall:
                         if self.vel.y >= 1:
                             self.vel.y = -self.vel.y*.7
                         else:
                             self.vel.y = -1
                         self.jumping = False
-                    elif hits:
+                    elif hits_floor:
                         if self.vel.y >= 1:
                             self.vel.y = -self.vel.y*.7
                         else:
                             self.vel.y = -1
-                        self.jumping = False
+                        self.jumping = False'''
 
                 self.image = self.images[self.index]
 
@@ -224,14 +256,10 @@ def start_game_forest(run, score):
                 if sound_volume > 1:
                     sound_volume = 1
 
-                if hits or hits_wall and sound_volume > 0.3:
-                    bounce.set_volume(sound_volume)
-                    bounce.play()
-
             def jump(self):
                 if not self.jumping:
                     self.jumping = True
-                    self.vel.y = -16
+                    self.vel.y = -17
 
             def cancel_jump(self):
                 if self.jumping:
