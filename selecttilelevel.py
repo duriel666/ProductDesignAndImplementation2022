@@ -1,5 +1,3 @@
-import pygame
-from pygame.locals import *
 from tilegame import *
 
 black = (0,  0,  0)
