@@ -1,4 +1,3 @@
-import pygame
 from forestlevel import *
 from beachlevel import *
 

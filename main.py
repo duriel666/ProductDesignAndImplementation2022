@@ -1,4 +1,3 @@
-import pygame
 import time
 from menu import *
 
