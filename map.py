@@ -275,17 +275,6 @@ def start_game(run):
         sprite_group.draw(window)
         point_group.draw(window)
         player.move()
-
-        game_font.render_to(
-            window, (0, 0), f'player.vel.x - {player.vel.x:,.3f}', (black))
-        game_font.render_to(
-            window, (0, 30), f'player.vel.y - {player.vel.y:,.3f}', (black))
-        game_font.render_to(
-            window, (0, 60), f'player.score - {player.score}', (black))
-        game_font.render_to(
-            window, (0, 90), f'player.pos.x - {player.pos[0]:,.2f}', (black))
-        game_font.render_to(
-            window, (0, 120), f'player.pos.x - {player.pos[1]:,.2f}', (black))
-
+        
         pygame.display.flip()
         clock.tick(fps)

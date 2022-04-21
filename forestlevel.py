@@ -299,7 +299,8 @@ def start_game_forest(run, score):
         lights.append(Polygon((0, -200), window, (255, 255, 200, 50),
                       [(-1, -200), (-1, -20), (650, 901), (1000, 901)]))'''
 
-        world_list = [light,testi, eteen, taakse, collision_wall, collision_floor]
+        world_list = [light, testi, eteen, taakse,
+                      collision_wall, collision_floor]
         for point in points:
             world_list.append(point)
         for door in doors:
@@ -414,9 +415,7 @@ def start_game_forest(run, score):
             sprite_group2.draw(window)
 
             game_font.render_to(
-                window, (0, 0), f'player.health - {int(player.health)} {len(enemies_soft_hit)}', (black))
-            game_font.render_to(
-                window, (0, 30), f'fps - {clock.get_fps()}', (black))
+                window, (0, 0), f'fps - {clock.get_fps()}', (black))
 
             if len(enemies_soft_hit) == int(player.health):
                 game_font.render_to(window, (400, 50),

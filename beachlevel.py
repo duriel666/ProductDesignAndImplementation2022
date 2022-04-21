@@ -94,13 +94,14 @@ class Player(pygame.sprite.Sprite):
         self.image = self.images[self.index].convert_alpha()
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
-        self.pos = vec(ww-(ww/8), wh-wh/8)
+        self.pos = vec(ww/8, wh-wh/8)
         self.vel = vec(0, 0)
         self.acc = vec(0, 0)
         self.jumping = False
         self.score = 0
         self.keys = 0
-        self.gravity = 0.2
+        self.health = 3
+        self.gravity = 0.4
 
     def move(self):
         self.acc = vec(0, self.gravity)
@@ -132,8 +133,8 @@ class Player(pygame.sprite.Sprite):
                 self.pos.x -= 2
                 self.vel.x = 0
                 self.acc.x = 0
-        if hits and self.vel.y >= -4:
-            self.vel.y -= 1
+        if hits and self.vel.y >= -6:
+            self.vel.y -= 3
             if hits and hits_wall:
                 if self.vel.x < 0:
                     if hits_wall:
@@ -150,6 +151,19 @@ class Player(pygame.sprite.Sprite):
                 self.vel.y = -self.vel.y
             if hits and hits_wall:
                 self.vel.y = -3
+        if self.vel.y > 0:
+            if hits and hits_wall:
+                if self.vel.y >= 1:
+                    self.vel.y = -self.vel.y*.7
+                else:
+                    self.vel.y = -1
+                self.jumping = False
+            elif hits:
+                if self.vel.y >= 1:
+                    self.vel.y = -self.vel.y*.7
+                else:
+                    self.vel.y = -1
+                self.jumping = False
 
         self.image = self.images[self.index]
 
@@ -159,22 +173,9 @@ class Player(pygame.sprite.Sprite):
 
         self.rect.midbottom = self.pos
 
-        if self.vel.y > 0:
-            if hits and hits_wall:
-                if self.vel.y >= 0.6:
-                    self.vel.y = -self.vel.y*.6
-                else:
-                    self.vel.y = -0.6
-                self.jumping = False
-            elif hits:
-                if self.vel.y >= 0.6:
-                    self.vel.y = -self.vel.y*.6
-                else:
-                    self.vel.y = -0.6
-                self.jumping = False
         sound_volume = -self.vel.y/40
-        if sound_volume > 0.5:
-            sound_volume = 0.5
+        if sound_volume > 1:
+            sound_volume = 1
 
         if hits or hits_wall and sound_volume > 0.1:
             bounce.set_volume(sound_volume)
@@ -324,15 +325,7 @@ def start_game_beach(run, score):
         player.move()
 
         game_font.render_to(
-            window, (0, 0), f'player.vel.x - {player.vel.x:,.3f}', (black))
-        game_font.render_to(
-            window, (0, 30), f'player.vel.y - {player.vel.y:,.3f}', (black))
-        game_font.render_to(
-            window, (0, 60), f'player.score - {player.score}', (black))
-        game_font.render_to(
-            window, (0, 90), f'player.pos.x - {player.pos[0]:,.2f}', (black))
-        game_font.render_to(
-            window, (0, 120), f'player.pos.x - {player.pos[1]:,.2f}', (black))
+            window, (0, 0), f'fps - {clock.get_fps()}', (black))
 
         pygame.display.flip()
         clock.tick(fps)
