@@ -1,7 +1,4 @@
-import pygame
-from pygame.locals import *
 from map import *
-import sys
 
 pygame.init()
 pygame.font.init()

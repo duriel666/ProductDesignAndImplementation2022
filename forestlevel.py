@@ -1,8 +1,4 @@
-import pygame
-from pygame.locals import *
 from selecttilelevel import *
-import sys
-import time
 
 
 def start_game_forest(run, score):
@@ -15,8 +11,8 @@ def start_game_forest(run, score):
 
         gw = 4961  # game world width
         gh = 3508  # game world height
-        fps = 120
-        friction = -0.04
+        fps = 60
+        friction = -0.05
         black = (0,  0,  0)
         white = (255, 255, 255)
 
@@ -29,7 +25,7 @@ def start_game_forest(run, score):
 
         pygame.time.set_timer(volume_up, timer)
 
-        class Polygon(pygame.sprite.Sprite):
+        '''class Polygon(pygame.sprite.Sprite):
             def __init__(self, pos, surface, color, points):
                 super().__init__()
                 self.surface = surface
@@ -52,7 +48,7 @@ def start_game_forest(run, score):
                 self.pos.y += speed
 
             def update(self):
-                self.surface.blit(self.shape, self.rect)
+                self.surface.blit(self.shape, self.rect)'''
 
         class Door(pygame.sprite.Sprite):
             def __init__(self, pos, level, door_image, size):
@@ -152,7 +148,7 @@ def start_game_forest(run, score):
                 self.score = 0
                 self.keys = 0
                 self.health = 3
-                self.gravity = 0.2
+                self.gravity = 0.4
 
             def move(self):
                 self.acc = vec(0, self.gravity)
@@ -184,8 +180,8 @@ def start_game_forest(run, score):
                         self.pos.x -= 2
                         self.vel.x = 0
                         self.acc.x = 0
-                if hits and self.vel.y >= -4:
-                    self.vel.y -= 1
+                if hits and self.vel.y >= -6:
+                    self.vel.y -= 3
                     if hits and hits_wall:
                         if self.vel.x < 0:
                             if hits_wall:
@@ -202,6 +198,19 @@ def start_game_forest(run, score):
                         self.vel.y = -self.vel.y
                     if hits and hits_wall:
                         self.vel.y = -3
+                if self.vel.y > 0:
+                    if hits and hits_wall:
+                        if self.vel.y >= 1:
+                            self.vel.y = -self.vel.y*.7
+                        else:
+                            self.vel.y = -1
+                        self.jumping = False
+                    elif hits:
+                        if self.vel.y >= 1:
+                            self.vel.y = -self.vel.y*.7
+                        else:
+                            self.vel.y = -1
+                        self.jumping = False
 
                 self.image = self.images[self.index]
 
@@ -211,19 +220,6 @@ def start_game_forest(run, score):
 
                 self.rect.midbottom = self.pos
 
-                if self.vel.y > 0:
-                    if hits and hits_wall:
-                        if self.vel.y >= 0.6:
-                            self.vel.y = -self.vel.y*.6
-                        else:
-                            self.vel.y = -0.6
-                        self.jumping = False
-                    elif hits:
-                        if self.vel.y >= 0.6:
-                            self.vel.y = -self.vel.y*.6
-                        else:
-                            self.vel.y = -0.6
-                        self.jumping = False
                 sound_volume = -self.vel.y/40
                 if sound_volume > 1:
                     sound_volume = 1
@@ -235,12 +231,12 @@ def start_game_forest(run, score):
             def jump(self):
                 if not self.jumping:
                     self.jumping = True
-                    self.vel.y = -12
+                    self.vel.y = -16
 
             def cancel_jump(self):
                 if self.jumping:
-                    if self.vel.y < -3:
-                        self.vel.y = -3
+                    if self.vel.y < -5:
+                        self.vel.y = -5
 
         player = Player()
         player_group = pygame.sprite.GroupSingle()
@@ -250,6 +246,7 @@ def start_game_forest(run, score):
         collision_floor = World('gfx/forest-col-floor.png')
         taakse = World(f'gfx/forest-bg.png')
         eteen = World('gfx/forest-fg.png')
+        light = World('gfx/forest-light.png')
         testi = World(f'gfx/menu-bg.png')
 
         points = []
@@ -292,24 +289,25 @@ def start_game_forest(run, score):
         sprite_group_back.add(testi)
         sprite_group.add(taakse)
         sprite_group.add(player)
+        sprite_group.add(light)
         sprite_group2 = pygame.sprite.Group()
         sprite_group2.add(eteen)
 
-        lights = []
+        '''lights = []
         lights.append(Polygon((0, -2360), window, (255, 255, 200, 50),
                       [(-1, -2360), (-1, -2200), (2400, 901), (3000, 901)]))
         lights.append(Polygon((0, -200), window, (255, 255, 200, 50),
-                      [(-1, -200), (-1, -20), (650, 901), (1000, 901)]))
+                      [(-1, -200), (-1, -20), (650, 901), (1000, 901)]))'''
 
-        world_list = [testi, eteen, taakse, collision_wall, collision_floor]
+        world_list = [light,testi, eteen, taakse, collision_wall, collision_floor]
         for point in points:
             world_list.append(point)
         for door in doors:
             world_list.append(door)
         for enemy_soft in enemies_soft:
             world_list.append(enemy_soft)
-        for light in lights:
-            world_list.append(light)
+        '''for light in lights:
+            world_list.append(light)'''
 
         clock = pygame.time.Clock()
 
@@ -410,25 +408,15 @@ def start_game_forest(run, score):
             point_group.draw(window)
             enemy_soft_group.draw(window)
             player.move()
-            for light in lights:
-                light.update()
+            '''for light in lights:
+                light.update()'''
             sprite_group2.update()
             sprite_group2.draw(window)
 
             game_font.render_to(
-                window, (0, 0), f'player.vel.x - {player.vel.x:,.3f}', (black))
+                window, (0, 0), f'player.health - {int(player.health)} {len(enemies_soft_hit)}', (black))
             game_font.render_to(
-                window, (0, 30), f'player.vel.y - {player.vel.y:,.3f}', (black))
-            game_font.render_to(
-                window, (0, 60), f'player.score - {player.score}', (black))
-            game_font.render_to(
-                window, (0, 90), f'player.pos.x - {player.pos[0]:,.2f}', (black))
-            game_font.render_to(
-                window, (0, 120), f'player.pos.x - {player.pos[1]:,.2f}', (black))
-            game_font.render_to(
-                window, (0, 150), f'player.health - {int(player.health)} {len(enemies_soft_hit)}', (black))
-            game_font.render_to(
-                window, (0, 180), f'fps - {clock.get_fps()}', (black))
+                window, (0, 30), f'fps - {clock.get_fps()}', (black))
 
             if len(enemies_soft_hit) == int(player.health):
                 game_font.render_to(window, (400, 50),

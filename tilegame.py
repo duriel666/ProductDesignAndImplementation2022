@@ -1,6 +1,5 @@
-from tkinter import EventType
 import pygame
-import sys
+from pygame.locals import *
 from tilemap import *
 from tilelevel import Level
 

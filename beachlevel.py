@@ -1,8 +1,4 @@
-import pygame
-from pygame.locals import *
 from selecttilelevel import *
-import sys
-import time
 
 pygame.init()
 pygame.font.init()
@@ -11,7 +7,7 @@ vec = pygame.math.Vector2
 
 gw = 4961  # game world width
 gh = 3508  # game world height
-fps = 120
+fps = 60
 friction = -0.04
 black = (0,  0,  0)
 white = (255, 255, 255)

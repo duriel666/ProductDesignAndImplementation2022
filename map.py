@@ -1,12 +1,10 @@
-import pygame
-from pygame.locals import *
 from selectdrawnlevel import *
 
 #ww = 1504
 #wh = 846
 gw = 4961  # game world width
 gh = 3508  # game world height
-fps = 120
+fps = 60
 friction = -0.08
 black = (0,  0,  0)
 white = (255, 255, 255)
@@ -73,7 +71,7 @@ class Player(pygame.sprite.Sprite):
         self.vel = vec(0, 0)
         self.acc = vec(0, 0)
         self.score = player.score
-        self.acceleration = 0.2
+        self.acceleration = 0.4
 
     def move(self):
         self.acc = vec(0, 0)
@@ -187,6 +185,7 @@ shadow_group.add(shadow)
 
 collision = World('gfx/map-col.png')
 taakse = World('gfx/map.png')
+eteen2 = World('gfx/map-clouds-shadows.png')
 eteen = World('gfx/map-clouds.png')
 
 points = []
@@ -209,9 +208,10 @@ sprite_group = pygame.sprite.Group()
 sprite_group.add(taakse)
 sprite_group.add(shadow)
 sprite_group.add(player)
+sprite_group.add(eteen2)
 sprite_group.add(eteen)
 
-world_list = [eteen, taakse, collision]
+world_list = [eteen, eteen2, taakse, collision]
 for point in points:
     world_list.append(point)
 
@@ -236,22 +236,22 @@ def start_game(run):
 
         speed_x = player.vel.x
         speed_y = player.vel.y
-        if player.pos.x < 400 and player.vel.x < 0 and collision.pos.x < 0:
+        if collision.pos.x < 0:
             for world in world_list:
                 world.scroll_x(-(speed_x))
             player.vel.x = 0
             player.pos.x -= speed_x
-        elif player.pos.x > ww-400 and player.vel.x > 0 and collision.pos.x > (-gw+ww):
+        elif collision.pos.x > (-gw+ww):
             for world in world_list:
                 world.scroll_x(-(speed_x))
             player.vel.x = 0
             player.pos.x -= speed_x
-        if player.pos.y < 300 and player.vel.y < 0 and collision.pos.y < 0:
+        if collision.pos.y < 0:
             for world in world_list:
                 world.scroll_y(-(speed_y))
             player.vel.y = 0
             player.pos.y -= speed_y
-        elif player.pos.y > wh-300 and player.vel.y > 0 and collision.pos.y > (-gh+wh):
+        elif collision.pos.y > (-gh+wh):
             for world in world_list:
                 world.scroll_y(-(speed_y))
             player.vel.y = 0
