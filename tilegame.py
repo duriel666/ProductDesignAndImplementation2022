@@ -6,7 +6,7 @@ from tilemap import *
 from tilelevel import *
 
 pygame.init()
-
+vec = pygame.Vector2()
 screen = pygame.display.set_mode((ww, wh))
 clock = pygame.time.Clock()
 level = Level(level_map, screen)

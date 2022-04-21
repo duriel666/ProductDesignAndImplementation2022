@@ -1,13 +1,13 @@
 from selecttilelevel import *
 
+vec = pygame.math.Vector2
+
 
 def start_game_forest(run, score):
     alive = True
     while alive:
         pygame.init()
         pygame.font.init()
-
-        vec = pygame.math.Vector2
 
         gw = 4961  # game world width
         gh = 3508  # game world height
@@ -36,7 +36,7 @@ def start_game_forest(run, score):
                 self.shape = pygame.Surface(self.rect.size, pygame.SRCALPHA)
                 pygame.draw.polygon(self.shape, color, [
                                     (x - min_x, y - min_y) for x, y in points])
-                self.pos = vec(pos)
+                self.pos = vec(pos[0],pos[1]+wh)
                 self.vel = vec(0, 0)
 
             def scroll_x(self, speed):
@@ -58,7 +58,7 @@ def start_game_forest(run, score):
                 self.rect = self.image.get_rect()
                 self.width = size[0]
                 self.height = size[1]
-                self.pos = vec(pos)
+                self.pos = vec(pos[0], pos[1]+wh)
                 self.vel = vec(0, 0)
                 self.level = level
 
@@ -83,7 +83,7 @@ def start_game_forest(run, score):
                     'gfx/forest-point.png').convert_alpha()
                 self.mask = pygame.mask.from_surface(self.image)
                 self.rect = self.image.get_rect()
-                self.pos = vec(pos)
+                self.pos = vec(pos[0], pos[1]+wh)
                 self.vel = vec(0, 0)
 
             def scroll_x(self, speed):
@@ -100,7 +100,7 @@ def start_game_forest(run, score):
                 self.image = pygame.image.load(enemy_image).convert_alpha()
                 self.mask = pygame.mask.from_surface(self.image)
                 self.rect = self.image.get_rect()
-                self.pos = vec(pos)
+                self.pos = vec(pos[0], pos[1]+wh)
                 self.vel = vec(0, 0)
 
             def scroll_x(self, speed):
@@ -131,7 +131,7 @@ def start_game_forest(run, score):
                 self.pos.y += speed*((self.height-wh)/(gh-wh))
 
         class Player(pygame.sprite.Sprite):
-            def __init__(self):
+            def __init__(self, pos):
                 super().__init__()
                 self.index = 0
                 self.images = []
@@ -141,7 +141,7 @@ def start_game_forest(run, score):
                 self.image = self.images[self.index].convert_alpha()
                 self.mask = pygame.mask.from_surface(self.image)
                 self.rect = self.image.get_rect()
-                self.pos = vec(ww/8, wh-wh/8)
+                self.pos = vec(pos[0], pos[1]+wh)
                 self.vel = vec(0, 0)
                 self.acc = vec(0, 0)
                 self.jumping = False
@@ -162,11 +162,15 @@ def start_game_forest(run, score):
 
                 if bounce.get_num_channels() < 1:
                     if hits_floor and self.vel.y != 0:
-                        sound_volumey = self.vel.x/vol
+                        sound_volumey = self.vel.y/vol
+                        if sound_volumey < 0:
+                            sound_volumey = -sound_volumey
                         bounce.set_volume(sound_volumey)
                         bounce.play()
-                    if hits_wall and self.vel.x != 0:
+                    elif hits_wall and self.vel.x != 0:
                         sound_volumex = self.vel.x/vol
+                        if sound_volumex < 0:
+                            sound_volumex = -sound_volumex
                         bounce.set_volume(sound_volumex)
                         bounce.play()
 
@@ -202,48 +206,6 @@ def start_game_forest(run, score):
                 if not hits_floor:
                     self.gravity = 0.4
 
-                '''if self.vel.x < 0:
-                    if hits_wall:
-                        self.pos.x += 2
-                        self.vel.x = 0
-                        self.acc.x = 0
-                if self.vel.x > 0:
-                    if hits_wall:
-                        self.pos.x -= 2
-                        self.vel.x = 0
-                        self.acc.x = 0
-                if hits_floor and self.vel.y >= -6:
-                    self.vel.y -= 3
-                    if hits_floor and hits_wall:
-                        if self.vel.x < 0:
-                            if hits_wall:
-                                self.pos.x += 2
-                                self.vel.x = 0
-                                self.acc.x = 0
-                        if self.vel.x > 0:
-                            if hits_wall:
-                                self.pos.x -= 2
-                                self.vel.x = 0
-                                self.acc.x = 0
-                if self.vel.y < 0:
-                    if hits_wall:
-                        self.vel.y = -self.vel.y
-                    if hits_floor and hits_wall:
-                        self.vel.y = -3
-                if self.vel.y > 0:
-                    if hits_floor and hits_wall:
-                        if self.vel.y >= 1:
-                            self.vel.y = -self.vel.y*.7
-                        else:
-                            self.vel.y = -1
-                        self.jumping = False
-                    elif hits_floor:
-                        if self.vel.y >= 1:
-                            self.vel.y = -self.vel.y*.7
-                        else:
-                            self.vel.y = -1
-                        self.jumping = False'''
-
                 self.image = self.images[self.index]
 
                 self.acc.x += self.vel.x * friction
@@ -266,7 +228,7 @@ def start_game_forest(run, score):
                     if self.vel.y < -5:
                         self.vel.y = -5
 
-        player = Player()
+        player = Player((100, -100))
         player_group = pygame.sprite.GroupSingle()
         player_group.add(player)
 
@@ -278,11 +240,11 @@ def start_game_forest(run, score):
         testi = World(f'gfx/menu-bg.png')
 
         points = []
-        points.append(Point((150, 450)))
-        points.append(Point((800, 500)))
-        points.append(Point((1500, 400)))
-        points.append(Point((1920, 550)))
-        points.append(Point((2500, -200)))
+        points.append(Point((1013, -534)))
+        points.append(Point((1949, -822)))
+        points.append(Point((4697, -1182)))
+        points.append(Point((4661, 1781)))
+        points.append(Point((2009, -1865)))
         points_found = []
         point_group = pygame.sprite.Group()
         for point in points:
@@ -290,17 +252,20 @@ def start_game_forest(run, score):
 
         doors = []
         doors.append(
-            Door((200, 770), 'map', 'gfx/drawn-mario.png', (gw*1.05, gh*1.05)))
-        doors.append(Door((4650, -1808), 'tile',
+            Door((119, -100), 'map', 'gfx/drawn-mario.png', (gw*1.05, gh*1.05)))
+        doors.append(Door((4553, -2585), 'tile',
                      'gfx/drawn-mario.png', (gw*1.05, gh*1.05)))
         door_group = pygame.sprite.Group()
         for door in doors:
             door_group.add(door)
 
         enemies_soft = []
-        enemies_soft.append(Enemy_soft((1000, 400), 'gfx/drawn-mario.png'))
-        enemies_soft.append(Enemy_soft((1200, 400), 'gfx/drawn-mario.png'))
-        enemies_soft.append(Enemy_soft((1400, 400), 'gfx/drawn-mario.png'))
+        enemies_soft.append(Enemy_soft(
+            (2189, -192), 'gfx/drawn-mario.png'))
+        enemies_soft.append(Enemy_soft(
+            (1271, -948), 'gfx/drawn-mario.png'))
+        enemies_soft.append(Enemy_soft(
+            (593, -1242), 'gfx/drawn-mario.png'))
         enemies_soft_hit = []
         enemy_soft_group = pygame.sprite.Group()
         for enemy_soft in enemies_soft:
@@ -321,12 +286,6 @@ def start_game_forest(run, score):
         sprite_group2 = pygame.sprite.Group()
         sprite_group2.add(eteen)
 
-        '''lights = []
-        lights.append(Polygon((0, -2360), window, (255, 255, 200, 50),
-                      [(-1, -2360), (-1, -2200), (2400, 901), (3000, 901)]))
-        lights.append(Polygon((0, -200), window, (255, 255, 200, 50),
-                      [(-1, -200), (-1, -20), (650, 901), (1000, 901)]))'''
-
         world_list = [light, testi, eteen, taakse,
                       collision_wall, collision_floor]
         for point in points:
@@ -335,8 +294,6 @@ def start_game_forest(run, score):
             world_list.append(door)
         for enemy_soft in enemies_soft:
             world_list.append(enemy_soft)
-        '''for light in lights:
-            world_list.append(light)'''
 
         clock = pygame.time.Clock()
 
@@ -437,8 +394,6 @@ def start_game_forest(run, score):
             point_group.draw(window)
             enemy_soft_group.draw(window)
             player.move()
-            '''for light in lights:
-                light.update()'''
             sprite_group2.update()
             sprite_group2.draw(window)
 

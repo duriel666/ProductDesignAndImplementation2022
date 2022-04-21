@@ -1,7 +1,5 @@
 from selectdrawnlevel import *
 
-#ww = 1504
-#wh = 846
 gw = 4961  # game world width
 gh = 3508  # game world height
 fps = 60
@@ -66,11 +64,11 @@ class Player(pygame.sprite.Sprite):
         self.image = self.images[self.index].convert_alpha()
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
-        self.pos = vec((ww/2, wh-wh/2))
-        self.shadow_pos = vec((self.pos.x-20, self.pos.y-20))
+        self.pos = vec(ww/2, wh/2)
+        self.shadow_pos = vec(self.pos.x-20, self.pos.y-20)
         self.vel = vec(0, 0)
         self.acc = vec(0, 0)
-        self.score = player.score
+        self.score = 0
         self.acceleration = 0.4
 
     def move(self):
@@ -265,6 +263,7 @@ def start_game(run):
         player.vel.x = speed_x
         player.vel.y = speed_y
 
+        window.fill((70,117,215))
         sprite_group.update()
         col_group.update()
         shadow_group.update()
