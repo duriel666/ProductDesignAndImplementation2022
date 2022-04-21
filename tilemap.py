@@ -16,5 +16,5 @@ level_map = [
 ]
 
 tile_size = 64
-ww = 1600
-wh = 900
+ww = 1280
+wh = 720
