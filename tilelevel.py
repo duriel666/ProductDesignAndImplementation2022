@@ -1,9 +1,11 @@
 import pygame
 from tiletile import Tile
-from tilemap import tile_size, ww
+from tilemap import tile_size, ww, wh
 from tileplayer import *
 from tileenemy import *
 from pygame import mixer
+
+vec = pygame.math.Vector2
 
 class Level:
     def __init__(self, level_data, surface):
@@ -11,7 +13,7 @@ class Level:
         self.display_surface = surface
         self.levelsetup(level_data)
 
-        self.worldmove = 0
+        self.worldmove = vec(0,0)
 
     def levelsetup(self, layout):
         self.tile = pygame.sprite.Group()
@@ -37,18 +39,28 @@ class Level:
         direction_x = player.direction.x
 
         if player_x < ww / 4 and direction_x < 0:
-            self.worldmove = 8
+            self.worldmove.x = 8
             player.speed = 0
         elif player_x > ww - (ww / 4) and direction_x > 0:
-            self.worldmove = -8
+            self.worldmove.x = -8
             player.speed = 0
-        elif player_x > ww - (ww / 4) and direction_x > 0:
-            self.worldmove = -8
-            player.speed = 0
-
         else:
-            self.worldmove = 0
+            self.worldmove.x = 0
             player.speed = 8
+    def scroll_y(self):
+        player = self.player.sprite
+        player_y = player.rect.centerx
+        direction_y = player.direction.y
+
+        if player_y < wh / 4 and direction_y < 0:
+            self.worldmove.y = -player.direction.y
+            player.direction.y = 0
+        elif player_y > wh - (wh / 4) and direction_y > 0:
+            self.worldmove.y = player.direction.y
+            player.direction.y = 0
+        else:
+            player.direction.y = self.worldmove.y
+            self.worldmove.y = 0
 
     def x_moving_coll(self):
         player = self.player.sprite
@@ -87,10 +99,10 @@ class Level:
                     enemy.kill()
                 
     def run(self):
-        self.tile.update(self.worldmove)
+        self.tile.update(self.worldmove.x,self.worldmove.y)
         self.tile.draw(self.display_surface)
         # blob_group.draw(self.display_surface)
-        self.enemy.update(self.worldmove)
+        self.enemy.update(self.worldmove.x,self.worldmove.y)
         self.enemy.draw(self.display_surface)
         self.scroll_x()
         self.player.update()
