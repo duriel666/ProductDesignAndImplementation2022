@@ -7,13 +7,14 @@ from pygame import mixer
 
 vec = pygame.math.Vector2
 
+
 class Level:
     def __init__(self, level_data, surface):
         # the level setup
         self.display_surface = surface
         self.levelsetup(level_data)
 
-        self.worldmove = vec(0,0)
+        self.worldmove = vec(0, 0)
 
     def levelsetup(self, layout):
         self.tile = pygame.sprite.Group()
@@ -47,6 +48,7 @@ class Level:
         else:
             self.worldmove.x = 0
             player.speed = 8
+
     def scroll_y(self):
         player = self.player.sprite
         player_y = player.rect.top
@@ -87,7 +89,8 @@ class Level:
 
     def enemy_coll(self):
         hitSound = pygame.mixer.Sound('kansio/clang.wav')
-        enemy_collision = pygame.sprite.spritecollide(self.player.sprite, self.enemy, False)
+        enemy_collision = pygame.sprite.spritecollide(
+            self.player.sprite, self.enemy, False)
         if enemy_collision:
             for enemy in enemy_collision:
                 enemy_center = enemy.rect.centery
@@ -97,12 +100,12 @@ class Level:
                     self.player.sprite.direction.y = -15
                     hitSound.play()
                     enemy.kill()
-                
+
     def run(self):
-        self.tile.update(self.worldmove.x,self.worldmove.y)
+        self.tile.update(self.worldmove.x, self.worldmove.y)
         self.tile.draw(self.display_surface)
         # blob_group.draw(self.display_surface)
-        self.enemy.update(self.worldmove.x,self.worldmove.y)
+        self.enemy.update(self.worldmove.x, self.worldmove.y)
         self.enemy.draw(self.display_surface)
         self.scroll_x()
         self.scroll_y()

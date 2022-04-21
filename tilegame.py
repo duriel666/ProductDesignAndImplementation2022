@@ -25,4 +25,6 @@ def start_game(run, score):
         level.run()
         pygame.display.update()
         clock.tick(60)
-start_game(True,0)
+
+
+start_game(True, 0)

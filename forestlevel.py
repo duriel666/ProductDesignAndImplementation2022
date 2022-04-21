@@ -265,8 +265,7 @@ def start_game_forest(run, score):
         points.append(Point((1064, -1633)))
         points.append(Point((1283, -1520)))
         points.append(Point((1991, -3187)))
-        #points.append(Point(()))
-        
+        # points.append(Point(()))
 
         points_found = []
         point_group = pygame.sprite.Group()
