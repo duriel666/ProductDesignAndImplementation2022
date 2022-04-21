@@ -1,11 +1,12 @@
 import pygame
+from pygame.locals import *
 import sys
 from pygame import mixer
 from tilemap import *
 from tilelevel import *
 
 pygame.init()
-
+vec = pygame.Vector2()
 screen = pygame.display.set_mode((ww, wh))
 clock = pygame.time.Clock()
 level = Level(level_map, screen)
@@ -19,9 +20,9 @@ def start_game(run, score):
                 if event.key == pygame.K_ESCAPE:
                     run = False
                     return score
-        
+
         screen.fill('pink')
         level.run()
         pygame.display.update()
         clock.tick(60)
-#start_game(True,0)
+# start_game(True,0)
