@@ -18,8 +18,8 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(topleft=pos)
         self.score = 0
         self.direction = pygame.math.Vector2(0, 0)
-        self.gravity = 1
-        self.jumpspeed = -16
+        self.gravity = 0.4
+        self.jumpspeed = -8
         self.speed = 8
     def import_character(self):
         char_path = './kuvat'

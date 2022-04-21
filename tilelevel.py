@@ -49,17 +49,16 @@ class Level:
             player.speed = 8
     def scroll_y(self):
         player = self.player.sprite
-        player_y = player.rect.centerx
+        player_y = player.rect.top
         direction_y = player.direction.y
-
-        if player_y < wh / 4 and direction_y < 0:
+        if player_y < wh / 4 and player.direction.y < 0:
             self.worldmove.y = -player.direction.y
             player.direction.y = 0
-        elif player_y > wh - (wh / 4) and direction_y > 0:
-            self.worldmove.y = player.direction.y
+        elif player_y > wh - (wh / 4) and player.direction.y > 0:
+            self.worldmove.y = -player.direction.y
             player.direction.y = 0
         else:
-            player.direction.y = self.worldmove.y
+            player.direction.y = -self.worldmove.y
             self.worldmove.y = 0
 
     def x_moving_coll(self):
@@ -75,6 +74,7 @@ class Level:
 
     def y_moving_coll(self):
         player = self.player.sprite
+        player.rect.y += player.direction.y
         player.add_gravity()
         for sprite in self.tile.sprites():
             if sprite.rect.colliderect(player.rect):
@@ -105,6 +105,7 @@ class Level:
         self.enemy.update(self.worldmove.x,self.worldmove.y)
         self.enemy.draw(self.display_surface)
         self.scroll_x()
+        self.scroll_y()
         self.player.update()
         self.x_moving_coll()
         self.y_moving_coll()
