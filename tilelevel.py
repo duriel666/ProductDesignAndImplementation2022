@@ -3,7 +3,7 @@ from tiletile import Tile
 from tilemap import tile_size, ww
 from tileplayer import *
 from tileenemy import *
-
+from pygame import mixer
 
 class Level:
     def __init__(self, level_data, surface):
@@ -70,6 +70,19 @@ class Level:
                     player.rect.top = sprite.rect.bottom
                     player.direction.y = 0
 
+    def enemy_coll(self):
+        hitSound = pygame.mixer.Sound('kansio/clang.wav')
+        enemy_collision = pygame.sprite.spritecollide(self.player.sprite, self.enemy, False)
+        if enemy_collision:
+            for enemy in enemy_collision:
+                enemy_center = enemy.rect.centery
+                enemy_top = enemy.rect.top
+                player_bottom = self.player.sprite.rect.bottom
+                if enemy_top < player_bottom < enemy_center and self.player.sprite.direction.y >= 0:
+                    self.player.sprite.direction.y = -15
+                    hitSound.play()
+                    enemy.kill()
+                
     def run(self):
         self.tile.update(self.worldmove)
         self.tile.draw(self.display_surface)
@@ -80,4 +93,5 @@ class Level:
         self.player.update()
         self.x_moving_coll()
         self.y_moving_coll()
+        self.enemy_coll()
         self.player.draw(self.display_surface)
