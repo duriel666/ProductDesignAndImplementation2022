@@ -42,6 +42,9 @@ class Level:
         elif player_x > ww - (ww / 4) and direction_x > 0:
             self.worldmove = -8
             player.speed = 0
+        elif player_x > ww - (ww / 4) and direction_x > 0:
+            self.worldmove = -8
+            player.speed = 0
 
         else:
             self.worldmove = 0
