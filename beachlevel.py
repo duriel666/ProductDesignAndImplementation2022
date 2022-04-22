@@ -69,6 +69,29 @@ def start_game_beach(run, score):
                 self.rect.topleft = self.pos
                 self.pos.y += speed
 
+        class Chest(pygame.sprite.Sprite):
+            def __init__(self, pos):
+                super().__init__()
+                self.index = 0
+                self.images = []
+                self.images.append(pygame.image.load(
+                    'gfx/forest-chest-closed.png').convert_alpha())
+                self.images.append(pygame.image.load(
+                    'gfx/forest-chest-open.png').convert_alpha())
+                self.image = self.images[self.index].convert_alpha()
+                self.mask = pygame.mask.from_surface(self.image)
+                self.rect = self.image.get_rect()
+                self.pos = vec(pos[0], pos[1]+wh)
+                self.vel = vec(0, 0)
+
+            def scroll_x(self, speed):
+                self.rect.topleft = self.pos
+                self.pos.x += speed
+
+            def scroll_y(self, speed):
+                self.rect.topleft = self.pos
+                self.pos.y += speed
+
         class Enemy_soft(pygame.sprite.Sprite):
             def __init__(self, pos, enemy_image):
                 super().__init__()
@@ -225,6 +248,12 @@ def start_game_beach(run, score):
         for point in points:
             point_group.add(point)
 
+        chests = []
+        chests.append(Chest((4073, -233)))
+        chest_group = pygame.sprite.Group()
+        for chest in chests:
+            chest_group.add(chest)
+
         doors = []
         doors.append(
             Door((119, -100), 'map', 'gfx/drawn-mario.png', (gw*1.05, gh*1.05)))
@@ -256,7 +285,6 @@ def start_game_beach(run, score):
         sprite_group_back = pygame.sprite.Group()
         sprite_group_back.add(testi)
         sprite_group.add(taakse)
-        sprite_group.add(player)
         sprite_group.add(light)
         sprite_group2 = pygame.sprite.Group()
         sprite_group2.add(eteen)
@@ -366,6 +394,8 @@ def start_game_beach(run, score):
             sprite_group_back.draw(window)
             door_group.draw(window)
             sprite_group.draw(window)
+            chest_group.draw(window)
+            player_group.draw(window)
             point_group.draw(window)
             enemy_soft_group.draw(window)
             player.move()
