@@ -263,7 +263,7 @@ def start_game(run):
         player.vel.x = speed_x
         player.vel.y = speed_y
 
-        window.fill((70,117,215))
+        window.fill((70, 117, 215))
         sprite_group.update()
         col_group.update()
         shadow_group.update()
@@ -274,6 +274,6 @@ def start_game(run):
         sprite_group.draw(window)
         point_group.draw(window)
         player.move()
-        
+
         pygame.display.flip()
         clock.tick(fps)

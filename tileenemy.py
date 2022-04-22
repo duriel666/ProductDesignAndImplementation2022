@@ -12,8 +12,8 @@ class Enemy(pygame.sprite.Sprite):  # pygame sprite has a buildin draw method
         self.rect = self.image.get_rect()
         self.rect.x = pos[0]
         self.rect.y = pos[1]
-        self.moving_enemy = vec(0,0)
-        self.speed=1
+        self.moving_enemy = vec(0, 0)
+        self.speed = 1
         self.moving_count = 0
 
     def update(self, x_shift, y_shift):

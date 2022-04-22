@@ -3,6 +3,7 @@ from tilethings import import_folder
 
 vec = pygame.math.Vector2
 
+
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos):
         super().__init__()
@@ -21,6 +22,7 @@ class Player(pygame.sprite.Sprite):
         self.gravity = 0.4
         self.jumpspeed = -8
         self.speed = 8
+
     def import_character(self):
         char_path = './kuvat'
         self.animations = {'run': []}
