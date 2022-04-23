@@ -135,28 +135,6 @@ class Player(pygame.sprite.Sprite):
             if self.vel.y < 7.5 and self.vel.y > -7.5:
                 self.vel.y = -self.vel.y*1.5
 
-        '''if pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask) and self.vel != 0:
-            if self.vel.x < 0 and self.vel.y < 0:
-                self.pos.x += 1*-self.vel.x
-                self.pos.y += 1*-self.vel.y
-            elif self.vel.x < 0 and self.vel.y > 0:
-                self.pos.x += 1*-self.vel.x
-                self.pos.y += -1*self.vel.y
-            elif self.vel.x > 0 and self.vel.y < 0:
-                self.pos.x += -1*self.vel.x
-                self.pos.y += 1*-self.vel.y
-            elif self.vel.x > 0 and self.vel.y > 0:
-                self.pos.x += -1*self.vel.x
-                self.pos.y += -1*self.vel.y
-            elif self.vel.x < 0:
-                self.pos.x += 1*-self.vel.x
-            elif self.vel.x > 0:
-                self.pos.x += -1*self.vel.x
-            elif self.vel.y < 0:
-                self.pos.y += 1*-self.vel.y
-            elif self.vel.y > 0:
-                self.pos.y += -1*self.vel.y'''
-
         self.image = self.images[self.index]
 
         self.acc += self.vel * friction
@@ -196,15 +174,11 @@ clouds = World('gfx/map-clouds.png')
 clouds2 = World('gfx/map-clouds2.png')
 
 points = []
-points.append(Point((1500, -50), 'forest', 'gfx/drawn-mario.png'))
+points.append(Point((1500, -50), 'forest', 'gfx/forest-entrance.png'))
 points.append(Point((1000, -850), 'level2', 'gfx/drawn-mario.png'))
 points.append(Point((800, 550), 'beach', 'gfx/drawn-mario.png'))
 
 points_found = []
-
-point_group = pygame.sprite.Group()
-for point in points:
-    point_group.add(point)
 
 score_count = int(len(points))
 
@@ -214,6 +188,8 @@ sprite_group = pygame.sprite.Group()
 # sprite_group.add(collision)
 sprite_group.add(taakse)
 sprite_group.add(shadow)
+for point in points:
+    sprite_group.add(point)
 sprite_group.add(player)
 sprite_group.add(cloud_shadows)
 sprite_group.add(clouds2)
@@ -278,11 +254,9 @@ def start_game(run):
         col_group.update()
         shadow_group.update()
         player_group.update()
-        point_group.update()
         shadow.update()
         player.update()
         sprite_group.draw(window)
-        point_group.draw(window)
         player.move()
 
         pygame.display.flip()
