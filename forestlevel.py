@@ -117,6 +117,10 @@ def start_game_forest(run, score):
                 self.rect.topleft = self.pos
                 self.pos.y += speed
 
+            def open(self):
+                self.index = 1
+                self.image = self.images[self.index]
+
         class Enemy_soft(pygame.sprite.Sprite):
             def __init__(self, pos, enemy_image):
                 super().__init__()
@@ -388,6 +392,11 @@ def start_game_forest(run, score):
                                     return player.score
                                 else:
                                     door.select()
+                for chest in chests:
+                    if pygame.sprite.spritecollide(chest, player_group, False, collided=pygame.sprite.collide_mask):
+                        if event.type == pygame.KEYDOWN:
+                            if event.key == pygame.K_e:
+                                chest.open()
 
             speed_x = player.vel.x
             speed_y = player.vel.y
@@ -433,6 +442,10 @@ def start_game_forest(run, score):
                     enemy_soft.kill()
                     enemies_soft_hit.append(enemy_soft)
                     enemies_soft.remove(enemy_soft)
+
+            for chest in chests:
+                if pygame.sprite.spritecollide(point, player_group, False, collided=pygame.sprite.collide_mask):
+                    chest.open()
 
             sprite_group.update()
             col_group.update()

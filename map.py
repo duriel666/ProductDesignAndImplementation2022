@@ -16,7 +16,7 @@ class Point(pygame.sprite.Sprite):
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
         self.pos = vec(0, 0)
-        self.pos2 = vec(pos[0],pos[1]+gh-wh)
+        self.pos2 = vec(pos[0], pos[1]+gh-wh)
         self.vel = vec(0, 0)
         self.level = level
 
@@ -33,6 +33,35 @@ class Point(pygame.sprite.Sprite):
             return select_forest(player.score)
         if self.level == 'beach':
             return select_beach(player.score)
+
+
+class Chest(pygame.sprite.Sprite):
+    def __init__(self, pos):
+        super().__init__()
+        self.index = 0
+        self.images = []
+        self.images.append(pygame.image.load(
+            'gfx/map-chest-closed.png').convert_alpha())
+        self.images.append(pygame.image.load(
+            'gfx/map-chest-open.png').convert_alpha())
+        self.image = self.images[self.index].convert_alpha()
+        self.mask = pygame.mask.from_surface(self.image)
+        self.rect = self.image.get_rect()
+        self.pos = vec(0, 0)
+        self.pos2 = vec(pos[0], pos[1]+gh-wh)
+        self.vel = vec(0, 0)
+
+    def scroll_x(self, speed):
+        self.rect.topleft = self.pos
+        self.pos.x = speed+self.pos2.x
+
+    def scroll_y(self, speed):
+        self.rect.topleft = self.pos
+        self.pos.y = speed+self.pos2.y
+
+    def open(self):
+        self.index = 1
+        self.image = self.images[self.index]
 
 
 class World(pygame.sprite.Sprite):
@@ -208,6 +237,15 @@ points.append(Point((800, 550), 'beach', 'gfx/drawn-mario.png'))
 
 points_found = []
 
+chests = []
+chests.append(Chest((1300, -250)))
+chests.append(Chest((2500, -850)))
+chests.append(Chest((950, 150)))
+chests.append(Chest((1100, -650)))
+chest_group = pygame.sprite.Group()
+for chest in chests:
+    chest_group.add(chest)
+
 score_count = int(len(points))
 
 col_group = pygame.sprite.Group()
@@ -218,6 +256,8 @@ sprite_group.add(taakse)
 sprite_group.add(shadow)
 for point in points:
     sprite_group.add(point)
+for chest in chests:
+    sprite_group.add(chest)
 sprite_group.add(player)
 sprite_group.add(cloud_shadows)
 sprite_group.add(clouds2)
@@ -226,6 +266,8 @@ sprite_group.add(clouds)
 world_list = [clouds2, clouds, cloud_shadows, taakse, collision]
 for point in points:
     world_list.append(point)
+for chest in chests:
+    world_list.append(chest)
 
 clock = pygame.time.Clock()
 
@@ -245,6 +287,11 @@ def start_game(run):
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_e:
                             point.select()
+            for chest in chests:
+                if pygame.sprite.spritecollide(chest, player_group, False, collided=pygame.sprite.collide_mask):
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_e:
+                            chest.open()
 
         '''speed_x = player.vel.x
         speed_y = player.vel.y
