@@ -312,9 +312,7 @@ def start_game(run):
         sprite_group.draw(window)
         player.move()
         game_font.render_to(
-            window, (0, 0), f'fps - {clock.get_fps()}', (black))
-        game_font.render_to(
-            window, (0, 30), f'player.vel - {player.vel.x:,.2f} - {player.vel.y:,.2f}', (black))
+            window, (0, 0), f'fps - {clock.get_fps():,.2f}', (black))
 
         pygame.display.flip()
         clock.tick(fps)

@@ -1,9 +1,11 @@
 from map import *
+from help import *
 
 pygame.init()
 pygame.font.init()
 
 game_font = pygame.freetype.Font('fonts/HelveticaNeue Light.ttf', 60)
+game_font2 = pygame.freetype.Font('fonts/HelveticaNeue Light.ttf', 30)
 
 black = (0,  0,  0)
 white = (180, 180, 180)
@@ -37,6 +39,9 @@ def gamemenu(run):
                     start_game(True)
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if 175 <= mouse[0] <= 575 and 285 <= mouse[1] <= 360:
+                    gamehelp(run)
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if 175 <= mouse[0] <= 575 and 385 <= mouse[1] <= 460:
                     run = False
                     return player.score
             if event.type == pygame.QUIT:
@@ -53,10 +58,17 @@ def gamemenu(run):
             game_font.render_to(window, (200, 200), 'START', (white))
         if 175 <= mouse[0] <= 575 and 285 <= mouse[1] <= 360:
             rect_a(window, select, (175, 285, 400, 75))
-            game_font.render_to(window, (197, 303), 'QUIT', (shadow2))
-            game_font.render_to(window, (200, 300), 'QUIT', (white2))
+            game_font.render_to(window, (197, 303), 'HELP', (shadow2))
+            game_font.render_to(window, (200, 300), 'HELP', (white2))
         else:
-            game_font.render_to(window, (197, 303), 'QUIT', (shadow))
-            game_font.render_to(window, (200, 300), 'QUIT', (white))
+            game_font.render_to(window, (197, 303), 'HELP', (shadow))
+            game_font.render_to(window, (200, 300), 'HELP', (white))
+        if 175 <= mouse[0] <= 575 and 385 <= mouse[1] <= 460:
+            rect_a(window, select, (175, 385, 400, 75))
+            game_font.render_to(window, (197, 403), 'QUIT', (shadow2))
+            game_font.render_to(window, (200, 400), 'QUIT', (white2))
+        else:
+            game_font.render_to(window, (197, 403), 'QUIT', (shadow))
+            game_font.render_to(window, (200, 400), 'QUIT', (white))
 
         pygame.display.update()

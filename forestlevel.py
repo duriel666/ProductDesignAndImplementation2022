@@ -465,7 +465,7 @@ def start_game_forest(run, score):
             sprite_group2.draw(window)
 
             game_font.render_to(
-                window, (0, 0), f'fps - {clock.get_fps()}', (black))
+                window, (0, 0), f'fps - {clock.get_fps():,.2f}', (black))
 
             if len(enemies_soft_hit) == int(player.health):
                 game_font.render_to(window, (400, 50),
