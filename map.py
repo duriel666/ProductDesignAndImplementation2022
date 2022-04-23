@@ -127,7 +127,15 @@ class Player(pygame.sprite.Sprite):
             if self.index >= len(self.images):
                 self.index = 0
 
-        if pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask) and self.vel != 0:
+        hits = pygame.sprite.spritecollide(
+            self, col_group, False, collided=pygame.sprite.collide_mask)
+        if hits and self.vel != 0:
+            if self.vel.x < 7.5 and self.vel.x > -7.5:
+                self.vel.x = -self.vel.x*1.5
+            if self.vel.y < 7.5 and self.vel.y > -7.5:
+                self.vel.y = -self.vel.y*1.5
+
+        '''if pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask) and self.vel != 0:
             if self.vel.x < 0 and self.vel.y < 0:
                 self.pos.x += 1*-self.vel.x
                 self.pos.y += 1*-self.vel.y
@@ -147,7 +155,7 @@ class Player(pygame.sprite.Sprite):
             elif self.vel.y < 0:
                 self.pos.y += 1*-self.vel.y
             elif self.vel.y > 0:
-                self.pos.y += -1*self.vel.y
+                self.pos.y += -1*self.vel.y'''
 
         self.image = self.images[self.index]
 
@@ -183,8 +191,9 @@ shadow_group.add(shadow)
 
 collision = World('gfx/map-col.png')
 taakse = World('gfx/map.png')
-eteen2 = World('gfx/map-clouds-shadows.png')
-eteen = World('gfx/map-clouds.png')
+cloud_shadows = World('gfx/map-clouds-shadows.png')
+clouds = World('gfx/map-clouds.png')
+clouds2 = World('gfx/map-clouds2.png')
 
 points = []
 points.append(Point((1500, -50), 'forest', 'gfx/drawn-mario.png'))
@@ -206,10 +215,11 @@ sprite_group = pygame.sprite.Group()
 sprite_group.add(taakse)
 sprite_group.add(shadow)
 sprite_group.add(player)
-sprite_group.add(eteen2)
-sprite_group.add(eteen)
+sprite_group.add(cloud_shadows)
+sprite_group.add(clouds2)
+sprite_group.add(clouds)
 
-world_list = [eteen, eteen2, taakse, collision]
+world_list = [clouds2, clouds, cloud_shadows, taakse, collision]
 for point in points:
     world_list.append(point)
 
