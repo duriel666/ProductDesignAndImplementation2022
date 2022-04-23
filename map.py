@@ -8,23 +8,25 @@ black = (0,  0,  0)
 white = (255, 255, 255)
 game_font = pygame.freetype.Font('fonts/HelveticaNeue Light.ttf', 30)
 
+
 class Point(pygame.sprite.Sprite):
     def __init__(self, pos, level, level_image):
         super().__init__()
         self.image = pygame.image.load(level_image).convert_alpha()
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
-        self.pos = vec(pos)
+        self.pos = vec(0, 0)
+        self.pos2 = vec(pos[0],pos[1]+gh-wh)
         self.vel = vec(0, 0)
         self.level = level
 
     def scroll_x(self, speed):
         self.rect.topleft = self.pos
-        self.pos.x = speed
+        self.pos.x = speed+self.pos2.x
 
     def scroll_y(self, speed):
         self.rect.topleft = self.pos
-        self.pos.y = speed
+        self.pos.y = speed+self.pos2.y
 
     def select(self):
         if self.level == 'forest':
@@ -132,35 +134,35 @@ class Player(pygame.sprite.Sprite):
             if self.vel.x < 0 and self.vel.y < 0:
                 self.pos_virtual.x += 2
                 self.pos_virtual.y += 2
-                self.vel.x=0
-                self.vel.y=0
+                self.vel.x = 0
+                self.vel.y = 0
             elif self.vel.x < 0 and self.vel.y > 0:
                 self.pos_virtual.x += 2
                 self.pos_virtual.y += -2
-                self.vel.x=0
-                self.vel.y=0
+                self.vel.x = 0
+                self.vel.y = 0
             elif self.vel.x > 0 and self.vel.y < 0:
                 self.pos_virtual.x += -2
                 self.pos_virtual.y += 2
-                self.vel.x=0
-                self.vel.y=0
+                self.vel.x = 0
+                self.vel.y = 0
             elif self.vel.x > 0 and self.vel.y > 0:
                 self.pos_virtual.x += -2
                 self.pos_virtual.y += -2
-                self.vel.x=0
-                self.vel.y=0
+                self.vel.x = 0
+                self.vel.y = 0
             elif self.vel.x < 0:
                 self.pos_virtual.x += 2
-                self.vel.x=0
+                self.vel.x = 0
             elif self.vel.x > 0:
                 self.pos_virtual.x += -2
-                self.vel.x=0
+                self.vel.x = 0
             elif self.vel.y < 0:
                 self.pos_virtual.y += 2
-                self.vel.y=0
+                self.vel.y = 0
             elif self.vel.y > 0:
                 self.pos_virtual.y += -2
-                self.vel.y=0
+                self.vel.y = 0
 
         self.image = self.images[self.index]
         self.rect.midbottom = self.pos
@@ -200,8 +202,8 @@ clouds = World('gfx/map-clouds.png')
 clouds2 = World('gfx/map-clouds2.png')
 
 points = []
-points.append(Point((1500, -50), 'forest', 'gfx/forest-entrance.png'))
-points.append(Point((1000, -850), 'level2', 'gfx/drawn-mario.png'))
+points.append(Point((1500, -300), 'forest', 'gfx/forest-entrance.png'))
+points.append(Point((1000, -1550), 'level2', 'gfx/drawn-mario.png'))
 points.append(Point((800, 550), 'beach', 'gfx/drawn-mario.png'))
 
 points_found = []
@@ -263,9 +265,9 @@ def start_game(run):
         sprite_group.draw(window)
         player.move()
         game_font.render_to(
-                window, (0, 0), f'fps - {clock.get_fps()}', (black))
+            window, (0, 0), f'fps - {clock.get_fps()}', (black))
         game_font.render_to(
-                window, (0, 30), f'player.vel - {player.vel.x:,.2f} - {player.vel.y:,.2f}', (black))
+            window, (0, 30), f'player.vel - {player.vel.x:,.2f} - {player.vel.y:,.2f}', (black))
 
         pygame.display.flip()
         clock.tick(fps)
