@@ -122,21 +122,23 @@ def start_game_forest(run, score):
                 self.image = self.images[self.index]
 
         class Enemy_soft(pygame.sprite.Sprite):
-            def __init__(self, pos, enemy_image):
+            def __init__(self, pos, enemy_image, size):
                 super().__init__()
                 self.image = pygame.image.load(enemy_image).convert_alpha()
                 self.mask = pygame.mask.from_surface(self.image)
                 self.rect = self.image.get_rect()
+                self.width = size[0]
+                self.height = size[1]
                 self.pos = vec(pos[0], pos[1]+wh)
                 self.vel = vec(0, 0)
 
             def scroll_x(self, speed):
                 self.rect.topleft = self.pos
-                self.pos.x += speed
+                self.pos.x += speed*((self.width-ww)/(gw-ww))
 
             def scroll_y(self, speed):
                 self.rect.topleft = self.pos
-                self.pos.y += speed
+                self.pos.y += speed*((self.height-wh)/(gh-wh))
 
         class World(pygame.sprite.Sprite):
             def __init__(self, world_image):
@@ -316,11 +318,11 @@ def start_game_forest(run, score):
 
         enemies_soft = []
         enemies_soft.append(Enemy_soft(
-            (2189, -192), 'gfx/drawn-mario.png'))
+            (2189, -192), 'gfx/forest-enemy-soft.png', (gw*0.95, gh*0.95)))
         enemies_soft.append(Enemy_soft(
-            (1271, -948), 'gfx/drawn-mario.png'))
+            (1271, -948), 'gfx/forest-enemy-soft.png', (gw*0.95, gh*0.95)))
         enemies_soft.append(Enemy_soft(
-            (593, -1242), 'gfx/drawn-mario.png'))
+            (593, -1242), 'gfx/forest-enemy-soft.png', (gw*0.95, gh*0.95)))
         enemies_soft_hit = []
         enemy_soft_group = pygame.sprite.Group()
         for enemy_soft in enemies_soft:

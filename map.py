@@ -293,11 +293,6 @@ def start_game(run):
                         if event.key == pygame.K_e:
                             chest.open()
 
-        '''speed_x = player.vel.x
-        speed_y = player.vel.y
-        for world in world_list:
-            world.scroll_x(-speed_x)
-            world.scroll_y(-speed_y)'''
         for world in world_list:
             world.scroll_x(-player.pos_virtual[0])
             world.scroll_y(-player.pos_virtual[1])
