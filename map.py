@@ -6,7 +6,7 @@ fps = 60
 friction = -0.08
 black = (0,  0,  0)
 white = (255, 255, 255)
-
+game_font = pygame.freetype.Font('fonts/HelveticaNeue Light.ttf', 30)
 
 class Point(pygame.sprite.Sprite):
     def __init__(self, pos, level, level_image):
@@ -20,11 +20,11 @@ class Point(pygame.sprite.Sprite):
 
     def scroll_x(self, speed):
         self.rect.topleft = self.pos
-        self.pos.x += speed
+        self.pos.x = speed
 
     def scroll_y(self, speed):
         self.rect.topleft = self.pos
-        self.pos.y += speed
+        self.pos.y = speed
 
     def select(self):
         if self.level == 'forest':
@@ -41,16 +41,16 @@ class World(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.width = self.image.get_width()
         self.height = self.image.get_height()
-        self.pos = vec(0, wh-self.height)
+        self.pos = vec(0, 0)
         self.vel = vec(0, 0)
 
     def scroll_x(self, speed):
         self.rect.topleft = self.pos
-        self.pos.x += speed*((self.width-ww)/(gw-ww))
+        self.pos.x = speed*((self.width-ww)/(gw-ww))
 
     def scroll_y(self, speed):
         self.rect.topleft = self.pos
-        self.pos.y += speed*((self.height-wh)/(gh-wh))
+        self.pos.y = speed*((self.height-wh)/(gh-wh))
 
 
 class Player(pygame.sprite.Sprite):
@@ -65,6 +65,7 @@ class Player(pygame.sprite.Sprite):
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
         self.pos = vec(ww/2, wh/2)
+        self.pos_virtual = vec(0, gh-wh)
         self.shadow_pos = vec(self.pos.x-20, self.pos.y-20)
         self.vel = vec(0, 0)
         self.acc = vec(0, 0)
@@ -127,21 +128,46 @@ class Player(pygame.sprite.Sprite):
             if self.index >= len(self.images):
                 self.index = 0
 
-        hits = pygame.sprite.spritecollide(
-            self, col_group, False, collided=pygame.sprite.collide_mask)
-        if hits and self.vel != 0:
-            if self.vel.x < 7.5 and self.vel.x > -7.5:
-                self.vel.x = -self.vel.x*1.5
-            if self.vel.y < 7.5 and self.vel.y > -7.5:
-                self.vel.y = -self.vel.y*1.5
+        if pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask) and self.vel != 0:
+            if self.vel.x < 0 and self.vel.y < 0:
+                self.pos_virtual.x += 2
+                self.pos_virtual.y += 2
+                self.vel.x=0
+                self.vel.y=0
+            elif self.vel.x < 0 and self.vel.y > 0:
+                self.pos_virtual.x += 2
+                self.pos_virtual.y += -2
+                self.vel.x=0
+                self.vel.y=0
+            elif self.vel.x > 0 and self.vel.y < 0:
+                self.pos_virtual.x += -2
+                self.pos_virtual.y += 2
+                self.vel.x=0
+                self.vel.y=0
+            elif self.vel.x > 0 and self.vel.y > 0:
+                self.pos_virtual.x += -2
+                self.pos_virtual.y += -2
+                self.vel.x=0
+                self.vel.y=0
+            elif self.vel.x < 0:
+                self.pos_virtual.x += 2
+                self.vel.x=0
+            elif self.vel.x > 0:
+                self.pos_virtual.x += -2
+                self.vel.x=0
+            elif self.vel.y < 0:
+                self.pos_virtual.y += 2
+                self.vel.y=0
+            elif self.vel.y > 0:
+                self.pos_virtual.y += -2
+                self.vel.y=0
 
         self.image = self.images[self.index]
+        self.rect.midbottom = self.pos
 
         self.acc += self.vel * friction
         self.vel += self.acc
-        self.pos += self.vel + self.acceleration * self.acc
-
-        self.rect.midbottom = self.pos
+        self.pos_virtual += self.vel + self.acceleration * self.acc
 
 
 class Shadow(pygame.sprite.Sprite):
@@ -218,36 +244,14 @@ def start_game(run):
                         if event.key == pygame.K_e:
                             point.select()
 
-        speed_x = player.vel.x
+        '''speed_x = player.vel.x
         speed_y = player.vel.y
-        if collision.pos.x < 0:
-            for world in world_list:
-                world.scroll_x(-(speed_x))
-            player.vel.x = 0
-            player.pos.x -= speed_x
-        elif collision.pos.x > (-gw+ww):
-            for world in world_list:
-                world.scroll_x(-(speed_x))
-            player.vel.x = 0
-            player.pos.x -= speed_x
-        if collision.pos.y < 0:
-            for world in world_list:
-                world.scroll_y(-(speed_y))
-            player.vel.y = 0
-            player.pos.y -= speed_y
-        elif collision.pos.y > (-gh+wh):
-            for world in world_list:
-                world.scroll_y(-(speed_y))
-            player.vel.y = 0
-            player.pos.y -= speed_y
-        else:
-            for world in world_list:
-                world.scroll_x(0)
-                world.scroll_y(0)
-            player.vel.x = speed_x
-            player.vel.y = speed_y
-        player.vel.x = speed_x
-        player.vel.y = speed_y
+        for world in world_list:
+            world.scroll_x(-speed_x)
+            world.scroll_y(-speed_y)'''
+        for world in world_list:
+            world.scroll_x(-player.pos_virtual[0])
+            world.scroll_y(-player.pos_virtual[1])
 
         window.fill((70, 117, 215))
         sprite_group.update()
@@ -258,6 +262,10 @@ def start_game(run):
         player.update()
         sprite_group.draw(window)
         player.move()
+        game_font.render_to(
+                window, (0, 0), f'fps - {clock.get_fps()}', (black))
+        game_font.render_to(
+                window, (0, 30), f'player.vel - {player.vel.x:,.2f} - {player.vel.y:,.2f}', (black))
 
         pygame.display.flip()
         clock.tick(fps)
