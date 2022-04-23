@@ -135,6 +135,28 @@ class Player(pygame.sprite.Sprite):
             if self.vel.y < 7.5 and self.vel.y > -7.5:
                 self.vel.y = -self.vel.y*1.5
 
+        '''if pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask) and self.vel != 0:
+            if self.vel.x < 0 and self.vel.y < 0:
+                self.pos.x += 1*-self.vel.x
+                self.pos.y += 1*-self.vel.y
+            elif self.vel.x < 0 and self.vel.y > 0:
+                self.pos.x += 1*-self.vel.x
+                self.pos.y += -1*self.vel.y
+            elif self.vel.x > 0 and self.vel.y < 0:
+                self.pos.x += -1*self.vel.x
+                self.pos.y += 1*-self.vel.y
+            elif self.vel.x > 0 and self.vel.y > 0:
+                self.pos.x += -1*self.vel.x
+                self.pos.y += -1*self.vel.y
+            elif self.vel.x < 0:
+                self.pos.x += 1*-self.vel.x
+            elif self.vel.x > 0:
+                self.pos.x += -1*self.vel.x
+            elif self.vel.y < 0:
+                self.pos.y += 1*-self.vel.y
+            elif self.vel.y > 0:
+                self.pos.y += -1*self.vel.y'''
+
         self.image = self.images[self.index]
 
         self.acc += self.vel * friction
