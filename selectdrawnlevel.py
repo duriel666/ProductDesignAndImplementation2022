@@ -1,5 +1,6 @@
 from forestlevel import *
 from beachlevel import *
+from magicallevel import *
 
 black = (0,  0,  0)
 white = (180, 180, 180)
