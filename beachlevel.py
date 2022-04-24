@@ -13,10 +13,12 @@ def start_game_beach(run, score):
         gh = 3508
         fps = 60
         friction = -0.06
-        black = (0,  0,  0)
-        white = (255, 255, 255)
+        black = (0,  0,  0, 200)
+        white = (255, 255, 255, 200)
+        red = (255, 0, 0, 200)
+        text_shadow = (0, 0, 0, 125)
 
-        game_font = pygame.freetype.Font('fonts/HelveticaNeue Light.ttf', 30)
+        game_font = pygame.freetype.Font('fonts/HelveticaNeue Light.ttf', 50)
 
         volume_up, timer = pygame.USEREVENT+1, 200
         bounce = pygame.mixer.Sound('sfx/beach-bounce.wav')
@@ -395,6 +397,7 @@ def start_game_beach(run, score):
                     enemy_soft.kill()
                     enemies_soft_hit.append(enemy_soft)
                     enemies_soft.remove(enemy_soft)
+            player.health = 3-len(enemies_soft_hit)
 
             sprite_group.update()
             col_group.update()
@@ -415,6 +418,18 @@ def start_game_beach(run, score):
 
             game_font.render_to(
                 window, (0, 0), f'fps - {clock.get_fps():,.2f}', (black))
+            game_font.render_to(
+                window, (ww-303, 23), 'Health', (text_shadow))
+            game_font.render_to(
+                window, (ww-300, 20), 'Health', (white))
+            game_font.render_to(
+                window, (ww-143, 23), player.health*'O', (text_shadow))
+            game_font.render_to(
+                window, (ww-140, 20), player.health*'O', (red))
+            game_font.render_to(
+                window, (ww-203, wh-57), f'Score {player.score}', (text_shadow))
+            game_font.render_to(
+                window, (ww-200, wh-60), f'Score {player.score}', (white))
 
             if len(enemies_soft_hit) == int(player.health):
                 game_font.render_to(window, (400, 50),

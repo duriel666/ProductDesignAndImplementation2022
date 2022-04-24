@@ -4,9 +4,12 @@ gw = 4961  # game world width
 gh = 3508  # game world height
 fps = 60
 friction = -0.08
-black = (0,  0,  0)
-white = (255, 255, 255)
-game_font = pygame.freetype.Font('fonts/HelveticaNeue Light.ttf', 30)
+black = (0,  0,  0, 200)
+white = (255, 255, 255, 200)
+red = (255, 0, 0, 200)
+text_shadow = (0, 0, 0, 125)
+
+game_font = pygame.freetype.Font('fonts/HelveticaNeue Light.ttf', 50)
 
 
 class Point(pygame.sprite.Sprite):
@@ -306,8 +309,25 @@ def start_game(run):
         player.update()
         sprite_group.draw(window)
         player.move()
+        location = ''
+        px = collision.pos.x
+        py = collision.pos.y
+        if py < -2350:
+            location = 'Southern Beach'
+        elif px > -1100 and py > -2350 and py < -1750:
+            location = 'Mushroom Forest'
+        elif px > -2600 and py > -1850 and px < -1100 and py < -850:
+            location = 'Three Bridges Island'
+        elif px > -2600 and py > -1750 and px < -100 and py < -1250:
+            location = 'Sea of Grass'
+        elif px > -360 and py > -1000 and py < -400:
+            location = 'Troll\'s Bridge'
+        else:
+            location = 'No Man\'s Land'
         game_font.render_to(
-            window, (0, 0), f'fps - {clock.get_fps():,.2f}', (black))
+            window, (20, 20), f'x {collision.pos.x:,.1f} - y {collision.pos.y:,.1f}', white)
+        game_font.render_to(window, (17, wh-57), location, text_shadow)
+        game_font.render_to(window, (20, wh-60), location, white)
 
         pygame.display.flip()
         clock.tick(fps)
