@@ -13,10 +13,12 @@ def start_game_beach(run, score):
         gh = 3508
         fps = 60
         friction = -0.06
-        black = (0,  0,  0)
-        white = (255, 255, 255)
+        black = (0,  0,  0, 200)
+        white = (255, 255, 255, 200)
+        red = (255, 0, 0, 200)
+        text_shadow = (0, 0, 0, 125)
 
-        game_font = pygame.freetype.Font('fonts/HelveticaNeue Light.ttf', 30)
+        game_font = pygame.freetype.Font('fonts/HelveticaNeue Light.ttf', 50)
 
         volume_up, timer = pygame.USEREVENT+1, 200
         bounce = pygame.mixer.Sound('sfx/beach-bounce.wav')
@@ -91,6 +93,10 @@ def start_game_beach(run, score):
             def scroll_y(self, speed):
                 self.rect.topleft = self.pos
                 self.pos.y += speed
+
+            def open(self):
+                self.index = 1
+                self.image = self.images[self.index]
 
         class Enemy_soft(pygame.sprite.Sprite):
             def __init__(self, pos, enemy_image):
@@ -295,6 +301,8 @@ def start_game_beach(run, score):
             world_list.append(point)
         for door in doors:
             world_list.append(door)
+        for chest in chests:
+            world_list.append(chest)
         for enemy_soft in enemies_soft:
             world_list.append(enemy_soft)
 
@@ -339,6 +347,11 @@ def start_game_beach(run, score):
                                     return player.score
                                 else:
                                     door.select()
+                for chest in chests:
+                    if pygame.sprite.spritecollide(chest, player_group, False, collided=pygame.sprite.collide_mask):
+                        if event.type == pygame.KEYDOWN:
+                            if event.key == pygame.K_e:
+                                chest.open()
 
             speed_x = player.vel.x
             speed_y = player.vel.y
@@ -384,6 +397,7 @@ def start_game_beach(run, score):
                     enemy_soft.kill()
                     enemies_soft_hit.append(enemy_soft)
                     enemies_soft.remove(enemy_soft)
+            player.health = 3-len(enemies_soft_hit)
 
             sprite_group.update()
             col_group.update()
@@ -402,12 +416,24 @@ def start_game_beach(run, score):
             sprite_group2.update()
             sprite_group2.draw(window)
 
+            '''game_font.render_to(
+                window, (20, 20), f'fps - {clock.get_fps():,.2f}', white)'''
             game_font.render_to(
-                window, (0, 0), f'fps - {clock.get_fps()}', (black))
+                window, (ww-303, 23), 'Health', text_shadow)
+            game_font.render_to(
+                window, (ww-300, 20), 'Health', white)
+            game_font.render_to(
+                window, (ww-143, 23), player.health*'O', text_shadow)
+            game_font.render_to(
+                window, (ww-140, 20), player.health*'O', red)
+            game_font.render_to(
+                window, (ww-233, wh-57), f'Score {player.score}', text_shadow)
+            game_font.render_to(
+                window, (ww-230, wh-60), f'Score {player.score}', white)
 
             if len(enemies_soft_hit) == int(player.health):
                 game_font.render_to(window, (400, 50),
-                                    f'You died! press esc to exit', (black))
+                                    f'You died! press esc to exit', black)
                 rect_a(window, (255, 0, 0, 80), (0, 0, ww, wh))
                 player.gravity = 0
                 player.acc = (0, 0)

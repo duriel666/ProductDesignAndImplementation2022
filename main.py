@@ -11,6 +11,7 @@ white = (255, 255, 255)
 
 time_start = time.time()
 
+# starting the game and timer. first screen is menu with "start", "help" and "quit" buttons
 if __name__ == "__main__":
     print(f'Score: {gamemenu(True)}')
     time_played = time.time()-time_start
