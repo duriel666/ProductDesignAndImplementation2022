@@ -16,11 +16,13 @@ def load_screen():
 
 
 def fade_to_black():
+    # fade to and from black for loading screen
     x = 0
 
 
 def select_beach(score):
     load_screen()
+    # background audio for the level
     pygame.mixer.music.load('sfx/beach-waves.wav')
     pygame.mixer.music.play(loops=-1)
     pygame.mixer.music.set_volume(0.0)

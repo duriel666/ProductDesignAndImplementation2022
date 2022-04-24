@@ -14,6 +14,7 @@ select = (255, 255, 255, 50)
 background = (50, 150, 50)
 shadow = (10, 10, 10, 150)
 shadow2 = (10, 10, 10, 150)
+# window dimension defined in tilemap.py
 ww = screen.get_width()
 wh = screen.get_height()
 

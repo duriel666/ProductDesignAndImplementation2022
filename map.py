@@ -8,10 +8,12 @@ black = (0,  0,  0, 200)
 white = (255, 255, 255, 200)
 red = (255, 0, 0, 200)
 text_shadow = (0, 0, 0, 125)
+sea_color = (70, 117, 215)
 
 game_font = pygame.freetype.Font('fonts/HelveticaNeue Light.ttf', 50)
 
 
+# unnecessary repeating of similar classes to be combined later maybe
 class Entrance(pygame.sprite.Sprite):
     def __init__(self, pos, level, level_image):
         super().__init__()
@@ -23,13 +25,13 @@ class Entrance(pygame.sprite.Sprite):
         self.vel = vec(0, 0)
         self.level = level
 
-    def scroll_x(self, speed):
+    def scroll_x(self, world_pos):
         self.rect.topleft = self.pos
-        self.pos.x = speed+self.pos2.x
+        self.pos.x = world_pos+self.pos2.x
 
-    def scroll_y(self, speed):
+    def scroll_y(self, world_pos):
         self.rect.topleft = self.pos
-        self.pos.y = speed+self.pos2.y
+        self.pos.y = world_pos+self.pos2.y
 
     def select(self):
         if self.level == 'forest':
@@ -54,13 +56,13 @@ class Chest(pygame.sprite.Sprite):
         self.pos2 = vec(pos[0], pos[1]+gh-wh)
         self.vel = vec(0, 0)
 
-    def scroll_x(self, speed):
+    def scroll_x(self, world_pos):
         self.rect.topleft = self.pos
-        self.pos.x = speed+self.pos2.x
+        self.pos.x = world_pos+self.pos2.x
 
-    def scroll_y(self, speed):
+    def scroll_y(self, world_pos):
         self.rect.topleft = self.pos
-        self.pos.y = speed+self.pos2.y
+        self.pos.y = world_pos+self.pos2.y
 
     def open(self):
         self.index = 1
@@ -78,28 +80,31 @@ class World(pygame.sprite.Sprite):
         self.pos = vec(0, 0)
         self.vel = vec(0, 0)
 
-    def scroll_x(self, speed):
+    def scroll_x(self, world_pos):
         self.rect.topleft = self.pos
-        self.pos.x = speed*((self.width-ww)/(gw-ww))
+        self.pos.x = world_pos*((self.width-ww)/(gw-ww))
 
-    def scroll_y(self, speed):
+    def scroll_y(self, world_pos):
         self.rect.topleft = self.pos
-        self.pos.y = speed*((self.height-wh)/(gh-wh))
+        self.pos.y = world_pos*((self.height-wh)/(gh-wh))
 
 
+# Player class should be moved to its own file.py
+# with two different movement styles for map and levels
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
         self.index = 0
         self.images = []
-        for i in range(0, 72):
+        for i in range(0, 72):  # load player animation sequence
             self.images.append(pygame.image.load(
                 f'gfx/puolukka{str(i+1)}.png'))
         self.image = self.images[self.index].convert_alpha()
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
-        self.pos = vec(ww/2, wh/2)
+        self.pos = vec(ww/2, wh/2)  # character position
         self.pos_virtual = vec(0, gh-wh)
+        # virtual position for world moving
         self.shadow_pos = vec(self.pos.x-20, self.pos.y-20)
         self.vel = vec(0, 0)
         self.acc = vec(0, 0)
@@ -162,6 +167,7 @@ class Player(pygame.sprite.Sprite):
             if self.index >= len(self.images):
                 self.index = 0
 
+        # player collision to collision mask (alpha channel)
         if pygame.sprite.spritecollide(self, col_group, False, collided=pygame.sprite.collide_mask) and self.vel != 0:
             if self.vel.x < 0 and self.vel.y < 0:
                 self.pos_virtual.x += 2
@@ -204,6 +210,7 @@ class Player(pygame.sprite.Sprite):
         self.pos_virtual += self.vel + self.acceleration * self.acc
 
 
+# shadow should be added directly to Player class maybe
 class Shadow(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
@@ -254,7 +261,10 @@ score_count = int(len(entrances))
 col_group = pygame.sprite.Group()
 col_group.add(collision)
 sprite_group = pygame.sprite.Group()
+
 # sprite_group = pygame.sprite.LayeredUpdates() # player behind entrances when pos_virtual.y > entrance
+# https://www.pygame.org/docs/ref/sprite.html#pygame.sprite.LayeredUpdates
+
 sprite_group.add(taakse)
 sprite_group.add(shadow)
 for entrance in entrances:
@@ -266,6 +276,7 @@ sprite_group.add(cloud_shadows)
 sprite_group.add(clouds2)
 sprite_group.add(clouds)
 
+# list of items to move when player moves
 world_list = [clouds2, clouds, cloud_shadows, taakse, collision]
 for entrance in entrances:
     world_list.append(entrance)
@@ -300,7 +311,7 @@ def start_game(run):
             world.scroll_x(-player.pos_virtual[0])
             world.scroll_y(-player.pos_virtual[1])
 
-        window.fill((70, 117, 215))
+        window.fill(sea_color)
         sprite_group.update()
         col_group.update()
         shadow_group.update()
@@ -314,7 +325,7 @@ def start_game(run):
         cpx = collision.pos.x
         cpy = collision.pos.y
         if cpy < -2350:
-            location = 'Southern Beach'
+            location = 'Sunshine Beach'
         elif cpx > -1100 and cpy > -2350 and cpy < -1750:
             location = 'Mushroom Forest'
         elif cpx > -2600 and cpy > -1850 and cpx < -1100 and cpy < -850:

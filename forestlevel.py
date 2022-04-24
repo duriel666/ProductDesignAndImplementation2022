@@ -191,6 +191,7 @@ def start_game_forest(run, score):
                 hits_wall = pygame.sprite.spritecollide(
                     self, col_group_wall, False, collided=pygame.sprite.collide_mask)
 
+                # if bounce.wav played at speed related volume if not playing
                 if bounce.get_num_channels() < 1:
                     if hits_floor and self.vel.y != 0:
                         sound_volumey = self.vel.y/vol
@@ -205,6 +206,7 @@ def start_game_forest(run, score):
                         bounce.set_volume(sound_volumex)
                         bounce.play()
 
+                # character animation played to movement direction
                 if key[K_a]:
                     self.acc.x = -self.acceleration
                     self.index -= 1
@@ -263,6 +265,7 @@ def start_game_forest(run, score):
         player_group = pygame.sprite.GroupSingle()
         player_group.add(player)
 
+        # images for World class
         collision_wall = World('gfx/forest-col-wall.png')
         collision_floor = World('gfx/forest-col-floor.png')
         taakse = World(f'gfx/forest-bg.png')
@@ -270,6 +273,7 @@ def start_game_forest(run, score):
         light = World('gfx/forest-light.png')
         testi = World(f'gfx/menu-bg.png')
 
+        # adding water droplets to be collected
         points = []
         points.append(Point((1013, -534)))
         points.append(Point((1949, -822)))
@@ -318,6 +322,8 @@ def start_game_forest(run, score):
         for door in doors:
             door_group.add(door)
 
+        # enemies_soft take one health from player
+        # enemies_hard kill from single hit (not implemented yet)
         enemies_soft = []
         enemies_soft.append(Enemy_soft(
             (2189, -192), 'gfx/forest-enemy-soft.png', (gw*0.95, gh*0.95)))
@@ -336,6 +342,7 @@ def start_game_forest(run, score):
         col_group.add(collision_floor)
         col_group_wall = pygame.sprite.Group()
         col_group_wall.add(collision_wall)
+        # sprites added in sequence from bottom to top
         sprite_group = pygame.sprite.Group()
         sprite_group_back = pygame.sprite.Group()
         sprite_group_back.add(testi)
@@ -363,6 +370,7 @@ def start_game_forest(run, score):
             surface.blit(shape, rect)
 
         player.score = score
+        # background audio is raised from zero when level starts to x in y milliseconds with userevent
         music_volume = 0
 
         while run:
@@ -402,6 +410,7 @@ def start_game_forest(run, score):
                             if event.key == pygame.K_e:
                                 chest.open()
 
+            # scrolling screen when player goes near edge. in map the player stays in the middle
             speed_x = player.vel.x
             speed_y = player.vel.y
             if player.pos.x < ww/3.2 and player.vel.x < 0 and collision_floor.pos.x < 0:
@@ -433,6 +442,7 @@ def start_game_forest(run, score):
             player.vel.x = speed_x
             player.vel.y = speed_y
 
+            # counting score and health
             for point in points:
                 if pygame.sprite.spritecollide(point, player_group, False, collided=pygame.sprite.collide_mask):
                     point.kill()
@@ -448,6 +458,7 @@ def start_game_forest(run, score):
                     enemies_soft.remove(enemy_soft)
             player.health = 3-len(enemies_soft_hit)
 
+            # updating and drawing sprites & items
             sprite_group.update()
             col_group.update()
             player_group.update()
@@ -465,6 +476,7 @@ def start_game_forest(run, score):
             sprite_group2.update()
             sprite_group2.draw(window)
 
+            # renderin text to screen
             '''game_font.render_to(
                 window, (20, 20), f'fps - {clock.get_fps():,.2f}', white)'''
             game_font.render_to(
@@ -490,5 +502,6 @@ def start_game_forest(run, score):
                 player.vel.y = 0
                 alive = False
 
+            # refresh screen
             pygame.display.flip()
             clock.tick(fps)
