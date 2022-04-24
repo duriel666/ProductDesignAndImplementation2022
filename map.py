@@ -38,6 +38,8 @@ class Entrance(pygame.sprite.Sprite):
             return select_forest(player.score)
         if self.level == 'beach':
             return select_beach(player.score)
+        if self.level == 'magical':
+            return select_beach(player.score)
 
 
 class Chest(pygame.sprite.Sprite):
@@ -242,7 +244,7 @@ clouds2 = World('gfx/map-clouds2.png')
 
 entrances = []
 entrances.append(Entrance((1500, -300), 'forest', 'gfx/forest-entrance.png'))
-entrances.append(Entrance((1050, -1950), 'level2', 'gfx/magical-entrance.png'))
+entrances.append(Entrance((1050, -1950), 'magical', 'gfx/magical-entrance.png'))
 entrances.append(Entrance((800, 300), 'beach', 'gfx/beach-entrance.png'))
 
 entrances_found = []
