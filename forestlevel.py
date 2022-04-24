@@ -326,11 +326,13 @@ def start_game_forest(run, score):
         # enemies_hard kill from single hit (not implemented yet)
         enemies_soft = []
         enemies_soft.append(Enemy_soft(
-            (2189, -192), 'gfx/forest-enemy-soft.png', (gw*0.95, gh*0.95)))
+            (2189, -292), 'gfx/forest-enemy-soft.png', (gw*0.95, gh*0.95)))
         enemies_soft.append(Enemy_soft(
-            (1271, -948), 'gfx/forest-enemy-soft.png', (gw*0.95, gh*0.95)))
+            (1271, -1148), 'gfx/forest-enemy-soft.png', (gw*1.05, gh*0.95)))
         enemies_soft.append(Enemy_soft(
-            (593, -1242), 'gfx/forest-enemy-soft.png', (gw*0.95, gh*0.95)))
+            (593, -2242), 'gfx/forest-enemy-soft.png', (gw*1.1, gh*1.05)))
+        enemies_soft.append(Enemy_soft(
+            (3200, -2720), 'gfx/forest-enemy-soft.png', (gw*0.8, gh*0.8)))
         enemies_soft_hit = []
         enemy_soft_group = pygame.sprite.Group()
         for enemy_soft in enemies_soft:
