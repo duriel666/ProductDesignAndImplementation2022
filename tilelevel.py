@@ -1,6 +1,6 @@
 import pygame
 from tiletile import Tile
-from tilemap import tile_size, ww, wh
+from tilemap import *
 from tileplayer import *
 from tileenemy import *
 from pygame import mixer
@@ -38,7 +38,8 @@ class Level:
         player = self.player.sprite
         player_x = player.rect.centerx
         direction_x = player.direction.x
-
+        ww=game_res.get_resolution_x
+        wh=game_res.get_resolution_y
         if player_x < ww / 4 and direction_x < 0:
             self.worldmove.x = 8
             player.speed = 0
@@ -53,6 +54,8 @@ class Level:
         player = self.player.sprite
         player_y = player.rect.top
         direction_y = player.direction.y
+        ww=game_res.get_resolution_x
+        wh=game_res.get_resolution_y
         if player_y < wh / 4 and player.direction.y < 0:
             self.worldmove.y = -player.direction.y
             player.direction.y = 0

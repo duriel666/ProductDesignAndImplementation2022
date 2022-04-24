@@ -1,6 +1,6 @@
 import pygame
 from tiletile import Tile
-from tilemap import tile_size, ww
+from tilemap import tile_size
 from tileplayer import *
 
 

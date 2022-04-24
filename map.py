@@ -13,7 +13,7 @@ sea_color = (70, 117, 215)
 game_font = pygame.freetype.Font('fonts/HelveticaNeue Light.ttf', 50)
 
 
-# unnecessary repeating of similar classes to be combined later maybe
+# unnecessary repeating of similar classes to be combined later, maybe
 class Entrance(pygame.sprite.Sprite):
     def __init__(self, pos, level, level_image):
         super().__init__()
