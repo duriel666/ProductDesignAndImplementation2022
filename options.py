@@ -40,10 +40,17 @@ def gameoptions(run):
                 pygame.quit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if 700 <= mouse[0] <= 1000 and 240 <= mouse[1] <= 285:
-                    game_res.set_resolution(1280, 720)
+                    game_res.set_resolution_x(1280)
+                    game_res.set_resolution_y(720)
+                    ww = game_res.get_resolution_x()
+                    wh = game_res.get_resolution_y()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if 700 <= mouse[0] <= 1000 and 290 <= mouse[1] <= 335:
-                    game_res.set_resolution(1600, 900)
+                    game_res.set_resolution_x(1600)
+                    game_res.set_resolution_y(900)
+                    ww = game_res.get_resolution_x()
+                    wh = game_res.get_resolution_y()
+                    
         screen.fill((background))
         window.blit(menu_bg, (0, 0))
         mouse = pygame.mouse.get_pos()

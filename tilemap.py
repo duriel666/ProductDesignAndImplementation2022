@@ -23,8 +23,10 @@ class Resolution:
         self.x = x
         self.y = y
 
-    def set_resolution(self, x, y):
+    def set_resolution_x(self, x):
         self.x = x
+
+    def set_resolution_y(self, y):
         self.y = y
 
     def get_resolution_x(self):

@@ -7,7 +7,7 @@ from tilelevel import *
 
 pygame.init()
 vec = pygame.Vector2()
-screen = pygame.display.set_mode(((ww, wh)))
+screen = pygame.display.set_mode(((ww, wh)), pygame.RESIZABLE)
 clock = pygame.time.Clock()
 level = Level(level_map, screen)
 score = 0
