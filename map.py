@@ -12,7 +12,7 @@ text_shadow = (0, 0, 0, 125)
 game_font = pygame.freetype.Font('fonts/HelveticaNeue Light.ttf', 50)
 
 
-class Point(pygame.sprite.Sprite):
+class Entrance(pygame.sprite.Sprite):
     def __init__(self, pos, level, level_image):
         super().__init__()
         self.image = pygame.image.load(level_image).convert_alpha()
@@ -233,12 +233,12 @@ cloud_shadows = World('gfx/map-clouds-shadows.png')
 clouds = World('gfx/map-clouds.png')
 clouds2 = World('gfx/map-clouds2.png')
 
-points = []
-points.append(Point((1500, -300), 'forest', 'gfx/forest-entrance.png'))
-points.append(Point((1000, -1550), 'level2', 'gfx/drawn-mario.png'))
-points.append(Point((800, 550), 'beach', 'gfx/drawn-mario.png'))
+entrances = []
+entrances.append(Entrance((1500, -300), 'forest', 'gfx/forest-entrance.png'))
+entrances.append(Entrance((1000, -1550), 'level2', 'gfx/drawn-mario.png'))
+entrances.append(Entrance((800, 550), 'beach', 'gfx/drawn-mario.png'))
 
-points_found = []
+entrances_found = []
 
 chests = []
 chests.append(Chest((1300, -250)))
@@ -249,15 +249,16 @@ chest_group = pygame.sprite.Group()
 for chest in chests:
     chest_group.add(chest)
 
-score_count = int(len(points))
+score_count = int(len(entrances))
 
 col_group = pygame.sprite.Group()
 col_group.add(collision)
 sprite_group = pygame.sprite.Group()
+# sprite_group = pygame.sprite.LayeredUpdates() # player behind entrances when pos_virtual.y > entrance
 sprite_group.add(taakse)
 sprite_group.add(shadow)
-for point in points:
-    sprite_group.add(point)
+for entrance in entrances:
+    sprite_group.add(entrance)
 for chest in chests:
     sprite_group.add(chest)
 sprite_group.add(player)
@@ -266,8 +267,8 @@ sprite_group.add(clouds2)
 sprite_group.add(clouds)
 
 world_list = [clouds2, clouds, cloud_shadows, taakse, collision]
-for point in points:
-    world_list.append(point)
+for entrance in entrances:
+    world_list.append(entrance)
 for chest in chests:
     world_list.append(chest)
 
@@ -284,11 +285,11 @@ def start_game(run):
             if event.type == pygame.QUIT:
                 run = False
                 return player.score
-            for point in points:
-                if pygame.sprite.spritecollide(point, player_group, False, collided=pygame.sprite.collide_mask):
+            for entrance in entrances:
+                if pygame.sprite.spritecollide(entrance, player_group, False, collided=pygame.sprite.collide_mask):
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_e:
-                            point.select()
+                            entrance.select()
             for chest in chests:
                 if pygame.sprite.spritecollide(chest, player_group, False, collided=pygame.sprite.collide_mask):
                     if event.type == pygame.KEYDOWN:
@@ -310,22 +311,25 @@ def start_game(run):
         player.move()
 
         location = ''
-        px = collision.pos.x
-        py = collision.pos.y
-        if py < -2350:
+        cpx = collision.pos.x
+        cpy = collision.pos.y
+        if cpy < -2350:
             location = 'Southern Beach'
-        elif px > -1100 and py > -2350 and py < -1750:
+        elif cpx > -1100 and cpy > -2350 and cpy < -1750:
             location = 'Mushroom Forest'
-        elif px > -2600 and py > -1850 and px < -1100 and py < -850:
+        elif cpx > -2600 and cpy > -1850 and cpx < -1100 and cpy < -850:
             location = 'Three Bridges Island'
-        elif px > -2600 and py > -1750 and px < -100 and py < -1250:
+        elif cpx > -2600 and cpy > -1750 and cpx < -100 and cpy < -1250:
             location = 'Sea of Grass'
-        elif px > -360 and py > -1000 and py < -400:
+        elif cpx > -360 and cpy > -1000 and cpy < -400:
             location = 'Troll\'s Bridge'
         else:
             location = 'No Man\'s Land'
-        '''game_font.render_to(
-            window, (20, 20), f'x {collision.pos.x:,.1f} - y {collision.pos.y:,.1f}', white)'''
+
+        game_font.render_to(
+            window, (20, 20), f'fps {clock.get_fps():,.2f}', white)
+        game_font.render_to(
+            window, (20, 70), f'collision.pox x {cpx:,.1f} y {cpy:,.1f}', white)
         game_font.render_to(window, (17, wh-57), location, text_shadow)
         game_font.render_to(window, (20, wh-60), location, white)
 
