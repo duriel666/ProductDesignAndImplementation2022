@@ -431,7 +431,7 @@ def start_game_beach(run, score):
             game_font.render_to(
                 window, (ww-230, wh-60), f'Score {player.score}', white)
 
-            if len(enemies_soft_hit) == int(player.health):
+            if len(enemies_soft_hit) == int(player.health)-1:
                 game_font.render_to(window, (400, 50),
                                     f'You died! press esc to exit', black)
                 rect_a(window, (255, 0, 0, 80), (0, 0, ww, wh))

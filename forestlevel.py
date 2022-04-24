@@ -478,7 +478,7 @@ def start_game_forest(run, score):
             sprite_group2.update()
             sprite_group2.draw(window)
 
-            # renderin text to screen
+            # rendering text to screen
             '''game_font.render_to(
                 window, (20, 20), f'fps - {clock.get_fps():,.2f}', white)'''
             game_font.render_to(
@@ -494,7 +494,7 @@ def start_game_forest(run, score):
             game_font.render_to(
                 window, (ww-230, wh-60), f'Score {player.score}', white)
 
-            if len(enemies_soft_hit) == int(player.health):
+            if len(enemies_soft_hit) == int(player.health)-1:
                 game_font.render_to(window, (400, 50),
                                     f'You died! press esc to exit', black)
                 rect_a(window, (255, 0, 0, 80), (0, 0, ww, wh))

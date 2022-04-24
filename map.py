@@ -242,7 +242,7 @@ clouds2 = World('gfx/map-clouds2.png')
 
 entrances = []
 entrances.append(Entrance((1500, -300), 'forest', 'gfx/forest-entrance.png'))
-entrances.append(Entrance((1000, -1550), 'level2', 'gfx/drawn-mario.png'))
+entrances.append(Entrance((1050, -1950), 'level2', 'gfx/magical-entrance.png'))
 entrances.append(Entrance((800, 300), 'beach', 'gfx/beach-entrance.png'))
 
 entrances_found = []
