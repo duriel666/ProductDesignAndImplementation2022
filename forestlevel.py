@@ -448,10 +448,6 @@ def start_game_forest(run, score):
                     enemies_soft.remove(enemy_soft)
             player.health = 3-len(enemies_soft_hit)
 
-            for chest in chests:
-                if pygame.sprite.spritecollide(point, player_group, False, collided=pygame.sprite.collide_mask):
-                    chest.open()
-
             sprite_group.update()
             col_group.update()
             player_group.update()
@@ -469,24 +465,24 @@ def start_game_forest(run, score):
             sprite_group2.update()
             sprite_group2.draw(window)
 
+            '''game_font.render_to(
+                window, (20, 20), f'fps - {clock.get_fps():,.2f}', white)'''
             game_font.render_to(
-                window, (0, 0), f'fps - {clock.get_fps():,.2f}', (black))
+                window, (ww-303, 23), 'Health', text_shadow)
             game_font.render_to(
-                window, (ww-303, 23), 'Health', (text_shadow))
+                window, (ww-300, 20), 'Health', white)
             game_font.render_to(
-                window, (ww-300, 20), 'Health', (white))
+                window, (ww-143, 23), player.health*'O', text_shadow)
             game_font.render_to(
-                window, (ww-143, 23), player.health*'O', (text_shadow))
+                window, (ww-140, 20), player.health*'O', red)
             game_font.render_to(
-                window, (ww-140, 20), player.health*'O', (red))
+                window, (ww-233, wh-57), f'Score {player.score}', text_shadow)
             game_font.render_to(
-                window, (ww-203, wh-57), f'Score {player.score}', (text_shadow))
-            game_font.render_to(
-                window, (ww-200, wh-60), f'Score {player.score}', (white))
+                window, (ww-230, wh-60), f'Score {player.score}', white)
 
             if len(enemies_soft_hit) == int(player.health):
                 game_font.render_to(window, (400, 50),
-                                    f'You died! press esc to exit', (black))
+                                    f'You died! press esc to exit', black)
                 rect_a(window, (255, 0, 0, 80), (0, 0, ww, wh))
                 player.gravity = 0
                 player.acc = (0, 0)

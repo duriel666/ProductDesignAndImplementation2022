@@ -254,7 +254,6 @@ score_count = int(len(points))
 col_group = pygame.sprite.Group()
 col_group.add(collision)
 sprite_group = pygame.sprite.Group()
-# sprite_group.add(collision)
 sprite_group.add(taakse)
 sprite_group.add(shadow)
 for point in points:
@@ -309,6 +308,7 @@ def start_game(run):
         player.update()
         sprite_group.draw(window)
         player.move()
+
         location = ''
         px = collision.pos.x
         py = collision.pos.y
@@ -324,8 +324,8 @@ def start_game(run):
             location = 'Troll\'s Bridge'
         else:
             location = 'No Man\'s Land'
-        game_font.render_to(
-            window, (20, 20), f'x {collision.pos.x:,.1f} - y {collision.pos.y:,.1f}', white)
+        '''game_font.render_to(
+            window, (20, 20), f'x {collision.pos.x:,.1f} - y {collision.pos.y:,.1f}', white)'''
         game_font.render_to(window, (17, wh-57), location, text_shadow)
         game_font.render_to(window, (20, wh-60), location, white)
 
