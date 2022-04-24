@@ -4,8 +4,7 @@ black = (0,  0,  0)
 white = (180, 180, 180)
 
 loading_font = pygame.freetype.Font('fonts/HelveticaNeue Light.ttf', 50)
-
-window = pygame.display.set_mode((ww, wh))
+window = screen
 
 
 def load_screen():

@@ -1,5 +1,6 @@
 from map import *
 from help import *
+from options import *
 
 pygame.init()
 pygame.font.init()
@@ -43,6 +44,9 @@ def gamemenu(run):
                     gamehelp(run)
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if 175 <= mouse[0] <= 575 and 385 <= mouse[1] <= 460:
+                    gameoptions(run)
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if 175 <= mouse[0] <= 575 and 485 <= mouse[1] <= 560:
                     run = False
                     return player.score
             if event.type == pygame.QUIT:
@@ -66,10 +70,17 @@ def gamemenu(run):
             game_font.render_to(window, (200, 300), 'HELP', (white))
         if 175 <= mouse[0] <= 575 and 385 <= mouse[1] <= 460:
             rect_a(window, select, (175, 385, 400, 75))
-            game_font.render_to(window, (197, 403), 'QUIT', (shadow2))
-            game_font.render_to(window, (200, 400), 'QUIT', (white2))
+            game_font.render_to(window, (197, 403), 'OPTIONS', (shadow2))
+            game_font.render_to(window, (200, 400), 'OPTIONS', (white2))
         else:
-            game_font.render_to(window, (197, 403), 'QUIT', (shadow))
-            game_font.render_to(window, (200, 400), 'QUIT', (white))
+            game_font.render_to(window, (197, 403), 'OPTIONS', (shadow))
+            game_font.render_to(window, (200, 400), 'OPTIONS', (white))
+        if 175 <= mouse[0] <= 575 and 485 <= mouse[1] <= 560:
+            rect_a(window, select, (175, 485, 400, 75))
+            game_font.render_to(window, (197, 503), 'QUIT', (shadow2))
+            game_font.render_to(window, (200, 500), 'QUIT', (white2))
+        else:
+            game_font.render_to(window, (197, 503), 'QUIT', (shadow))
+            game_font.render_to(window, (200, 500), 'QUIT', (white))
 
         pygame.display.update()

@@ -1,3 +1,6 @@
+from wave import Wave_write
+
+
 level_map = [
     '                                                                                                                                       ',
     '                                                                                                                                       ',
@@ -13,5 +16,28 @@ level_map = [
 ]
 
 tile_size = 64
-ww = 1600
-wh = 900
+
+
+class Resolution:
+    def __init__(self, x=1280, y=720):
+        self.x = x
+        self.y = y
+
+    def set_resolution_x(self, x):
+        self.x = x
+
+    def set_resolution_y(self, y):
+        self.y = y
+
+    def get_resolution_x(self):
+        return self.x
+
+    def get_resolution_y(self):
+        return self.y
+
+
+game_res = Resolution()
+ww = game_res.get_resolution_x()
+wh = game_res.get_resolution_y()
+print(ww)
+print(wh)
