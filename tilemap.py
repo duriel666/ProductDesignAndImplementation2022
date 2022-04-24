@@ -19,7 +19,7 @@ tile_size = 64
 
 
 class Resolution:
-    def __init__(self, x, y):
+    def __init__(self, x=1280, y=720):
         self.x = x
         self.y = y
 
@@ -34,7 +34,7 @@ class Resolution:
         return self.y
 
 
-game_res = Resolution(1280, 720)
+game_res = Resolution()
 ww = game_res.get_resolution_x()
 wh = game_res.get_resolution_y()
 print(ww)
