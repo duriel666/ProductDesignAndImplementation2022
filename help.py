@@ -13,7 +13,7 @@ white3 = (100, 100, 100)
 select = (255, 255, 255, 100)
 background = (50, 150, 50)
 shadow = (10, 10, 10, 150)
-grey=(100,100,100,150)
+grey = (100, 100, 100, 150)
 ww = screen.get_width()
 wh = screen.get_height()
 
@@ -50,8 +50,10 @@ def gamehelp(run):
         else:
             game_font.render_to(window, (197, 303), 'BACK', (shadow))
             game_font.render_to(window, (200, 300), 'BACK', (white))
-        game_font.render_to(window, (197, 403), 'QUIT', (shadow))
-        game_font.render_to(window, (200, 400), 'QUIT', (white3))
+        game_font.render_to(window, (197, 403), 'OPTIONS', (shadow))
+        game_font.render_to(window, (200, 400), 'OPTIONS', (white3))
+        game_font.render_to(window, (197, 503), 'QUIT', (shadow))
+        game_font.render_to(window, (200, 500), 'QUIT', (white3))
 
         rect_a(window, grey, (690, 185, 320, 135))
         game_font2.render_to(
