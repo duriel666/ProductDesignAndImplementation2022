@@ -299,6 +299,8 @@ def start_game_beach(run, score):
             world_list.append(point)
         for door in doors:
             world_list.append(door)
+        for chest in chests:
+            world_list.append(chest)
         for enemy_soft in enemies_soft:
             world_list.append(enemy_soft)
 
