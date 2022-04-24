@@ -26,6 +26,8 @@ def rect_a(surface, color, rect):
     pygame.draw.rect(shape, color, shape.get_rect())
     surface.blit(shape, rect)
 
+# resolution change not working
+
 
 def gameoptions(run):
     while run:
@@ -37,14 +39,10 @@ def gameoptions(run):
                 if 700 <= mouse[0] <= 1000 and 240 <= mouse[1] <= 285:
                     game_res.set_resolution_x(1280)
                     game_res.set_resolution_y(720)
-                    ww = game_res.get_resolution_x()
-                    wh = game_res.get_resolution_y()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if 700 <= mouse[0] <= 1000 and 290 <= mouse[1] <= 335:
                     game_res.set_resolution_x(1600)
                     game_res.set_resolution_y(900)
-                    ww = game_res.get_resolution_x()
-                    wh = game_res.get_resolution_y()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if 175 <= mouse[0] <= 575 and 385 <= mouse[1] <= 460:
                     run = False

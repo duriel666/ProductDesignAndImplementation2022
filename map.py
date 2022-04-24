@@ -243,13 +243,13 @@ clouds2 = World('gfx/map-clouds2.png')
 entrances = []
 entrances.append(Entrance((1500, -300), 'forest', 'gfx/forest-entrance.png'))
 entrances.append(Entrance((1000, -1550), 'level2', 'gfx/drawn-mario.png'))
-entrances.append(Entrance((800, 550), 'beach', 'gfx/drawn-mario.png'))
+entrances.append(Entrance((800, 300), 'beach', 'gfx/drawn-mario.png'))
 
 entrances_found = []
 
 chests = []
 chests.append(Chest((1300, -250)))
-chests.append(Chest((2500, -850)))
+chests.append(Chest((2400, -950)))
 chests.append(Chest((950, 150)))
 chests.append(Chest((1100, -650)))
 chest_group = pygame.sprite.Group()

@@ -39,5 +39,3 @@ class Resolution:
 game_res = Resolution()
 ww = game_res.get_resolution_x()
 wh = game_res.get_resolution_y()
-print(ww)
-print(wh)
