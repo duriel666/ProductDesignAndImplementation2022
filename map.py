@@ -243,7 +243,7 @@ clouds2 = World('gfx/map-clouds2.png')
 entrances = []
 entrances.append(Entrance((1500, -300), 'forest', 'gfx/forest-entrance.png'))
 entrances.append(Entrance((1000, -1550), 'level2', 'gfx/drawn-mario.png'))
-entrances.append(Entrance((800, 300), 'beach', 'gfx/drawn-mario.png'))
+entrances.append(Entrance((800, 300), 'beach', 'gfx/beach-entrance.png'))
 
 entrances_found = []
 
@@ -337,10 +337,11 @@ def start_game(run):
         else:
             location = 'No Man\'s Land'
 
-        game_font.render_to(
+        '''game_font.render_to(
             window, (20, 20), f'fps {clock.get_fps():,.2f}', white)
         game_font.render_to(
-            window, (20, 70), f'collision.pox x {cpx:,.1f} y {cpy:,.1f}', white)
+            window, (20, 70), f'collision.pox x {cpx:,.1f} y {cpy:,.1f}', white)'''
+
         game_font.render_to(window, (17, wh-57), location, text_shadow)
         game_font.render_to(window, (20, wh-60), location, white)
 

@@ -4,7 +4,7 @@ from menu import *
 pygame.init()
 pygame.mixer.init()
 
-pygame.display.set_caption('Game - 0.2')
+pygame.display.set_caption('Game - 0.3')
 
 black = (0,  0,  0)
 white = (255, 255, 255)
