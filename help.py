@@ -38,11 +38,14 @@ def gamehelp(run):
                     run = False
             if event.type == pygame.QUIT:
                 pygame.quit()
+
         screen.fill((background))
         window.blit(menu_bg, (0, 0))
         mouse = pygame.mouse.get_pos()
+        
         game_font.render_to(window, (197, 203), 'START', (shadow))
         game_font.render_to(window, (200, 200), 'START', (white3))
+
         if 175 <= mouse[0] <= 575 and 285 <= mouse[1] <= 360:
             rect_a(window, select, (175, 285, 400, 75))
             game_font.render_to(window, (197, 303), 'BACK', (shadow))
@@ -50,6 +53,7 @@ def gamehelp(run):
         else:
             game_font.render_to(window, (197, 303), 'BACK', (shadow))
             game_font.render_to(window, (200, 300), 'BACK', (white))
+
         game_font.render_to(window, (197, 403), 'OPTIONS', (shadow))
         game_font.render_to(window, (200, 400), 'OPTIONS', (white3))
         game_font.render_to(window, (197, 503), 'QUIT', (shadow))
