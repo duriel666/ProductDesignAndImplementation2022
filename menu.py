@@ -30,15 +30,25 @@ def rect_a(surface, color, rect):
     surface.blit(shape, rect)
 
 
+volume_up, timer = pygame.USEREVENT+1, 100
+pygame.time.set_timer(volume_up, timer)
+
+
 def gamemenu(run):
+    music_volume = 0
     while run:
         for event in pygame.event.get():
+            if event.type == volume_up:
+                if music_volume < 0.6:
+                    music_volume += 0.001
+                    pygame.mixer.music.set_volume(music_volume)
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     run = False
                     return player.score
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if 175 <= mouse[0] <= 575 and 185 <= mouse[1] <= 260:
+                    pygame.mixer.music.stop()
                     start_game(True)
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if 175 <= mouse[0] <= 575 and 285 <= mouse[1] <= 360:

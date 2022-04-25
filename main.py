@@ -13,6 +13,9 @@ time_start = time.time()
 
 # starting the game and timer. first screen is menu with "start", "help", "options" and "quit" buttons
 if __name__ == "__main__":
+    pygame.mixer.music.load('sfx/menu.wav')
+    pygame.mixer.music.play(loops=-1)
+    pygame.mixer.music.set_volume(0.0)
     print(f'Score: {gamemenu(True)}')
     time_played = time.time()-time_start
     if time_played > 60:

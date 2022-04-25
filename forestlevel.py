@@ -397,6 +397,9 @@ def start_game_forest(run, score):
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         pygame.mixer.music.stop()
+                        pygame.mixer.music.load('sfx/map.wav')
+                        pygame.mixer.music.play(loops=-1)
+                        pygame.mixer.music.set_volume(0.0)
                         run = False
                         return player.score
                 if event.type == pygame.KEYDOWN:
@@ -407,6 +410,9 @@ def start_game_forest(run, score):
                         player.cancel_jump()
                 if event.type == pygame.QUIT:
                     pygame.mixer.music.stop()
+                    pygame.mixer.music.load('sfx/map.wav')
+                    pygame.mixer.music.play(loops=-1)
+                    pygame.mixer.music.set_volume(0.0)
                     run = False
                     return player.score
                 for door in doors:
@@ -415,6 +421,9 @@ def start_game_forest(run, score):
                             if event.key == pygame.K_e:
                                 pygame.mixer.music.stop()
                                 if door.select() == 'map':
+                                    pygame.mixer.music.load('sfx/map.wav')
+                                    pygame.mixer.music.play(loops=-1)
+                                    pygame.mixer.music.set_volume(0.0)
                                     run = False
                                     return player.score
                                 else:

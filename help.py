@@ -42,7 +42,7 @@ def gamehelp(run):
         screen.fill((background))
         window.blit(menu_bg, (0, 0))
         mouse = pygame.mouse.get_pos()
-        
+
         game_font.render_to(window, (197, 203), 'START', (shadow))
         game_font.render_to(window, (200, 200), 'START', (white3))
 
@@ -75,7 +75,7 @@ def gamehelp(run):
 
         rect_a(window, grey, (690, 385, 320, 175))
         game_font2.render_to(
-            window, (708, 402), 'Level:', (shadow))
+            window, (708, 402), 'Levels:', (shadow))
         game_font2.render_to(
             window, (708, 442), 'A, D  - to move', (shadow))
         game_font2.render_to(
@@ -83,7 +83,7 @@ def gamehelp(run):
         game_font2.render_to(
             window, (708, 522), 'E  - to use', (shadow))
         game_font2.render_to(
-            window, (710, 400), 'Level:', (white2))
+            window, (710, 400), 'Levels:', (white2))
         game_font2.render_to(
             window, (710, 440), 'A, D  - to move', (white2))
         game_font2.render_to(

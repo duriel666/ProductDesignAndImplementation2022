@@ -289,21 +289,41 @@ for chest in chests:
 
 clock = pygame.time.Clock()
 
+volume_up, timer = pygame.USEREVENT+1, 100
+pygame.time.set_timer(volume_up, timer)
+
 
 def start_game(run):
+    pygame.mixer.music.load('sfx/map.wav')
+    pygame.mixer.music.play(loops=-1)
+    pygame.mixer.music.set_volume(0.0)
+    music_volume = 0
     while run:
         for event in pygame.event.get():
+            if event.type == volume_up:
+                if music_volume < 0.4:
+                    music_volume += 0.001
+                    pygame.mixer.music.set_volume(music_volume)
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
+                    pygame.mixer.music.stop()
+                    pygame.mixer.music.load('sfx/menu.wav')
+                    pygame.mixer.music.play(loops=-1)
+                    pygame.mixer.music.set_volume(0.0)
                     run = False
                     return player.score
             if event.type == pygame.QUIT:
+                pygame.mixer.music.stop()
+                pygame.mixer.music.load('sfx/menu.wav')
+                pygame.mixer.music.play(loops=-1)
+                pygame.mixer.music.set_volume(0.0)
                 run = False
                 return player.score
             for entrance in entrances:
                 if pygame.sprite.spritecollide(entrance, player_group, False, collided=pygame.sprite.collide_mask):
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_e:
+                            pygame.mixer.music.stop()
                             entrance.select()
             for chest in chests:
                 if pygame.sprite.spritecollide(chest, player_group, False, collided=pygame.sprite.collide_mask):
