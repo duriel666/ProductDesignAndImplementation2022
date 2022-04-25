@@ -333,7 +333,7 @@ def start_game_forest(run, score):
         enemies_soft.append(Enemy_soft(
             (593, -2242), 'gfx/forest-enemy-soft.png', (gw*1.1, gh*1.05)))
         enemies_soft.append(Enemy_soft(
-            (3200, -2720), 'gfx/forest-enemy-soft.png', (gw*0.8, gh*0.8)))
+            (3200, -2920), 'gfx/forest-enemy-soft.png', (gw*0.9, gh*0.9)))
         enemies_soft_hit = []
         enemy_soft_group = pygame.sprite.Group()
         for enemy_soft in enemies_soft:
