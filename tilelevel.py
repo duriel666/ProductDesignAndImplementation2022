@@ -38,8 +38,6 @@ class Level:
         player = self.player.sprite
         player_x = player.rect.centerx
         direction_x = player.direction.x
-        ww=game_res.get_resolution_x
-        wh=game_res.get_resolution_y
         if player_x < ww / 4 and direction_x < 0:
             self.worldmove.x = 8
             player.speed = 0
@@ -54,14 +52,12 @@ class Level:
         player = self.player.sprite
         player_y = player.rect.top
         direction_y = player.direction.y
-        ww=game_res.get_resolution_x
-        wh=game_res.get_resolution_y
-        if player_y < wh / 4 and player.direction.y < 0:
-            self.worldmove.y = -player.direction.y
-            player.direction.y = 0
-        elif player_y > wh - (wh / 4) and player.direction.y > 0:
-            self.worldmove.y = -player.direction.y
-            player.direction.y = 0
+        if player_y < wh / 4 and direction_y < 0:
+            self.worldmove.y = -direction_y
+            direction_y = 0
+        elif player_y > wh - (wh / 4) and direction_y > 0:
+            self.worldmove.y = -direction_y
+            direction_y = 0
         else:
             player.direction.y = -self.worldmove.y
             self.worldmove.y = 0
@@ -86,9 +82,11 @@ class Level:
                 if player.direction.y > 0:
                     player.rect.bottom = sprite.rect.top
                     player.direction.y = 0
+                    player.jumping = False
                 elif player.direction.y < 0:
                     player.rect.top = sprite.rect.bottom
                     player.direction.y = 0
+                    player.jumping = False
 
     def enemy_coll(self):
         hitSound = pygame.mixer.Sound('kansio/clang.wav')
@@ -100,9 +98,10 @@ class Level:
                 enemy_top = enemy.rect.top
                 player_bottom = self.player.sprite.rect.bottom
                 if enemy_top < player_bottom < enemy_center and self.player.sprite.direction.y >= 0:
-                    self.player.sprite.direction.y = -15
+                    self.player.sprite.direction.y = -4
                     hitSound.play()
                     enemy.kill()
+                    self.player.jumping = False
 
     def run(self):
         self.tile.update(self.worldmove.x, self.worldmove.y)
@@ -111,7 +110,7 @@ class Level:
         self.enemy.update(self.worldmove.x, self.worldmove.y)
         self.enemy.draw(self.display_surface)
         self.scroll_x()
-        self.scroll_y()
+        # self.scroll_y()
         self.player.update()
         self.x_moving_coll()
         self.y_moving_coll()

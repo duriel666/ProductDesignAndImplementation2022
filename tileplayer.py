@@ -15,13 +15,15 @@ class Player(pygame.sprite.Sprite):
         for i in range(0, 72):
             self.images.append(pygame.image.load(
                 'gfx/character/puolukka'+str(i+1)+'.png'))
-        self.image = self.images[self.index].convert_alpha()
+        self.image = pygame.transform.scale(
+            self.images[self.index].convert_alpha(), (60, 60))
         self.rect = self.image.get_rect(topleft=pos)
         self.score = 0
         self.direction = pygame.math.Vector2(0, 0)
         self.gravity = 0.4
-        self.jumpspeed = -8
+        self.jumpspeed = -10
         self.speed = 8
+        self.jumping = False
 
     def import_character(self):
         char_path = './kuvat'
@@ -32,7 +34,6 @@ class Player(pygame.sprite.Sprite):
 
     def get_input(self):
         keys = pygame.key.get_pressed()
-        self.index = 0
 
         if keys[pygame.K_d]:
             self.direction.x = 1
@@ -48,13 +49,16 @@ class Player(pygame.sprite.Sprite):
             self.direction.x = 0
         if keys[pygame.K_w]:
             self.jump()
+        #self.image = self.index
 
     def add_gravity(self):
         self.direction.y += self.gravity
         self.rect.y += self.direction.y
 
     def jump(self):
-        self.direction.y = self.jumpspeed
+        if not self.jumping:
+            self.direction.y = self.jumpspeed
+            self.jumping = True
 
     def update(self):
         self.get_input()
