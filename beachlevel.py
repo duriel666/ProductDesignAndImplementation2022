@@ -86,6 +86,7 @@ def start_game_beach(run, score):
                 self.rect = self.image.get_rect()
                 self.pos = vec(pos[0], pos[1]+wh)
                 self.vel = vec(0, 0)
+                self.status = True
 
             def scroll_x(self, speed):
                 self.rect.topleft = self.pos
@@ -98,6 +99,9 @@ def start_game_beach(run, score):
             def open(self):
                 self.index = 1
                 self.image = self.images[self.index]
+                if player.health < 7:
+                    player.health += 1
+                self.status = False
 
         class Enemy_soft(pygame.sprite.Sprite):
             def __init__(self, pos, enemy_image):
@@ -352,7 +356,8 @@ def start_game_beach(run, score):
                     if pygame.sprite.spritecollide(chest, player_group, False, collided=pygame.sprite.collide_mask):
                         if event.type == pygame.KEYDOWN:
                             if event.key == pygame.K_e:
-                                chest.open()
+                                if chest.status:
+                                    chest.open()
 
             speed_x = player.vel.x
             speed_y = player.vel.y
@@ -398,7 +403,8 @@ def start_game_beach(run, score):
                     enemy_soft.kill()
                     enemies_soft_hit.append(enemy_soft)
                     enemies_soft.remove(enemy_soft)
-            player.health = 3-len(enemies_soft_hit)
+            player.health -= len(enemies_soft_hit)
+            enemies_soft_hit = []
 
             sprite_group.update()
             col_group.update()
@@ -423,10 +429,20 @@ def start_game_beach(run, score):
                 window, (ww-303, 23), 'Health', text_shadow)
             game_font.render_to(
                 window, (ww-300, 20), 'Health', white)
-            game_font.render_to(
-                window, (ww-143, 23), player.health*'O', text_shadow)
-            game_font.render_to(
-                window, (ww-140, 20), player.health*'O', red)
+            if player.health < 4:
+                game_font.render_to(
+                    window, (ww-143, 23), player.health*'O', text_shadow)
+                game_font.render_to(
+                    window, (ww-140, 20), player.health*'O', red)
+            elif player.health >= 4 and player.health < 7:
+                game_font.render_to(
+                    window, (ww-143, 23), 3*'O', text_shadow)
+                game_font.render_to(
+                    window, (ww-140, 20), 3*'O', red)
+                game_font.render_to(
+                    window, (ww-143, 73), (player.health-3)*'O', text_shadow)
+                game_font.render_to(
+                    window, (ww-140, 70), (player.health-3)*'O', red)
             game_font.render_to(
                 window, (ww-233, wh-57), f'Score {player.score}', text_shadow)
             game_font.render_to(

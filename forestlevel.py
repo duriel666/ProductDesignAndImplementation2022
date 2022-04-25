@@ -124,7 +124,8 @@ def start_game_forest(run, score):
             def open(self):
                 self.index = 1
                 self.image = self.images[self.index]
-                player.health += 1
+                if player.health < 7:
+                    player.health += 1
                 self.status = False
 
         class Enemy_soft(pygame.sprite.Sprite):
@@ -467,6 +468,7 @@ def start_game_forest(run, score):
                     enemies_soft.remove(enemy_soft)
             player.health -= len(enemies_soft_hit)
             enemies_soft_hit = []
+
             # updating and drawing sprites & items
             sprite_group.update()
             col_group.update()
