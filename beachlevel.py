@@ -261,10 +261,10 @@ def start_game_beach(run, score):
         collision_wall = World('gfx/beach-col-wall.png')
         collision_floor = World('gfx/beach-col-floor.png')
         taakse = World(f'gfx/beach-bg.png')
+        taakse2 = World(f'gfx/beach-bg-back.png')
         eteen = World('gfx/beach-fg.png')
         light = World('gfx/beach-light.png')
         light2 = World('gfx/beach-light2.png')
-        testi = World(f'gfx/menu-bg.png')
 
         points = []
         points.append(Point((1013, -534)))
@@ -319,14 +319,14 @@ def start_game_beach(run, score):
         col_group_wall.add(collision_wall)
         sprite_group = pygame.sprite.Group()
         sprite_group_back = pygame.sprite.Group()
-        sprite_group_back.add(testi)
+        sprite_group_back.add(taakse2)
         sprite_group.add(taakse)
         sprite_group2 = pygame.sprite.Group()
         sprite_group2.add(light)
         sprite_group2.add(light2)
         sprite_group2.add(eteen)
 
-        world_list = [light, light2, testi, eteen, taakse,
+        world_list = [light, light2, eteen, taakse, taakse2,
                       collision_wall, collision_floor]
         for point in points:
             world_list.append(point)

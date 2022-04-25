@@ -17,6 +17,7 @@ def start_game_forest(run, score):
         black = (0,  0,  0, 200)
         white = (255, 255, 255, 200)
         red = (255, 0, 0, 200)
+        grey = (127, 127, 127)
         text_shadow = (0, 0, 0, 125)
 
         game_font = pygame.freetype.Font('fonts/HelveticaNeue Light.ttf', 50)
@@ -276,9 +277,9 @@ def start_game_forest(run, score):
         taakse = World(f'gfx/forest-bg.png')
         taakse2 = World(f'gfx/forest-bg1.png')
         taakse3 = World(f'gfx/forest-bg2.png')
+        taakse4 = World(f'gfx/forest-bg-back.png')
         eteen = World('gfx/forest-fg.png')
         light = World('gfx/forest-light.png')
-        testi = World(f'gfx/menu-bg.png')
 
         # adding water droplets to be collected
         points = []
@@ -325,8 +326,8 @@ def start_game_forest(run, score):
         doors = []
         doors.append(
             Door((25, -280), 'map', 'gfx/forest-entrance.png', (gw*0.95, gh*0.95)))
-        doors.append(Door((4553, -2585), 'tile',
-                     'gfx/forest-entrance.png', (gw*1.05, gh*1.05)))
+        doors.append(Door((4653, -2885), 'tile',
+                     'gfx/forest-entrance.png', (gw*0.95, gh*0.95)))
         door_group = pygame.sprite.Group()
         for door in doors:
             door_group.add(door)
@@ -357,6 +358,7 @@ def start_game_forest(run, score):
         sprite_group = pygame.sprite.Group()
         sprite_group_back = pygame.sprite.Group()
         # sprite_group_back.add(testi)
+        sprite_group_back.add(taakse4)
         sprite_group_back.add(taakse3)
         sprite_group.add(taakse2)
         sprite_group.add(taakse)
@@ -364,7 +366,7 @@ def start_game_forest(run, score):
         sprite_group2.add(light)
         sprite_group2.add(eteen)
 
-        world_list = [light, eteen, taakse, taakse2, taakse3,
+        world_list = [light, eteen, taakse, taakse2, taakse3, taakse4,
                       collision_wall, collision_floor]
         for point in points:
             world_list.append(point)
@@ -479,7 +481,6 @@ def start_game_forest(run, score):
             player_group.update()
             point_group.update()
             enemy_soft_group.update()
-            window.fill(white)
             sprite_group_back.draw(window)
             door_group.draw(window)
             sprite_group.draw(window)
