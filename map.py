@@ -22,7 +22,7 @@ class Entrance(pygame.sprite.Sprite):
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
         self.pos = vec(0, 0)
-        self.pos2 = vec(pos[0], pos[1]+gh-wh)
+        self.pos2 = vec(pos[0], pos[1]+gh-720)
         self.vel = vec(0, 0)
         self.level = level
 
@@ -56,7 +56,7 @@ class Chest(pygame.sprite.Sprite):
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
         self.pos = vec(0, 0)
-        self.pos2 = vec(pos[0], pos[1]+gh-wh)
+        self.pos2 = vec(pos[0], pos[1]+gh-720)
         self.vel = vec(0, 0)
 
     def scroll_x(self, world_pos):
@@ -101,12 +101,12 @@ class Player(pygame.sprite.Sprite):
         self.images = []
         for i in range(0, 72):  # load player animation sequence
             self.images.append(pygame.image.load(
-                f'gfx/puolukka{str(i+1)}.png'))
+                f'gfx/character/puolukka{str(i+1)}.png'))
         self.image = self.images[self.index].convert_alpha()
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
         self.pos = vec(ww/2, wh/2)  # character position
-        self.pos_virtual = vec(0, gh-wh)
+        self.pos_virtual = vec((1600-ww)/2, gh-wh-((900-wh)/2))
         # virtual position for world moving
         self.shadow_pos = vec(self.pos.x-20, self.pos.y-20)
         self.vel = vec(0, 0)
@@ -218,7 +218,7 @@ class Shadow(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
         self.image = pygame.image.load(
-            'gfx/puolukka-shadow.png').convert_alpha()
+            'gfx/character/puolukka-shadow.png').convert_alpha()
         self.rect = self.image.get_rect()
         self.pos = vec((ww/2, wh-wh/2))
 
@@ -244,8 +244,8 @@ clouds = World('gfx/map-clouds.png')
 clouds2 = World('gfx/map-clouds2.png')
 
 entrances = []
-entrances.append(Entrance((1500, -300), 'forest', 'gfx/forest-entrance.png'))
-entrances.append(Entrance((1050, -1950), 'magical',
+entrances.append(Entrance((1500, -500), 'forest', 'gfx/forest-entrance.png'))
+entrances.append(Entrance((1050, -2250), 'magical',
                  'gfx/magical-entrance.png'))
 entrances.append(Entrance((800, 300), 'beach', 'gfx/beach-entrance.png'))
 

@@ -169,7 +169,7 @@ def start_game_forest(run, score):
                 self.images = []
                 for i in range(0, 72):
                     self.images.append(pygame.image.load(
-                        f'gfx/puolukka{str(i+1)}.png'))
+                        f'gfx/character/puolukka{str(i+1)}.png'))
                 self.image = self.images[self.index].convert_alpha()
                 self.mask = pygame.mask.from_surface(self.image)
                 self.rect = self.image.get_rect()
@@ -316,9 +316,9 @@ def start_game_forest(run, score):
 
         doors = []
         doors.append(
-            Door((119, -100), 'map', 'gfx/drawn-mario.png', (gw*1.05, gh*1.05)))
+            Door((25, -280), 'map', 'gfx/forest-entrance.png', (gw*0.95, gh*0.95)))
         doors.append(Door((4553, -2585), 'tile',
-                     'gfx/drawn-mario.png', (gw*1.05, gh*1.05)))
+                     'gfx/forest-entrance.png', (gw*1.05, gh*1.05)))
         door_group = pygame.sprite.Group()
         for door in doors:
             door_group.add(door)
@@ -495,7 +495,7 @@ def start_game_forest(run, score):
             game_font.render_to(
                 window, (ww-230, wh-60), f'Score {player.score}', white)
 
-            if len(enemies_soft_hit) == int(player.health)-1:
+            if len(enemies_soft_hit) == int(player.health):
                 game_font.render_to(window, (400, 50),
                                     f'You died! press esc to exit', black)
                 rect_a(window, (255, 0, 0, 80), (0, 0, ww, wh))

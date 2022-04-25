@@ -14,7 +14,7 @@ class Player(pygame.sprite.Sprite):
         self.images = []
         for i in range(0, 72):
             self.images.append(pygame.image.load(
-                'gfx/puolukka'+str(i+1)+'.png'))
+                'gfx/character/puolukka'+str(i+1)+'.png'))
         self.image = self.images[self.index].convert_alpha()
         self.rect = self.image.get_rect(topleft=pos)
         self.score = 0

@@ -21,8 +21,8 @@ def start_game_magical(run, score):
         game_font = pygame.freetype.Font('fonts/HelveticaNeue Light.ttf', 50)
 
         volume_up, timer = pygame.USEREVENT+1, 200
-        bounce = pygame.mixer.Sound('sfx/forest-bounce.wav')
-        point_get = pygame.mixer.Sound('sfx/forest-point.wav')
+        bounce = pygame.mixer.Sound('sfx/magical-bounce.wav')
+        point_get = pygame.mixer.Sound('sfx/magical-point.wav')
         point_get.set_volume(0.4)
 
         pygame.time.set_timer(volume_up, timer)
@@ -57,7 +57,7 @@ def start_game_magical(run, score):
             def __init__(self, pos):
                 super().__init__()
                 self.image = pygame.image.load(
-                    'gfx/forest-point.png').convert_alpha()
+                    'gfx/magical-point.png').convert_alpha()
                 self.mask = pygame.mask.from_surface(self.image)
                 self.rect = self.image.get_rect()
                 self.pos = vec(pos[0], pos[1]+wh)
@@ -77,9 +77,9 @@ def start_game_magical(run, score):
                 self.index = 0
                 self.images = []
                 self.images.append(pygame.image.load(
-                    'gfx/forest-chest-closed.png').convert_alpha())
+                    'gfx/magical-chest-closed.png').convert_alpha())
                 self.images.append(pygame.image.load(
-                    'gfx/forest-chest-open.png').convert_alpha())
+                    'gfx/magical-chest-open.png').convert_alpha())
                 self.image = self.images[self.index].convert_alpha()
                 self.mask = pygame.mask.from_surface(self.image)
                 self.rect = self.image.get_rect()
@@ -143,7 +143,7 @@ def start_game_magical(run, score):
                 self.images = []
                 for i in range(0, 72):
                     self.images.append(pygame.image.load(
-                        f'gfx/puolukka{str(i+1)}.png'))
+                        f'gfx/character/puolukka{str(i+1)}.png'))
                 self.image = self.images[self.index].convert_alpha()
                 self.mask = pygame.mask.from_surface(self.image)
                 self.rect = self.image.get_rect()
@@ -238,11 +238,11 @@ def start_game_magical(run, score):
         player_group = pygame.sprite.GroupSingle()
         player_group.add(player)
 
-        collision_wall = World('gfx/forest-col-wall.png')
-        collision_floor = World('gfx/forest-col-floor.png')
-        taakse = World(f'gfx/forest-bg.png')
-        eteen = World('gfx/forest-fg.png')
-        light = World('gfx/forest-light.png')
+        collision_wall = World('gfx/magical-col-wall.png')
+        collision_floor = World('gfx/magical-col-floor.png')
+        taakse = World(f'gfx/magical-bg.png')
+        eteen = World('gfx/magical-fg.png')
+        light = World('gfx/magical-light.png')
         testi = World(f'gfx/menu-bg.png')
 
         points = []
@@ -285,23 +285,23 @@ def start_game_magical(run, score):
             chest_group.add(chest)
 
         doors = []
-        '''doors.append(
-            Door((119, -100), 'map', 'gfx/drawn-mario.png', (gw*1.05, gh*1.05)))
+        doors.append(
+            Door((10, -300), 'map', 'gfx/magical-entrance.png', (gw*0.95, gh*0.95)))
         doors.append(Door((4553, -2585), 'tile',
-                     'gfx/drawn-mario.png', (gw*1.05, gh*1.05)))'''
+                     'gfx/magical-entrance.png', (gw*1.05, gh*1.05)))
         door_group = pygame.sprite.Group()
         for door in doors:
             door_group.add(door)
 
         enemies_soft = []
         enemies_soft.append(Enemy_soft(
-            (2189, -292), 'gfx/forest-enemy-soft.png', (gw*0.95, gh*0.95)))
+            (2189, -292), 'gfx/magical-enemy-soft.png', (gw*0.95, gh*0.95)))
         enemies_soft.append(Enemy_soft(
-            (1271, -1148), 'gfx/forest-enemy-soft.png', (gw*1.05, gh*0.95)))
+            (1271, -1148), 'gfx/magical-enemy-soft.png', (gw*1.05, gh*0.95)))
         enemies_soft.append(Enemy_soft(
-            (593, -2242), 'gfx/forest-enemy-soft.png', (gw*1.1, gh*1.05)))
+            (593, -2242), 'gfx/magical-enemy-soft.png', (gw*1.1, gh*1.05)))
         enemies_soft.append(Enemy_soft(
-            (3200, -2720), 'gfx/forest-enemy-soft.png', (gw*0.8, gh*0.8)))
+            (3200, -2720), 'gfx/magical-enemy-soft.png', (gw*0.8, gh*0.8)))
         enemies_soft_hit = []
         enemy_soft_group = pygame.sprite.Group()
         for enemy_soft in enemies_soft:
@@ -459,7 +459,7 @@ def start_game_magical(run, score):
             game_font.render_to(
                 window, (ww-230, wh-60), f'Score {player.score}', white)
 
-            if len(enemies_soft_hit) == int(player.health)-1:
+            if len(enemies_soft_hit) == int(player.health):
                 game_font.render_to(window, (400, 50),
                                     f'You died! press esc to exit', black)
                 rect_a(window, (255, 0, 0, 80), (0, 0, ww, wh))
