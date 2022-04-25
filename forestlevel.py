@@ -325,9 +325,9 @@ def start_game_forest(run, score):
 
         doors = []
         doors.append(
-            Door((25, -280), 'map', 'gfx/forest-entrance.png', (gw*0.95, gh*0.95)))
-        doors.append(Door((4653, -3085), 'tile',
-                     'gfx/forest-entrance.png', (gw*0.95, gh*0.95)))
+            Door((-50, -370), 'map', 'gfx/forest-exit-map.png', (gw*0.95, gh*0.95)))
+        doors.append(Door((4090, -2740), 'tile',
+                     'gfx/forest-exit-tile.png', (gw*0.95, gh*0.95)))
         door_group = pygame.sprite.Group()
         for door in doors:
             door_group.add(door)
