@@ -24,8 +24,23 @@ class Level:
             for col_index, cell in enumerate(row):
                 x = col_index * tile_size
                 y = row_index * tile_size
-                if cell == 'X':
-                    tile = Tile((x, y), tile_size)
+                if cell == '1':
+                    tile = Tile((x, y), tile_size,'gfx/1.png')
+                    self.tile.add(tile)
+                if cell == '2':
+                    tile = Tile((x, y), tile_size,'gfx/2.png')
+                    self.tile.add(tile)
+                if cell == '3':
+                    tile = Tile((x, y), tile_size,'gfx/3.png')
+                    self.tile.add(tile)
+                if cell == '4':
+                    tile = Tile((x, y), tile_size,'gfx/4.png')
+                    self.tile.add(tile)
+                if cell == '5':
+                    tile = Tile((x, y), tile_size,'gfx/5.png')
+                    self.tile.add(tile)
+                if cell == '6':
+                    tile = Tile((x, y), tile_size,'gfx/6.png')
                     self.tile.add(tile)
                 if cell == 'P':
                     player_sprite = Player((x, y))
