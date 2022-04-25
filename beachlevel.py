@@ -120,6 +120,23 @@ def start_game_beach(run, score):
                 self.rect.topleft = self.pos
                 self.pos.y += speed
 
+        class Enemy_hard(pygame.sprite.Sprite):
+            def __init__(self, pos, enemy_image):
+                super().__init__()
+                self.image = pygame.image.load(enemy_image).convert_alpha()
+                self.mask = pygame.mask.from_surface(self.image)
+                self.rect = self.image.get_rect()
+                self.pos = vec(pos[0]-gw+ww, pos[1]+wh)
+                self.vel = vec(0, 0)
+
+            def scroll_x(self, speed):
+                self.rect.topleft = self.pos
+                self.pos.x += speed
+
+            def scroll_y(self, speed):
+                self.rect.topleft = self.pos
+                self.pos.y += speed
+
         class World(pygame.sprite.Sprite):
             def __init__(self, world_image):
                 super().__init__()
@@ -246,6 +263,7 @@ def start_game_beach(run, score):
         taakse = World(f'gfx/beach-bg.png')
         eteen = World('gfx/beach-fg.png')
         light = World('gfx/beach-light.png')
+        light2 = World('gfx/beach-light2.png')
         testi = World(f'gfx/menu-bg.png')
 
         points = []
@@ -286,6 +304,13 @@ def start_game_beach(run, score):
         for enemy_soft in enemies_soft:
             enemy_soft_group.add(enemy_soft)
 
+        enemies_hard = []
+        enemies_hard.append(Enemy_hard(
+            (2189, -192), 'gfx/beach-enemy-soft.png'))
+        enemy_hard_group = pygame.sprite.Group()
+        for enemy_hard in enemies_hard:
+            enemy_hard_group.add(enemy_hard)
+
         score_count = int(len(points))
 
         col_group = pygame.sprite.Group()
@@ -296,11 +321,12 @@ def start_game_beach(run, score):
         sprite_group_back = pygame.sprite.Group()
         sprite_group_back.add(testi)
         sprite_group.add(taakse)
-        sprite_group.add(light)
         sprite_group2 = pygame.sprite.Group()
+        sprite_group2.add(light)
+        sprite_group2.add(light2)
         sprite_group2.add(eteen)
 
-        world_list = [light, testi, eteen, taakse,
+        world_list = [light, light2, testi, eteen, taakse,
                       collision_wall, collision_floor]
         for point in points:
             world_list.append(point)
