@@ -326,7 +326,7 @@ def start_game_forest(run, score):
         doors = []
         doors.append(
             Door((25, -280), 'map', 'gfx/forest-entrance.png', (gw*0.95, gh*0.95)))
-        doors.append(Door((4653, -2885), 'tile',
+        doors.append(Door((4653, -3085), 'tile',
                      'gfx/forest-entrance.png', (gw*0.95, gh*0.95)))
         door_group = pygame.sprite.Group()
         for door in doors:
@@ -493,8 +493,8 @@ def start_game_forest(run, score):
             sprite_group2.draw(window)
 
             # rendering text to screen
-            '''game_font.render_to(
-                window, (20, 20), f'fps - {clock.get_fps():,.2f}', white)'''
+            game_font.render_to(
+                window, (20, 20), f'fps - {clock.get_fps():,.2f}', white)
             game_font.render_to(
                 window, (ww-303, 23), 'Health', text_shadow)
             game_font.render_to(
