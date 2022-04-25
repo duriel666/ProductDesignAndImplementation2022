@@ -83,10 +83,12 @@ class Level:
                     player.rect.bottom = sprite.rect.top
                     player.direction.y = 0
                     player.jumping = False
+                    self.player.sprite.direction.y = -3
                 elif player.direction.y < 0:
                     player.rect.top = sprite.rect.bottom
                     player.direction.y = 0
                     player.jumping = False
+                    self.player.sprite.direction.y = -3
 
     def enemy_coll(self):
         hitSound = pygame.mixer.Sound('kansio/clang.wav')
