@@ -313,6 +313,8 @@ def start_game_forest(run, score):
 
         chests = []
         chests.append(Chest((4073, -233)))
+        chests.append(Chest((500, -233)))
+        chests.append(Chest((4073, -1233)))
         chest_group = pygame.sprite.Group()
         for chest in chests:
             chest_group.add(chest)
@@ -463,8 +465,8 @@ def start_game_forest(run, score):
                     enemy_soft.kill()
                     enemies_soft_hit.append(enemy_soft)
                     enemies_soft.remove(enemy_soft)
-            player.health = player.health-len(enemies_soft_hit)
-
+            player.health -= len(enemies_soft_hit)
+            enemies_soft_hit = []
             # updating and drawing sprites & items
             sprite_group.update()
             col_group.update()
