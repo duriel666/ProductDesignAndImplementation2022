@@ -313,8 +313,8 @@ def start_game_forest(run, score):
 
         chests = []
         chests.append(Chest((4073, -233)))
-        chests.append(Chest((500, -233)))
-        chests.append(Chest((4073, -1233)))
+        chests.append(Chest((450, -263)))
+        chests.append(Chest((4073, -1300)))
         chest_group = pygame.sprite.Group()
         for chest in chests:
             chest_group.add(chest)
