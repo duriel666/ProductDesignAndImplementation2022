@@ -43,4 +43,4 @@ def select_magical(score):
     pygame.mixer.music.load('sfx/magical-chimes.wav')
     pygame.mixer.music.play(loops=-1)
     pygame.mixer.music.set_volume(0.0)
-    # return start_game_magical(True, score)
+    return start_game_magical(True, score)
