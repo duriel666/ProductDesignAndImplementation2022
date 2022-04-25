@@ -9,8 +9,8 @@ def start_game_magical(run, score):
         pygame.init()
         pygame.font.init()
 
-        gw = 4961  # game world width
-        gh = 3508  # game world height
+        gw = 3508
+        gh = 4961
         fps = 60
         friction = -0.06
         black = (0,  0,  0, 200)
@@ -285,10 +285,10 @@ def start_game_magical(run, score):
             chest_group.add(chest)
 
         doors = []
-        doors.append(
+        '''doors.append(
             Door((119, -100), 'map', 'gfx/drawn-mario.png', (gw*1.05, gh*1.05)))
         doors.append(Door((4553, -2585), 'tile',
-                     'gfx/drawn-mario.png', (gw*1.05, gh*1.05)))
+                     'gfx/drawn-mario.png', (gw*1.05, gh*1.05)))'''
         door_group = pygame.sprite.Group()
         for door in doors:
             door_group.add(door)
