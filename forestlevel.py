@@ -274,6 +274,8 @@ def start_game_forest(run, score):
         collision_wall = World('gfx/forest-col-wall.png')
         collision_floor = World('gfx/forest-col-floor.png')
         taakse = World(f'gfx/forest-bg.png')
+        taakse2 = World(f'gfx/forest-bg1.png')
+        taakse3 = World(f'gfx/forest-bg2.png')
         eteen = World('gfx/forest-fg.png')
         light = World('gfx/forest-light.png')
         testi = World(f'gfx/menu-bg.png')
@@ -354,13 +356,15 @@ def start_game_forest(run, score):
         # sprites added in sequence from bottom to top
         sprite_group = pygame.sprite.Group()
         sprite_group_back = pygame.sprite.Group()
-        sprite_group_back.add(testi)
+        # sprite_group_back.add(testi)
+        sprite_group_back.add(taakse3)
+        sprite_group.add(taakse2)
         sprite_group.add(taakse)
         sprite_group2 = pygame.sprite.Group()
         sprite_group2.add(light)
         sprite_group2.add(eteen)
 
-        world_list = [light, testi, eteen, taakse,
+        world_list = [light, eteen, taakse, taakse2, taakse3,
                       collision_wall, collision_floor]
         for point in points:
             world_list.append(point)

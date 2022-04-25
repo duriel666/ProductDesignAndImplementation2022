@@ -341,32 +341,6 @@ def start_game(run):
         else:
             location = 'No Man\'s Land'
 
-        '''if cpy < -2350:
-            location = 'Sunshine Beach'
-        elif cpx > -1100 and cpy > -2350 and cpy < -1750:
-            location = 'Mushroom Forest'
-        elif cpx > -2600 and cpy > -1850 and cpx < -1100 and cpy < -850:
-            location = 'Three Bridges Island'
-        elif cpx > -2600 and cpy > -1750 and cpx < -100 and cpy < -1250:
-            location = 'Sea of Grass'
-        elif cpx > -360 and cpy > -1000 and cpy < -400:
-            location = 'Troll\'s Bridge'
-        else:
-            location = 'No Man\'s Land'''
-
-        '''if cpy < -1450:
-            location = 'Sunshine Beach'
-        elif cpx > 500 and cpy > -1450 and cpy < -1750:
-            location = 'Mushroom Forest'
-        elif cpx > -1000 and cpy > -950 and cpx < 500 and cpy < 50:
-            location = 'Three Bridges Island'
-        elif cpx > -1000 and cpy > -950 and cpx < 1500 and cpy < -350:
-            location = 'Sea of Grass'
-        elif cpx > 1240 and cpy > -100 and cpy < 500:
-            location = 'Troll\'s Bridge'
-        else:
-            location = 'No Man\'s Land'''
-
         '''game_font.render_to(
             window, (20, 20), f'fps {clock.get_fps():,.2f}', white)
         game_font.render_to(
