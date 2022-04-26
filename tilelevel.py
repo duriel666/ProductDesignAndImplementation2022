@@ -53,10 +53,10 @@ class Level:
         player = self.player.sprite
         player_x = player.rect.centerx
         direction_x = player.direction.x
-        if player_x < ww / 4 and direction_x < 0:
+        if player_x < ww / 3 and direction_x < 0:
             self.worldmove.x = 8
             player.speed = 0
-        elif player_x > ww - (ww / 4) and direction_x > 0:
+        elif player_x > ww - (ww / 3) and direction_x > 0:
             self.worldmove.x = -8
             player.speed = 0
         else:
@@ -126,9 +126,9 @@ class Level:
         # blob_group.draw(self.display_surface)
         self.enemy.update(self.worldmove.x, self.worldmove.y)
         self.enemy.draw(self.display_surface)
-        self.scroll_x()
         # self.scroll_y()
         self.player.update()
+        self.scroll_x()
         self.x_moving_coll()
         self.y_moving_coll()
         self.enemy_coll()
