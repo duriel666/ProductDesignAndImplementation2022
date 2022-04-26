@@ -98,7 +98,7 @@ def start_game_forest(run, score):
                 self.rect.topleft = self.pos
                 self.pos.y += speed
 
-        class Chest(pygame.sprite.Sprite):
+        class Chest(pygame.sprite.Sprite):  # gives player one helth
             def __init__(self, pos):
                 super().__init__()
                 self.index = 0
@@ -274,11 +274,11 @@ def start_game_forest(run, score):
         # images for World class
         collision_wall = World('gfx/forest-col-wall.png')
         collision_floor = World('gfx/forest-col-floor.png')
-        taakse = World(f'gfx/forest-bg.png')
-        taakse2 = World(f'gfx/forest-bg1.png')
-        taakse3 = World(f'gfx/forest-bg2.png')
+        #taakse = World(f'gfx/forest-bg.png')
+        taakse2 = World(f'gfx/forest-bg1-lines.png')
+        taakse3 = World(f'gfx/forest-bg2-lines.png')
         taakse4 = World(f'gfx/forest-bg-back.png')
-        eteen = World('gfx/forest-fg.png')
+        eteen = World('gfx/forest-fg-lines.png')
         light = World('gfx/forest-light.png')
 
         # adding water droplets to be collected
@@ -333,7 +333,7 @@ def start_game_forest(run, score):
             door_group.add(door)
 
         # enemies_soft take one health from player
-        # enemies_hard kill from single hit (not implemented yet)
+        # enemies_hard kill (or take 3 health?) from single hit
         enemies_soft = []
         enemies_soft.append(Enemy_soft(
             (2189, -292), 'gfx/forest-enemy-soft.png', (gw*0.95, gh*0.95)))
@@ -361,12 +361,12 @@ def start_game_forest(run, score):
         sprite_group_back.add(taakse4)
         sprite_group_back.add(taakse3)
         sprite_group.add(taakse2)
-        sprite_group.add(taakse)
+        # sprite_group.add(taakse)
         sprite_group2 = pygame.sprite.Group()
         sprite_group2.add(light)
         sprite_group2.add(eteen)
 
-        world_list = [light, eteen, taakse, taakse2, taakse3, taakse4,
+        world_list = [light, eteen, taakse2, taakse3, taakse4,
                       collision_wall, collision_floor]
         for point in points:
             world_list.append(point)
