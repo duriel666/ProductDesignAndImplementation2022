@@ -26,6 +26,8 @@ def rect_a(surface, color, rect):
     pygame.draw.rect(shape, color, shape.get_rect())
     surface.blit(shape, rect)
 
+# resolution change not working
+
 
 def gameoptions(run):
     while run:
@@ -37,14 +39,10 @@ def gameoptions(run):
                 if 700 <= mouse[0] <= 1000 and 240 <= mouse[1] <= 285:
                     game_res.set_resolution_x(1280)
                     game_res.set_resolution_y(720)
-                    ww = game_res.get_resolution_x()
-                    wh = game_res.get_resolution_y()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if 700 <= mouse[0] <= 1000 and 290 <= mouse[1] <= 335:
                     game_res.set_resolution_x(1600)
                     game_res.set_resolution_y(900)
-                    ww = game_res.get_resolution_x()
-                    wh = game_res.get_resolution_y()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if 175 <= mouse[0] <= 575 and 385 <= mouse[1] <= 460:
                     run = False
@@ -54,10 +52,12 @@ def gameoptions(run):
         screen.fill((background))
         window.blit(menu_bg, (0, 0))
         mouse = pygame.mouse.get_pos()
+        
         game_font.render_to(window, (197, 203), 'START', (shadow))
         game_font.render_to(window, (200, 200), 'START', (white3))
         game_font.render_to(window, (197, 303), 'HELP', (shadow))
         game_font.render_to(window, (200, 300), 'HELP', (white3))
+
         if 175 <= mouse[0] <= 575 and 385 <= mouse[1] <= 460:
             rect_a(window, select, (175, 385, 400, 75))
             game_font.render_to(window, (197, 403), 'BACK', (shadow))
@@ -65,6 +65,7 @@ def gameoptions(run):
         else:
             game_font.render_to(window, (197, 403), 'BACK', (shadow))
             game_font.render_to(window, (200, 400), 'BACK', (white))
+
         game_font.render_to(window, (197, 503), 'QUIT', (shadow))
         game_font.render_to(window, (200, 500), 'QUIT', (white3))
 
@@ -72,6 +73,7 @@ def gameoptions(run):
             rect_a(window, select, (690, 240, 320, 45))
         if 700 <= mouse[0] <= 1000 and 290 <= mouse[1] <= 335:
             rect_a(window, select, (690, 290, 320, 45))
+
         game_font2.render_to(
             window, (708, 202), 'Resolution:', (shadow))
         game_font2.render_to(

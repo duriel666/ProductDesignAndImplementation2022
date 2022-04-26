@@ -2,17 +2,17 @@ from wave import Wave_write
 
 
 level_map = [
-    '                                                                                                                                       ',
-    '                                                                                                                                       ',
-    '                                                                                                                                       ',
-    ' XX    XXX            XX                                                                   XXX                                         ',
-    ' XX P                                                          XX                                                                      ',
-    ' XXXX         XX              XX                                                    XX                XXX                              ',
-    ' XXXX       XX     E                               XX                    XXX                                                           ',
-    ' XX         XX    XX  XX                       XXXXXXXX                             E                                E                 ',
-    '       X  XXXX    XX  XXXXXXXXXXXXXXXXXXX    XXXXXXXXXXXXXX  X               XXXXX XXXXX     X   XXX   XXXX    XXXXXXXXXX     XXXX     ',
-    '     XXX  XXXXXX  XX  XXXX XXXXXXXXXXXXXX    XXXXXXXXXXXXXX  XX             XXXXXX XXXXXXXXXXX   XXXXXXXXXXX   XXXXXXXXXX     XXXXXXX  ',
-    'XXXXXXXX  XXXXXX  XX  XXXXXXXXXXXXXXXXXXX    XXXXXXXXXXXXXX  XXXX           XXXXXX XXXXXXXXXXX   XXXXXXXXXXX   XXXXXXXXXX     XXXXXXX  '
+    '                                                                                                                                      456                                                                     ',
+    '                                                                                                                                      456                                                                     ',
+    '                                                                                                                                      456                                                                     ',
+    ' 13    123            13                                                                   123                                         452                                                                    ',
+    ' 46 P                                                           13                                                                      452                                                                   ',
+    ' 4523         13              13                    E                                13                123                               45222222222222222222222222222222222222222222223                      ',
+    ' 4556       13                                     13                    123                                                                                                                                  ',
+    ' 46         46    13  13                       12225523                                                                                                                                         12223         ',
+    '       2  1256    46  4522222222222222223    12555555552223  2       13      12223 12223     2   123   1223                    123                                                       122222255556         ',
+    '     126  455523  46  4556 45555555555556    45555555555556  43             155556 45555222226   45522255553   1222223        4555223   13                                                                    ',
+    '12222556  455556  46  4555255555555555556    45555555555556  4523           455556 45555555556   45555555556   4555555556     4555556                                                                         '
 ]
 
 tile_size = 64
@@ -39,5 +39,3 @@ class Resolution:
 game_res = Resolution()
 ww = game_res.get_resolution_x()
 wh = game_res.get_resolution_y()
-print(ww)
-print(wh)

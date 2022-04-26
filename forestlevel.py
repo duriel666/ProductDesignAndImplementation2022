@@ -1,4 +1,5 @@
 from selecttilelevel import *
+import random
 
 vec = pygame.math.Vector2
 
@@ -16,6 +17,7 @@ def start_game_forest(run, score):
         black = (0,  0,  0, 200)
         white = (255, 255, 255, 200)
         red = (255, 0, 0, 200)
+        grey = (127, 127, 127)
         text_shadow = (0, 0, 0, 125)
 
         game_font = pygame.freetype.Font('fonts/HelveticaNeue Light.ttf', 50)
@@ -110,6 +112,7 @@ def start_game_forest(run, score):
                 self.rect = self.image.get_rect()
                 self.pos = vec(pos[0], pos[1]+wh)
                 self.vel = vec(0, 0)
+                self.status = True
 
             def scroll_x(self, speed):
                 self.rect.topleft = self.pos
@@ -122,6 +125,9 @@ def start_game_forest(run, score):
             def open(self):
                 self.index = 1
                 self.image = self.images[self.index]
+                if player.health < 7:
+                    player.health += 1
+                self.status = False
 
         class Enemy_soft(pygame.sprite.Sprite):
             def __init__(self, pos, enemy_image, size):
@@ -168,7 +174,7 @@ def start_game_forest(run, score):
                 self.images = []
                 for i in range(0, 72):
                     self.images.append(pygame.image.load(
-                        f'gfx/puolukka{str(i+1)}.png'))
+                        f'gfx/character/puolukka{str(i+1)}.png'))
                 self.image = self.images[self.index].convert_alpha()
                 self.mask = pygame.mask.from_surface(self.image)
                 self.rect = self.image.get_rect()
@@ -269,9 +275,11 @@ def start_game_forest(run, score):
         collision_wall = World('gfx/forest-col-wall.png')
         collision_floor = World('gfx/forest-col-floor.png')
         taakse = World(f'gfx/forest-bg.png')
+        taakse2 = World(f'gfx/forest-bg1.png')
+        taakse3 = World(f'gfx/forest-bg2.png')
+        taakse4 = World(f'gfx/forest-bg-back.png')
         eteen = World('gfx/forest-fg.png')
         light = World('gfx/forest-light.png')
-        testi = World(f'gfx/menu-bg.png')
 
         # adding water droplets to be collected
         points = []
@@ -309,15 +317,17 @@ def start_game_forest(run, score):
 
         chests = []
         chests.append(Chest((4073, -233)))
+        chests.append(Chest((450, -263)))
+        chests.append(Chest((4073, -1300)))
         chest_group = pygame.sprite.Group()
         for chest in chests:
             chest_group.add(chest)
 
         doors = []
         doors.append(
-            Door((119, -100), 'map', 'gfx/drawn-mario.png', (gw*1.05, gh*1.05)))
-        doors.append(Door((4553, -2585), 'tile',
-                     'gfx/drawn-mario.png', (gw*1.05, gh*1.05)))
+            Door((-50, -370), 'map', 'gfx/forest-exit-map.png', (gw*0.95, gh*0.95)))
+        doors.append(Door((4090, -2740), 'tile',
+                     'gfx/forest-exit-tile.png', (gw*0.95, gh*0.95)))
         door_group = pygame.sprite.Group()
         for door in doors:
             door_group.add(door)
@@ -326,11 +336,13 @@ def start_game_forest(run, score):
         # enemies_hard kill from single hit (not implemented yet)
         enemies_soft = []
         enemies_soft.append(Enemy_soft(
-            (2189, -192), 'gfx/forest-enemy-soft.png', (gw*0.95, gh*0.95)))
+            (2189, -292), 'gfx/forest-enemy-soft.png', (gw*0.95, gh*0.95)))
         enemies_soft.append(Enemy_soft(
-            (1271, -948), 'gfx/forest-enemy-soft.png', (gw*0.95, gh*0.95)))
+            (1271, -1148), 'gfx/forest-enemy-soft.png', (gw*1.05, gh*0.95)))
         enemies_soft.append(Enemy_soft(
-            (593, -1242), 'gfx/forest-enemy-soft.png', (gw*0.95, gh*0.95)))
+            (593, -2242), 'gfx/forest-enemy-soft.png', (gw*1.1, gh*1.05)))
+        enemies_soft.append(Enemy_soft(
+            (3200, -2620), 'gfx/forest-enemy-soft.png', (gw*0.9, gh*0.9)))
         enemies_soft_hit = []
         enemy_soft_group = pygame.sprite.Group()
         for enemy_soft in enemies_soft:
@@ -345,13 +357,16 @@ def start_game_forest(run, score):
         # sprites added in sequence from bottom to top
         sprite_group = pygame.sprite.Group()
         sprite_group_back = pygame.sprite.Group()
-        sprite_group_back.add(testi)
+        # sprite_group_back.add(testi)
+        sprite_group_back.add(taakse4)
+        sprite_group_back.add(taakse3)
+        sprite_group.add(taakse2)
         sprite_group.add(taakse)
         sprite_group2 = pygame.sprite.Group()
         sprite_group2.add(light)
         sprite_group2.add(eteen)
 
-        world_list = [light, testi, eteen, taakse,
+        world_list = [light, eteen, taakse, taakse2, taakse3, taakse4,
                       collision_wall, collision_floor]
         for point in points:
             world_list.append(point)
@@ -382,6 +397,9 @@ def start_game_forest(run, score):
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         pygame.mixer.music.stop()
+                        pygame.mixer.music.load('sfx/map.wav')
+                        pygame.mixer.music.play(loops=-1)
+                        pygame.mixer.music.set_volume(0.0)
                         run = False
                         return player.score
                 if event.type == pygame.KEYDOWN:
@@ -392,6 +410,9 @@ def start_game_forest(run, score):
                         player.cancel_jump()
                 if event.type == pygame.QUIT:
                     pygame.mixer.music.stop()
+                    pygame.mixer.music.load('sfx/map.wav')
+                    pygame.mixer.music.play(loops=-1)
+                    pygame.mixer.music.set_volume(0.0)
                     run = False
                     return player.score
                 for door in doors:
@@ -400,6 +421,9 @@ def start_game_forest(run, score):
                             if event.key == pygame.K_e:
                                 pygame.mixer.music.stop()
                                 if door.select() == 'map':
+                                    pygame.mixer.music.load('sfx/map.wav')
+                                    pygame.mixer.music.play(loops=-1)
+                                    pygame.mixer.music.set_volume(0.0)
                                     run = False
                                     return player.score
                                 else:
@@ -408,7 +432,8 @@ def start_game_forest(run, score):
                     if pygame.sprite.spritecollide(chest, player_group, False, collided=pygame.sprite.collide_mask):
                         if event.type == pygame.KEYDOWN:
                             if event.key == pygame.K_e:
-                                chest.open()
+                                if chest.status:
+                                    chest.open()
 
             # scrolling screen when player goes near edge. in map the player stays in the middle
             speed_x = player.vel.x
@@ -456,7 +481,8 @@ def start_game_forest(run, score):
                     enemy_soft.kill()
                     enemies_soft_hit.append(enemy_soft)
                     enemies_soft.remove(enemy_soft)
-            player.health = 3-len(enemies_soft_hit)
+            player.health -= len(enemies_soft_hit)
+            enemies_soft_hit = []
 
             # updating and drawing sprites & items
             sprite_group.update()
@@ -464,7 +490,6 @@ def start_game_forest(run, score):
             player_group.update()
             point_group.update()
             enemy_soft_group.update()
-            window.fill(white)
             sprite_group_back.draw(window)
             door_group.draw(window)
             sprite_group.draw(window)
@@ -476,17 +501,27 @@ def start_game_forest(run, score):
             sprite_group2.update()
             sprite_group2.draw(window)
 
-            # renderin text to screen
-            '''game_font.render_to(
-                window, (20, 20), f'fps - {clock.get_fps():,.2f}', white)'''
+            # rendering text to screen
+            game_font.render_to(
+                window, (20, 20), f'fps - {clock.get_fps():,.2f}', white)
             game_font.render_to(
                 window, (ww-303, 23), 'Health', text_shadow)
             game_font.render_to(
                 window, (ww-300, 20), 'Health', white)
-            game_font.render_to(
-                window, (ww-143, 23), player.health*'O', text_shadow)
-            game_font.render_to(
-                window, (ww-140, 20), player.health*'O', red)
+            if player.health < 4:
+                game_font.render_to(
+                    window, (ww-143, 23), player.health*'O', text_shadow)
+                game_font.render_to(
+                    window, (ww-140, 20), player.health*'O', red)
+            elif player.health >= 4 and player.health < 7:
+                game_font.render_to(
+                    window, (ww-143, 23), 3*'O', text_shadow)
+                game_font.render_to(
+                    window, (ww-140, 20), 3*'O', red)
+                game_font.render_to(
+                    window, (ww-143, 73), (player.health-3)*'O', text_shadow)
+                game_font.render_to(
+                    window, (ww-140, 70), (player.health-3)*'O', red)
             game_font.render_to(
                 window, (ww-233, wh-57), f'Score {player.score}', text_shadow)
             game_font.render_to(

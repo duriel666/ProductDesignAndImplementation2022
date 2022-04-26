@@ -1,4 +1,5 @@
 from selecttilelevel import *
+import random
 
 vec = pygame.math.Vector2
 
@@ -57,7 +58,7 @@ def start_game_beach(run, score):
             def __init__(self, pos):
                 super().__init__()
                 self.image = pygame.image.load(
-                    'gfx/forest-point.png').convert_alpha()
+                    'gfx/beach-point.png').convert_alpha()
                 self.mask = pygame.mask.from_surface(self.image)
                 self.rect = self.image.get_rect()
                 self.pos = vec(pos[0]-gw+ww, pos[1]+wh)
@@ -77,14 +78,15 @@ def start_game_beach(run, score):
                 self.index = 0
                 self.images = []
                 self.images.append(pygame.image.load(
-                    'gfx/forest-chest-closed.png').convert_alpha())
+                    'gfx/beach-chest-closed.png').convert_alpha())
                 self.images.append(pygame.image.load(
-                    'gfx/forest-chest-open.png').convert_alpha())
+                    'gfx/beach-chest-open.png').convert_alpha())
                 self.image = self.images[self.index].convert_alpha()
                 self.mask = pygame.mask.from_surface(self.image)
                 self.rect = self.image.get_rect()
                 self.pos = vec(pos[0], pos[1]+wh)
                 self.vel = vec(0, 0)
+                self.status = True
 
             def scroll_x(self, speed):
                 self.rect.topleft = self.pos
@@ -97,8 +99,28 @@ def start_game_beach(run, score):
             def open(self):
                 self.index = 1
                 self.image = self.images[self.index]
+                if player.health < 7:
+                    player.health += 1
+                self.status = False
 
         class Enemy_soft(pygame.sprite.Sprite):
+            def __init__(self, pos, enemy_image):
+                super().__init__()
+                self.image = pygame.image.load(enemy_image).convert_alpha()
+                self.mask = pygame.mask.from_surface(self.image)
+                self.rect = self.image.get_rect()
+                self.pos = vec(pos[0]-gw+ww, pos[1]+wh)
+                self.vel = vec(0, 0)
+
+            def scroll_x(self, speed):
+                self.rect.topleft = self.pos
+                self.pos.x += speed
+
+            def scroll_y(self, speed):
+                self.rect.topleft = self.pos
+                self.pos.y += speed
+
+        class Enemy_hard(pygame.sprite.Sprite):
             def __init__(self, pos, enemy_image):
                 super().__init__()
                 self.image = pygame.image.load(enemy_image).convert_alpha()
@@ -141,7 +163,7 @@ def start_game_beach(run, score):
                 self.images = []
                 for i in range(0, 72):
                     self.images.append(pygame.image.load(
-                        f'gfx/puolukka{str(i+1)}.png'))
+                        f'gfx/character/puolukka{str(i+1)}.png'))
                 self.image = self.images[self.index].convert_alpha()
                 self.mask = pygame.mask.from_surface(self.image)
                 self.rect = self.image.get_rect()
@@ -236,12 +258,13 @@ def start_game_beach(run, score):
         player_group = pygame.sprite.GroupSingle()
         player_group.add(player)
 
-        collision_wall = World('gfx/forest-col-wall.png')
-        collision_floor = World('gfx/forest-col-floor.png')
-        taakse = World(f'gfx/forest-bg.png')
-        eteen = World('gfx/forest-fg.png')
-        light = World('gfx/forest-light.png')
-        testi = World(f'gfx/menu-bg.png')
+        collision_wall = World('gfx/beach-col-wall.png')
+        collision_floor = World('gfx/beach-col-floor.png')
+        taakse = World(f'gfx/beach-bg.png')
+        taakse2 = World(f'gfx/beach-bg-back.png')
+        eteen = World('gfx/beach-fg.png')
+        light = World('gfx/beach-light.png')
+        light2 = World('gfx/beach-light2.png')
 
         points = []
         points.append(Point((1013, -534)))
@@ -262,24 +285,31 @@ def start_game_beach(run, score):
 
         doors = []
         doors.append(
-            Door((119, -100), 'map', 'gfx/drawn-mario.png', (gw*1.05, gh*1.05)))
+            Door((10, -250), 'map', 'gfx/beach-entrance.png', (gw*0.95, gh*0.95)))
         doors.append(Door((4553, -2585), 'tile',
-                     'gfx/drawn-mario.png', (gw*1.05, gh*1.05)))
+                     'gfx/beach-entrance.png', (gw*1.05, gh*1.05)))
         door_group = pygame.sprite.Group()
         for door in doors:
             door_group.add(door)
 
         enemies_soft = []
         enemies_soft.append(Enemy_soft(
-            (2189, -192), 'gfx/drawn-mario.png'))
+            (2189, -192), 'gfx/beach-enemy-soft.png'))
         enemies_soft.append(Enemy_soft(
-            (1271, -948), 'gfx/drawn-mario.png'))
+            (1271, -948), 'gfx/beach-enemy-soft.png'))
         enemies_soft.append(Enemy_soft(
-            (593, -1242), 'gfx/drawn-mario.png'))
+            (593, -1242), 'gfx/beach-enemy-soft.png'))
         enemies_soft_hit = []
         enemy_soft_group = pygame.sprite.Group()
         for enemy_soft in enemies_soft:
             enemy_soft_group.add(enemy_soft)
+
+        enemies_hard = []
+        enemies_hard.append(Enemy_hard(
+            (2189, -192), 'gfx/beach-enemy-soft.png'))
+        enemy_hard_group = pygame.sprite.Group()
+        for enemy_hard in enemies_hard:
+            enemy_hard_group.add(enemy_hard)
 
         score_count = int(len(points))
 
@@ -289,13 +319,14 @@ def start_game_beach(run, score):
         col_group_wall.add(collision_wall)
         sprite_group = pygame.sprite.Group()
         sprite_group_back = pygame.sprite.Group()
-        sprite_group_back.add(testi)
+        sprite_group_back.add(taakse2)
         sprite_group.add(taakse)
-        sprite_group.add(light)
         sprite_group2 = pygame.sprite.Group()
+        sprite_group2.add(light)
+        sprite_group2.add(light2)
         sprite_group2.add(eteen)
 
-        world_list = [light, testi, eteen, taakse,
+        world_list = [light, light2, eteen, taakse, taakse2,
                       collision_wall, collision_floor]
         for point in points:
             world_list.append(point)
@@ -325,6 +356,9 @@ def start_game_beach(run, score):
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         pygame.mixer.music.stop()
+                        pygame.mixer.music.load('sfx/map.wav')
+                        pygame.mixer.music.play(loops=-1)
+                        pygame.mixer.music.set_volume(0.0)
                         run = False
                         return player.score
                 if event.type == pygame.KEYDOWN:
@@ -335,6 +369,9 @@ def start_game_beach(run, score):
                         player.cancel_jump()
                 if event.type == pygame.QUIT:
                     pygame.mixer.music.stop()
+                    pygame.mixer.music.load('sfx/map.wav')
+                    pygame.mixer.music.play(loops=-1)
+                    pygame.mixer.music.set_volume(0.0)
                     run = False
                     return player.score
                 for door in doors:
@@ -343,6 +380,9 @@ def start_game_beach(run, score):
                             if event.key == pygame.K_e:
                                 pygame.mixer.music.stop()
                                 if door.select() == 'map':
+                                    pygame.mixer.music.load('sfx/map.wav')
+                                    pygame.mixer.music.play(loops=-1)
+                                    pygame.mixer.music.set_volume(0.0)
                                     run = False
                                     return player.score
                                 else:
@@ -351,7 +391,8 @@ def start_game_beach(run, score):
                     if pygame.sprite.spritecollide(chest, player_group, False, collided=pygame.sprite.collide_mask):
                         if event.type == pygame.KEYDOWN:
                             if event.key == pygame.K_e:
-                                chest.open()
+                                if chest.status:
+                                    chest.open()
 
             speed_x = player.vel.x
             speed_y = player.vel.y
@@ -397,7 +438,8 @@ def start_game_beach(run, score):
                     enemy_soft.kill()
                     enemies_soft_hit.append(enemy_soft)
                     enemies_soft.remove(enemy_soft)
-            player.health = 3-len(enemies_soft_hit)
+            player.health -= len(enemies_soft_hit)
+            enemies_soft_hit = []
 
             sprite_group.update()
             col_group.update()
@@ -422,10 +464,20 @@ def start_game_beach(run, score):
                 window, (ww-303, 23), 'Health', text_shadow)
             game_font.render_to(
                 window, (ww-300, 20), 'Health', white)
-            game_font.render_to(
-                window, (ww-143, 23), player.health*'O', text_shadow)
-            game_font.render_to(
-                window, (ww-140, 20), player.health*'O', red)
+            if player.health < 4:
+                game_font.render_to(
+                    window, (ww-143, 23), player.health*'O', text_shadow)
+                game_font.render_to(
+                    window, (ww-140, 20), player.health*'O', red)
+            elif player.health >= 4 and player.health < 7:
+                game_font.render_to(
+                    window, (ww-143, 23), 3*'O', text_shadow)
+                game_font.render_to(
+                    window, (ww-140, 20), 3*'O', red)
+                game_font.render_to(
+                    window, (ww-143, 73), (player.health-3)*'O', text_shadow)
+                game_font.render_to(
+                    window, (ww-140, 70), (player.health-3)*'O', red)
             game_font.render_to(
                 window, (ww-233, wh-57), f'Score {player.score}', text_shadow)
             game_font.render_to(

@@ -1,4 +1,5 @@
 from selectdrawnlevel import *
+import random
 
 gw = 4961  # game world width
 gh = 3508  # game world height
@@ -21,7 +22,7 @@ class Entrance(pygame.sprite.Sprite):
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
         self.pos = vec(0, 0)
-        self.pos2 = vec(pos[0], pos[1]+gh-wh)
+        self.pos2 = vec(pos[0], pos[1]+gh-720)
         self.vel = vec(0, 0)
         self.level = level
 
@@ -38,6 +39,8 @@ class Entrance(pygame.sprite.Sprite):
             return select_forest(player.score)
         if self.level == 'beach':
             return select_beach(player.score)
+        if self.level == 'magical':
+            return select_magical(player.score)
 
 
 class Chest(pygame.sprite.Sprite):
@@ -53,7 +56,7 @@ class Chest(pygame.sprite.Sprite):
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
         self.pos = vec(0, 0)
-        self.pos2 = vec(pos[0], pos[1]+gh-wh)
+        self.pos2 = vec(pos[0], pos[1]+gh-720)
         self.vel = vec(0, 0)
 
     def scroll_x(self, world_pos):
@@ -98,12 +101,12 @@ class Player(pygame.sprite.Sprite):
         self.images = []
         for i in range(0, 72):  # load player animation sequence
             self.images.append(pygame.image.load(
-                f'gfx/puolukka{str(i+1)}.png'))
+                f'gfx/character/puolukka{str(i+1)}.png'))
         self.image = self.images[self.index].convert_alpha()
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
         self.pos = vec(ww/2, wh/2)  # character position
-        self.pos_virtual = vec(0, gh-wh)
+        self.pos_virtual = vec((1600-ww)/2, gh-wh-((900-wh)/2))
         # virtual position for world moving
         self.shadow_pos = vec(self.pos.x-20, self.pos.y-20)
         self.vel = vec(0, 0)
@@ -215,7 +218,7 @@ class Shadow(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
         self.image = pygame.image.load(
-            'gfx/puolukka-shadow.png').convert_alpha()
+            'gfx/character/puolukka-shadow.png').convert_alpha()
         self.rect = self.image.get_rect()
         self.pos = vec((ww/2, wh-wh/2))
 
@@ -241,15 +244,16 @@ clouds = World('gfx/map-clouds.png')
 clouds2 = World('gfx/map-clouds2.png')
 
 entrances = []
-entrances.append(Entrance((1500, -300), 'forest', 'gfx/forest-entrance.png'))
-entrances.append(Entrance((1000, -1550), 'level2', 'gfx/drawn-mario.png'))
-entrances.append(Entrance((800, 550), 'beach', 'gfx/drawn-mario.png'))
+entrances.append(Entrance((1500, -500), 'forest', 'gfx/forest-entrance.png'))
+entrances.append(Entrance((1050, -2250), 'magical',
+                 'gfx/magical-entrance.png'))
+entrances.append(Entrance((800, 300), 'beach', 'gfx/beach-entrance.png'))
 
 entrances_found = []
 
 chests = []
 chests.append(Chest((1300, -250)))
-chests.append(Chest((2500, -850)))
+chests.append(Chest((2400, -950)))
 chests.append(Chest((950, 150)))
 chests.append(Chest((1100, -650)))
 chest_group = pygame.sprite.Group()
@@ -285,21 +289,41 @@ for chest in chests:
 
 clock = pygame.time.Clock()
 
+volume_up, timer = pygame.USEREVENT+1, 100
+pygame.time.set_timer(volume_up, timer)
+
 
 def start_game(run):
+    pygame.mixer.music.load('sfx/map.wav')
+    pygame.mixer.music.play(loops=-1)
+    pygame.mixer.music.set_volume(0.0)
+    music_volume = 0
     while run:
         for event in pygame.event.get():
+            if event.type == volume_up:
+                if music_volume < 0.4:
+                    music_volume += 0.001
+                    pygame.mixer.music.set_volume(music_volume)
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
+                    pygame.mixer.music.stop()
+                    pygame.mixer.music.load('sfx/menu.wav')
+                    pygame.mixer.music.play(loops=-1)
+                    pygame.mixer.music.set_volume(0.0)
                     run = False
                     return player.score
             if event.type == pygame.QUIT:
+                pygame.mixer.music.stop()
+                pygame.mixer.music.load('sfx/menu.wav')
+                pygame.mixer.music.play(loops=-1)
+                pygame.mixer.music.set_volume(0.0)
                 run = False
                 return player.score
             for entrance in entrances:
                 if pygame.sprite.spritecollide(entrance, player_group, False, collided=pygame.sprite.collide_mask):
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_e:
+                            pygame.mixer.music.stop()
                             entrance.select()
             for chest in chests:
                 if pygame.sprite.spritecollide(chest, player_group, False, collided=pygame.sprite.collide_mask):
@@ -322,8 +346,8 @@ def start_game(run):
         player.move()
 
         location = ''
-        cpx = collision.pos.x
-        cpy = collision.pos.y
+        cpx = collision.pos.x+(1600-ww)
+        cpy = collision.pos.y+(900-wh)
         if cpy < -2350:
             location = 'Sunshine Beach'
         elif cpx > -1100 and cpy > -2350 and cpy < -1750:
@@ -337,10 +361,11 @@ def start_game(run):
         else:
             location = 'No Man\'s Land'
 
-        game_font.render_to(
+        '''game_font.render_to(
             window, (20, 20), f'fps {clock.get_fps():,.2f}', white)
         game_font.render_to(
-            window, (20, 70), f'collision.pox x {cpx:,.1f} y {cpy:,.1f}', white)
+            window, (20, 70), f'collision.pox x {cpx:,.1f} y {cpy:,.1f}', white)'''
+
         game_font.render_to(window, (17, wh-57), location, text_shadow)
         game_font.render_to(window, (20, wh-60), location, white)
 

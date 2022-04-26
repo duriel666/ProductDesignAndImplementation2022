@@ -1,5 +1,6 @@
 from forestlevel import *
 from beachlevel import *
+from magicallevel import *
 
 black = (0,  0,  0)
 white = (180, 180, 180)
@@ -35,3 +36,11 @@ def select_forest(score):
     pygame.mixer.music.play(loops=-1)
     pygame.mixer.music.set_volume(0.0)
     return start_game_forest(True, score)
+
+
+def select_magical(score):
+    load_screen()
+    pygame.mixer.music.load('sfx/magical-chimes.wav')
+    pygame.mixer.music.play(loops=-1)
+    pygame.mixer.music.set_volume(0.0)
+    return start_game_magical(True, score)
