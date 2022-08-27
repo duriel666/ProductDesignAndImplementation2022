@@ -7,3 +7,5 @@ By JanneM, JonnaK, SallaP
 Install pygame for Python (Windows: "pip install pygame")
 
 Run main.py
+
+Demo video - https://youtu.be/nEhju859tDc
